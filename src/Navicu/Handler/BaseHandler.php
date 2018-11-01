@@ -1,0 +1,255 @@
+<?php
+
+namespace App\Navicu\Handler;
+
+use App\Navicu\Exception\NavicuException;
+use App\Navicu\Util\NavicuValidator;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+/**
+ * Maneja toda la logica de negocio de la aplicacion. La intención
+ * es crear un "Handler" por cada flujo y que extiendan de esta
+ * clase
+ *
+ * @author Emilio Ochoa <emilioaor@gmail.com>
+ */
+abstract class BaseHandler
+{
+    /** Codigos de respuesta */
+    const CODE_UNDEFINED = 0;
+    const CODE_SUCCESS = 200;
+    const CODE_BAD_REQUEST = 400;
+    const CODE_EXCEPTION = 500;
+
+    /**
+     * Codigo de respuesta del flujo
+     *
+     * @var int
+     */
+    private $code;
+
+    /**
+     * Codigo de respuesta http
+     *
+     * @var int
+     */
+    private $codeHttp;
+
+    /**
+     * Parametros del flujo
+     *
+     * @var array
+     */
+    private $params;
+
+    /**
+     * Errores durante el flujo
+     *
+     * @var array
+     */
+    private $errors;
+
+    /**
+     * Data de respuesta
+     *
+     * @var array
+     */
+    private $data;
+
+    /**
+     * Reglas de validacion definidas para el Handler
+     *
+     * @var array
+     */
+    private $rules;
+
+    /**
+     * Indica si el Handler ya fue procesado
+     *
+     * @var bool
+     */
+    private $processed;
+
+    /**
+     * Init Handler
+     *
+     * @param array $parameters
+     */
+    final public function __construct(array $parameters = [])
+    {
+        $this->code = self::CODE_UNDEFINED;
+        $this->params = $parameters;
+        $this->errors = [];
+        $this->data = [];
+        $this->rules = $this->validationRules();
+        $this->processed = false;
+    }
+
+    /**
+     * Aqui va la logica
+     *
+     * @return array
+     */
+    protected abstract function handler() : array;
+
+    /**
+     * Todas las reglas de validacion para los parametros que recibe
+     * el Handler
+     *
+     * Las reglas de validacion estan definidas en:
+     * @see \App\Navicu\Util\NavicuValidator
+     *
+     * @return array
+     */
+    protected abstract function validationRules() : array;
+
+    /**
+     * Ejecuta el Handler
+     */
+    final public function processHandler() : void
+    {
+        try {
+            $this->processed = true;
+
+            $validator = new NavicuValidator();
+            $validator->validate($this->params, $this->rules);
+
+            if ($validator->hasError()) {
+
+                $this->code = self::CODE_BAD_REQUEST;
+                $this->codeHttp = self::CODE_BAD_REQUEST;
+                $this->errors = $validator->getErrors();
+
+            } else {
+
+                $this->code = self::CODE_SUCCESS;
+                $this->codeHttp = self::CODE_SUCCESS;
+                $this->data = $this->handler();
+            }
+
+        } catch (NavicuException $ex) {
+
+            $this->code = $ex->getCode();
+            $this->codeHttp = self::CODE_EXCEPTION;
+            $this->addError($ex->getMessage());
+
+        } catch (\Exception $ex) {
+
+            $this->code = self::CODE_EXCEPTION;
+            $this->codeHttp = self::CODE_EXCEPTION;
+            $this->addError($ex->getMessage());
+        }
+    }
+
+    /**
+     * Set params del Handler
+     *
+     * @param $parameters;
+     * @return BaseHandler
+     */
+    public function setParams(array $parameters) : BaseHandler
+    {
+        $this->params = $parameters;
+        return $this;
+    }
+
+    /**
+     * Get Params del Handler
+     *
+     * @return array
+     */
+    public function getParams() : array
+    {
+        return $this->params;
+    }
+
+    /**
+     * Set un parametro
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return BaseHandler
+     */
+    public function setParam($key, $value) : BaseHandler
+    {
+        $this->params[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * Agrega un error en la ejecucion
+     *
+     * @param string $error
+     * @return BaseHandler
+     */
+    public function addError($error) : BaseHandler
+    {
+        $this->errors[] = $error;
+        return $this;
+    }
+
+    /**
+     * Indica si el proceso fue exitoso
+     *
+     * @return bool
+     */
+    public function isSuccess() : bool
+    {
+        return $this->code === self::CODE_SUCCESS && $this->codeHttp === self::CODE_SUCCESS;
+    }
+
+    /**
+     * Obtiene la data del handler procesado
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getData() : array
+    {
+        if (! $this->processed) {
+            throw new \Exception('Handler has not been processed, please call "processHandler" before "getData"');
+        }
+
+        return [
+            'code' => $this->code,
+            'data' => $this->data
+        ];
+    }
+
+    /**
+     * Obtiene la respuesta para los errores
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getErrors() : array
+    {
+        if (! $this->processed) {
+            throw new \Exception('Handler has not been processed, please call "processHandler" before "getErrors"');
+        }
+
+        return [
+            'code' => $this->code,
+            'errors' => $this->errors
+        ];
+    }
+
+    /**
+     * Obtiene un objeto JsonResponse con la respuesta del Handler
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function getJsonResponseData() : JsonResponse
+    {
+        if (! $this->processed) {
+            throw new \Exception('Handler has not been processed, please call "processHandler" before "getJsonResponseData"');
+        }
+
+        if ($this->isSuccess()) {
+            return new JsonResponse($this->getData());
+        }
+
+        return new JsonResponse($this->getErrors(), $this->codeHttp);
+    }
+}
