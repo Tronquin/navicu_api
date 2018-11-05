@@ -5,29 +5,41 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\OAuthUserRepository")
+ * OauthUser
+ *
+ * @ORM\Table(name="oauth_user", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_86da15d877153098", columns={"code"})})
+ * @ORM\Entity
  */
-class OAuthUser
+class OauthUser
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="oauth_user_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30, unique=true)
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=30, nullable=false)
      */
     private $code;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=false)
      */
     private $token;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expired_at", type="datetime", nullable=false)
      */
     private $expiredAt;
 
@@ -72,8 +84,5 @@ class OAuthUser
         return $this;
     }
 
-    public function generateToken()
-    {
-        $this->token = md5($this->code . time() . rand(100, 10000));
-    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\OAuthUser;
+use App\Entity\OauthUser;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -33,7 +33,7 @@ class TokenSubscriber implements EventSubscriberInterface
         $token = $request->get('token');
 
         /** @var OAuthUser $oAuthUser */
-        $oAuthUser = $manager->getRepository(OAuthUser::class)->findOneBy(['token' => $token]);
+        $oAuthUser = $manager->getRepository(OauthUser::class)->findOneBy(['token' => $token]);
 
         if (! $oAuthUser) {
 
