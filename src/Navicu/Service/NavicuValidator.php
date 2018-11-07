@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Navicu\Util;
+namespace App\Navicu\Service;
 
 /**
  * Validator para los parametros en la aplicacion

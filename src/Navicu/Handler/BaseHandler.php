@@ -3,7 +3,7 @@
 namespace App\Navicu\Handler;
 
 use App\Navicu\Exception\NavicuException;
-use App\Navicu\Util\NavicuValidator;
+use App\Navicu\Service\NavicuValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -97,7 +97,7 @@ abstract class BaseHandler
      * el Handler
      *
      * Las reglas de validacion estan definidas en:
-     * @see \App\Navicu\Util\NavicuValidator
+     * @see \App\Navicu\Service\NavicuValidator
      *
      * @return array
      */

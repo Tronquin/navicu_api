@@ -25,7 +25,7 @@ class TestHandler extends BaseHandler
      * el Handler
      *
      * Las reglas de validacion estan definidas en:
-     * @see \App\Navicu\Util\NavicuValidator
+     * @see \App\Navicu\Service\NavicuValidator
      *
      * @return array
      */
