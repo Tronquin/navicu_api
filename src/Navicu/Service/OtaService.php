@@ -26,6 +26,7 @@ class OtaService
     const URL_TICKET_TEST = 'issue_test';
     const URL_FARE_FAMILY = 'fareFamily';
     const URL_SEAT_MAP = 'seatMap';
+    const URL_CANCEL = 'cancel';
 
     /**
      * Hace una busqueda one way en OTA
@@ -315,7 +316,7 @@ class OtaService
             throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
-        return self::send(self::URL_SEAT_MAP, $params);
+        return self::send(self::URL_CANCEL, $params);
     }
 
     /**
