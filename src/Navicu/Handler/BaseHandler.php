@@ -271,18 +271,25 @@ abstract class BaseHandler
      * @param Request $request
      * @return BaseHandler
      */
-    private function setParamsFromRequest(Request $request)
+    private function setParamsFromRequest(Request $request) : BaseHandler
     {
         $this->params = $request->attributes->get('_route_params');
 
         foreach ($request->query->all() as $key => $value) {
-            if ('token' !== $key) {
-                $this->setParam($key, $value);
-            }
+            $this->setParam($key, $value);
         }
 
         foreach ($request->request->all() as $key => $value) {
             $this->setParam($key, $value);
+        }
+
+        if ($request->headers->get('content-type') === 'application/json') {
+
+            $json = json_decode($request->getContent(), true);
+
+            if ($json) {
+                $this->params = array_merge($this->params, $json);
+            }
         }
 
         return $this;

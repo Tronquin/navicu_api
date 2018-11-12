@@ -22,7 +22,7 @@ class TokenSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if (! $request->query->has('token')) {
+        if (! $request->headers->has('navicu_token')) {
 
             return $event->setController(function () {
                 return new JsonResponse(['code' => 400, 'errors' => ['token is required']]);
@@ -30,7 +30,7 @@ class TokenSubscriber implements EventSubscriberInterface
         }
 
         $manager = $this->container->get('doctrine')->getManager();
-        $token = $request->get('token');
+        $token = $request->headers->get('navicu_token');
 
         /** @var OAuthUser $oAuthUser */
         $oAuthUser = $manager->getRepository(OauthUser::class)->findOneBy(['token' => $token]);
