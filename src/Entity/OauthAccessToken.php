@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * OauthAccessToken
  *
- * @ORM\Table(name="oauth_access_token", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_f7fa86a45f37a13b", columns={"token"})}, indexes={@ORM\Index(name="idx_f7fa86a4a76ed395", columns={"user_id"}), @ORM\Index(name="idx_f7fa86a4dca49ed", columns={"oauth_client_id"})})
+ * @ORM\Table(name="oauth_access_token", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_f7fa86a45f37a13b", columns={"token"})}, indexes={@ORM\Index(name="idx_f7fa86a4dca49ed", columns={"oauth_client_id"}), @ORM\Index(name="idx_f7fa86a4a76ed395", columns={"user_id"})})
  * @ORM\Entity
  */
 class OauthAccessToken

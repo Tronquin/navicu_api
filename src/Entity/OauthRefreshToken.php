@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * OauthRefreshToken
  *
- * @ORM\Table(name="oauth_refresh_token", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_55dcf7555f37a13b", columns={"token"})}, indexes={@ORM\Index(name="idx_55dcf755dca49ed", columns={"oauth_client_id"}), @ORM\Index(name="idx_55dcf755a76ed395", columns={"user_id"})})
+ * @ORM\Table(name="oauth_refresh_token", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_55dcf7555f37a13b", columns={"token"})}, indexes={@ORM\Index(name="idx_55dcf755a76ed395", columns={"user_id"}), @ORM\Index(name="idx_55dcf755dca49ed", columns={"oauth_client_id"})})
  * @ORM\Entity
  */
 class OauthRefreshToken

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ReservationGroup
  *
- * @ORM\Table(name="reservation_group", indexes={@ORM\Index(name="idx_2ebf946264d218e", columns={"location_id"}), @ORM\Index(name="idx_2ebf9462cde7c497", columns={"aavv_invoice_id"}), @ORM\Index(name="idx_2ebf9462d2c3b2dd", columns={"aavv_id"}), @ORM\Index(name="idx_2ebf9462289427d2", columns={"aavv_profile_id"})})
+ * @ORM\Table(name="reservation_group", indexes={@ORM\Index(name="idx_2ebf9462cde7c497", columns={"aavv_invoice_id"}), @ORM\Index(name="idx_2ebf9462d2c3b2dd", columns={"aavv_id"}), @ORM\Index(name="idx_2ebf9462289427d2", columns={"aavv_profile_id"}), @ORM\Index(name="idx_2ebf946264d218e", columns={"location_id"})})
  * @ORM\Entity
  */
 class ReservationGroup

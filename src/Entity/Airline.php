@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Airline
  *
- * @ORM\Table(name="airline", uniqueConstraints={@ORM\UniqueConstraint(name="unique_iata_airline", columns={"iso"}), @ORM\UniqueConstraint(name="unique_slug_airline", columns={"slug"})}, indexes={@ORM\Index(name="IDX_EC141EF864D218E", columns={"location_id"}), @ORM\Index(name="IDX_EC141EF8F98F144A", columns={"logo_id"}), @ORM\Index(name="IDX_EC141EF838248176", columns={"currency_id"})})
+ * @ORM\Table(name="airline", uniqueConstraints={@ORM\UniqueConstraint(name="unique_slug_airline", columns={"slug"}), @ORM\UniqueConstraint(name="unique_iata_airline", columns={"iso"})}, indexes={@ORM\Index(name="IDX_EC141EF864D218E", columns={"location_id"}), @ORM\Index(name="IDX_EC141EF8F98F144A", columns={"logo_id"}), @ORM\Index(name="IDX_EC141EF838248176", columns={"currency_id"})})
  * @ORM\Entity
  */
 class Airline

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DisableAdvance
  *
- * @ORM\Table(name="disable_advance", indexes={@ORM\Index(name="idx_aaaf4928a76ed395", columns={"user_id"}), @ORM\Index(name="idx_aaaf49287d8e0d0b", columns={"deactive_id"})})
+ * @ORM\Table(name="disable_advance", indexes={@ORM\Index(name="idx_aaaf49287d8e0d0b", columns={"deactive_id"}), @ORM\Index(name="idx_aaaf4928a76ed395", columns={"user_id"})})
  * @ORM\Entity
  */
 class DisableAdvance

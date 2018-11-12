@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Aavv
  *
- * @ORM\Table(name="aavv", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_2bc8e414f98f144a", columns={"logo_id"}), @ORM\UniqueConstraint(name="uniq_2bc8e4148530a5dc", columns={"subdomain_id"})})
+ * @ORM\Table(name="aavv", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_2bc8e4148530a5dc", columns={"subdomain_id"}), @ORM\UniqueConstraint(name="uniq_2bc8e414f98f144a", columns={"logo_id"})})
  * @ORM\Entity
  */
 class Aavv

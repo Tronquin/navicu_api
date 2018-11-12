@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Payment
  *
- * @ORM\Table(name="payment", indexes={@ORM\Index(name="idx_6d28840d7c222479", columns={"receiverbank"}), @ORM\Index(name="idx_6d28840dd860bf7a", columns={"bank"}), @ORM\Index(name="idx_6d28840dad5dc05d", columns={"payment_type"}), @ORM\Index(name="idx_6d28840d42c84955", columns={"reservation"})})
+ * @ORM\Table(name="payment", indexes={@ORM\Index(name="idx_6d28840d7c222479", columns={"receiverbank"}), @ORM\Index(name="idx_6d28840dad5dc05d", columns={"payment_type"}), @ORM\Index(name="idx_6d28840dd860bf7a", columns={"bank"}), @ORM\Index(name="idx_6d28840d42c84955", columns={"reservation"})})
  * @ORM\Entity
  */
 class Payment
@@ -155,16 +155,6 @@ class Payment
     private $receiverbank;
 
     /**
-     * @var \BankType
-     *
-     * @ORM\ManyToOne(targetEntity="BankType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="bank", referencedColumnName="id")
-     * })
-     */
-    private $bank;
-
-    /**
      * @var \PaymentType
      *
      * @ORM\ManyToOne(targetEntity="PaymentType")
@@ -173,6 +163,16 @@ class Payment
      * })
      */
     private $paymentType;
+
+    /**
+     * @var \BankType
+     *
+     * @ORM\ManyToOne(targetEntity="BankType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="bank", referencedColumnName="id")
+     * })
+     */
+    private $bank;
 
     public function getId(): ?int
     {
@@ -395,18 +395,6 @@ class Payment
         return $this;
     }
 
-    public function getBank(): ?BankType
-    {
-        return $this->bank;
-    }
-
-    public function setBank(?BankType $bank): self
-    {
-        $this->bank = $bank;
-
-        return $this;
-    }
-
     public function getPaymentType(): ?PaymentType
     {
         return $this->paymentType;
@@ -415,6 +403,18 @@ class Payment
     public function setPaymentType(?PaymentType $paymentType): self
     {
         $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    public function getBank(): ?BankType
+    {
+        return $this->bank;
+    }
+
+    public function setBank(?BankType $bank): self
+    {
+        $this->bank = $bank;
 
         return $this;
     }

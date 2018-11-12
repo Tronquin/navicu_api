@@ -86,21 +86,6 @@ class Role
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Module", inversedBy="role")
-     * @ORM\JoinTable(name="role_modules",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="module_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $module;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\ManyToMany(targetEntity="Permission", inversedBy="role")
      * @ORM\JoinTable(name="role_permissions",
      *   joinColumns={
@@ -121,13 +106,28 @@ class Role
     private $user;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Module", inversedBy="role")
+     * @ORM\JoinTable(name="role_modules",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="module_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $module;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->module = new \Doctrine\Common\Collections\ArrayCollection();
         $this->permission = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->module = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,32 +232,6 @@ class Role
     }
 
     /**
-     * @return Collection|Module[]
-     */
-    public function getModule(): Collection
-    {
-        return $this->module;
-    }
-
-    public function addModule(Module $module): self
-    {
-        if (!$this->module->contains($module)) {
-            $this->module[] = $module;
-        }
-
-        return $this;
-    }
-
-    public function removeModule(Module $module): self
-    {
-        if ($this->module->contains($module)) {
-            $this->module->removeElement($module);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Permission[]
      */
     public function getPermission(): Collection
@@ -306,6 +280,32 @@ class Role
         if ($this->user->contains($user)) {
             $this->user->removeElement($user);
             $user->removeRole($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Module[]
+     */
+    public function getModule(): Collection
+    {
+        return $this->module;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->module->contains($module)) {
+            $this->module[] = $module;
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        if ($this->module->contains($module)) {
+            $this->module->removeElement($module);
         }
 
         return $this;

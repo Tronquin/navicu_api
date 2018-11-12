@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Room
  *
- * @ORM\Table(name="room", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_729f519b989d9b62", columns={"slug"}), @ORM\UniqueConstraint(name="uniq_729f519b32e99b8d", columns={"profile_image"})}, indexes={@ORM\Index(name="idx_729f519b549213ec", columns={"property_id"}), @ORM\Index(name="idx_729f519bc54c8c93", columns={"type_id"})})
+ * @ORM\Table(name="room", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_729f519b32e99b8d", columns={"profile_image"}), @ORM\UniqueConstraint(name="uniq_729f519b989d9b62", columns={"slug"})}, indexes={@ORM\Index(name="idx_729f519bc54c8c93", columns={"type_id"}), @ORM\Index(name="idx_729f519b549213ec", columns={"property_id"})})
  * @ORM\Entity
  */
 class Room

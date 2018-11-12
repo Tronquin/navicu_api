@@ -128,16 +128,6 @@ class FlightPayment
     private $paymentCommision = '0';
 
     /**
-     * @var \FlightReservation
-     *
-     * @ORM\ManyToOne(targetEntity="FlightReservation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_reservation", referencedColumnName="id")
-     * })
-     */
-    private $flightReservation;
-
-    /**
      * @var \PaymentType
      *
      * @ORM\ManyToOne(targetEntity="PaymentType")
@@ -146,6 +136,16 @@ class FlightPayment
      * })
      */
     private $paymentType;
+
+    /**
+     * @var \FlightReservation
+     *
+     * @ORM\ManyToOne(targetEntity="FlightReservation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="flight_reservation", referencedColumnName="id")
+     * })
+     */
+    private $flightReservation;
 
     public function getId(): ?int
     {
@@ -332,18 +332,6 @@ class FlightPayment
         return $this;
     }
 
-    public function getFlightReservation(): ?FlightReservation
-    {
-        return $this->flightReservation;
-    }
-
-    public function setFlightReservation(?FlightReservation $flightReservation): self
-    {
-        $this->flightReservation = $flightReservation;
-
-        return $this;
-    }
-
     public function getPaymentType(): ?PaymentType
     {
         return $this->paymentType;
@@ -352,6 +340,18 @@ class FlightPayment
     public function setPaymentType(?PaymentType $paymentType): self
     {
         $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    public function getFlightReservation(): ?FlightReservation
+    {
+        return $this->flightReservation;
+    }
+
+    public function setFlightReservation(?FlightReservation $flightReservation): self
+    {
+        $this->flightReservation = $flightReservation;
 
         return $this;
     }

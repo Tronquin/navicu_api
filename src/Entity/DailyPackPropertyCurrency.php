@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DailyPackPropertyCurrency
  *
- * @ORM\Table(name="daily_pack_property_currency", indexes={@ORM\Index(name="idx_c4b2de2fc6f863e3", columns={"daily_pack_id"}), @ORM\Index(name="idx_c4b2de2f87414140", columns={"property_currency_id"})})
+ * @ORM\Table(name="daily_pack_property_currency", indexes={@ORM\Index(name="idx_c4b2de2f87414140", columns={"property_currency_id"}), @ORM\Index(name="idx_c4b2de2fc6f863e3", columns={"daily_pack_id"})})
  * @ORM\Entity
  */
 class DailyPackPropertyCurrency
@@ -44,16 +44,6 @@ class DailyPackPropertyCurrency
     private $baseRate;
 
     /**
-     * @var \DailyPack
-     *
-     * @ORM\ManyToOne(targetEntity="DailyPack")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="daily_pack_id", referencedColumnName="id")
-     * })
-     */
-    private $dailyPack;
-
-    /**
      * @var \PropertyCurrency
      *
      * @ORM\ManyToOne(targetEntity="PropertyCurrency")
@@ -62,6 +52,16 @@ class DailyPackPropertyCurrency
      * })
      */
     private $propertyCurrency;
+
+    /**
+     * @var \DailyPack
+     *
+     * @ORM\ManyToOne(targetEntity="DailyPack")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="daily_pack_id", referencedColumnName="id")
+     * })
+     */
+    private $dailyPack;
 
     public function getId(): ?int
     {
@@ -104,18 +104,6 @@ class DailyPackPropertyCurrency
         return $this;
     }
 
-    public function getDailyPack(): ?DailyPack
-    {
-        return $this->dailyPack;
-    }
-
-    public function setDailyPack(?DailyPack $dailyPack): self
-    {
-        $this->dailyPack = $dailyPack;
-
-        return $this;
-    }
-
     public function getPropertyCurrency(): ?PropertyCurrency
     {
         return $this->propertyCurrency;
@@ -124,6 +112,18 @@ class DailyPackPropertyCurrency
     public function setPropertyCurrency(?PropertyCurrency $propertyCurrency): self
     {
         $this->propertyCurrency = $propertyCurrency;
+
+        return $this;
+    }
+
+    public function getDailyPack(): ?DailyPack
+    {
+        return $this->dailyPack;
+    }
+
+    public function setDailyPack(?DailyPack $dailyPack): self
+    {
+        $this->dailyPack = $dailyPack;
 
         return $this;
     }

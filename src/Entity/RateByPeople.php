@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * RateByPeople
  *
- * @ORM\Table(name="rate_by_people", indexes={@ORM\Index(name="idx_cacc218254177093", columns={"room_id"}), @ORM\Index(name="idx_cacc218287414140", columns={"property_currency_id"})})
+ * @ORM\Table(name="rate_by_people", indexes={@ORM\Index(name="idx_cacc218287414140", columns={"property_currency_id"}), @ORM\Index(name="idx_cacc218254177093", columns={"room_id"})})
  * @ORM\Entity
  */
 class RateByPeople

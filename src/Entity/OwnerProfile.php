@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * OwnerProfile
  *
- * @ORM\Table(name="owner_profile", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_d212cd0a76ed395", columns={"user_id"})}, indexes={@ORM\Index(name="idx_d212cd0727aca70", columns={"parent_id"}), @ORM\Index(name="idx_d212cd0ffa0c224", columns={"office_id"}), @ORM\Index(name="idx_d212cd064d218e", columns={"location_id"})})
+ * @ORM\Table(name="owner_profile", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_d212cd0a76ed395", columns={"user_id"})}, indexes={@ORM\Index(name="idx_d212cd0727aca70", columns={"parent_id"}), @ORM\Index(name="idx_d212cd064d218e", columns={"location_id"}), @ORM\Index(name="idx_d212cd0ffa0c224", columns={"office_id"})})
  * @ORM\Entity
  */
 class OwnerProfile

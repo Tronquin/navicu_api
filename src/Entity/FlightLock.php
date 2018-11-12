@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FlightLock
  *
- * @ORM\Table(name="flight_lock", indexes={@ORM\Index(name="idx_6b1c6697522fbab", columns={"destiny"}), @ORM\Index(name="idx_6b1c669def1561e", columns={"origin"}), @ORM\Index(name="idx_6b1c669aaf21bcd", columns={"airline_flight_type_rate"}), @ORM\Index(name="IDX_6B1C66916FE72E1", columns={"updated_by"}), @ORM\Index(name="IDX_6B1C669DE12AB56", columns={"created_by"})})
+ * @ORM\Table(name="flight_lock", indexes={@ORM\Index(name="idx_6b1c6697522fbab", columns={"destiny"}), @ORM\Index(name="idx_6b1c669aaf21bcd", columns={"airline_flight_type_rate"}), @ORM\Index(name="idx_6b1c669def1561e", columns={"origin"}), @ORM\Index(name="IDX_6B1C66916FE72E1", columns={"updated_by"}), @ORM\Index(name="IDX_6B1C669DE12AB56", columns={"created_by"})})
  * @ORM\Entity
  */
 class FlightLock

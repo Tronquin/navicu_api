@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Property
  *
- * @ORM\Table(name="property", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_8bf21cde32e99b8d", columns={"profile_image"}), @ORM\UniqueConstraint(name="unique_slug_property", columns={"slug"}), @ORM\UniqueConstraint(name="uniq_8bf21cde981d9d7f", columns={"base_policy"}), @ORM\UniqueConstraint(name="unique_public_id", columns={"public_id"})}, indexes={@ORM\Index(name="idx_8bf21cde2d385412", columns={"accommodation"}), @ORM\Index(name="idx_8bf21cde38248176", columns={"currency_id"}), @ORM\Index(name="idx_8bf21cde90c13dc5", columns={"recruit_id"}), @ORM\Index(name="idx_8bf21cde5e9e89cb", columns={"location"}), @ORM\Index(name="idx_8bf21cde7854071c", columns={"commercial_id"}), @ORM\Index(name="idx_8bf21cde1716ede3", columns={"nvc_profile_id"}), @ORM\Index(name="idx_8bf21cdedb8f0c9b", columns={"city_tax_currency_id"}), @ORM\Index(name="IDX_8BF21CDE63905048", columns={"opt_profile"})})
+ * @ORM\Table(name="property", uniqueConstraints={@ORM\UniqueConstraint(name="unique_slug_property", columns={"slug"}), @ORM\UniqueConstraint(name="uniq_8bf21cde32e99b8d", columns={"profile_image"}), @ORM\UniqueConstraint(name="uniq_8bf21cde981d9d7f", columns={"base_policy"}), @ORM\UniqueConstraint(name="unique_public_id", columns={"public_id"})}, indexes={@ORM\Index(name="idx_8bf21cde2d385412", columns={"accommodation"}), @ORM\Index(name="idx_8bf21cde38248176", columns={"currency_id"}), @ORM\Index(name="idx_8bf21cde1716ede3", columns={"nvc_profile_id"}), @ORM\Index(name="idx_8bf21cde5e9e89cb", columns={"location"}), @ORM\Index(name="idx_8bf21cdedb8f0c9b", columns={"city_tax_currency_id"}), @ORM\Index(name="idx_8bf21cde7854071c", columns={"commercial_id"}), @ORM\Index(name="idx_8bf21cde90c13dc5", columns={"recruit_id"}), @ORM\Index(name="IDX_8BF21CDE63905048", columns={"opt_profile"})})
  * @ORM\Entity
  */
 class Property
@@ -596,13 +596,6 @@ class Property
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="OwnerProfile", mappedBy="property")
-     */
-    private $ownerprofile;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\ManyToMany(targetEntity="Language", inversedBy="property")
      * @ORM\JoinTable(name="property_language",
      *   joinColumns={
@@ -616,12 +609,19 @@ class Property
     private $language;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="OwnerProfile", mappedBy="property")
+     */
+    private $ownerprofile;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->ownerprofile = new \Doctrine\Common\Collections\ArrayCollection();
         $this->language = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ownerprofile = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1554,6 +1554,32 @@ class Property
     }
 
     /**
+     * @return Collection|Language[]
+     */
+    public function getLanguage(): Collection
+    {
+        return $this->language;
+    }
+
+    public function addLanguage(Language $language): self
+    {
+        if (!$this->language->contains($language)) {
+            $this->language[] = $language;
+        }
+
+        return $this;
+    }
+
+    public function removeLanguage(Language $language): self
+    {
+        if ($this->language->contains($language)) {
+            $this->language->removeElement($language);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|OwnerProfile[]
      */
     public function getOwnerprofile(): Collection
@@ -1576,32 +1602,6 @@ class Property
         if ($this->ownerprofile->contains($ownerprofile)) {
             $this->ownerprofile->removeElement($ownerprofile);
             $ownerprofile->removeProperty($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Language[]
-     */
-    public function getLanguage(): Collection
-    {
-        return $this->language;
-    }
-
-    public function addLanguage(Language $language): self
-    {
-        if (!$this->language->contains($language)) {
-            $this->language[] = $language;
-        }
-
-        return $this;
-    }
-
-    public function removeLanguage(Language $language): self
-    {
-        if ($this->language->contains($language)) {
-            $this->language->removeElement($language);
         }
 
         return $this;
