@@ -43,6 +43,10 @@ class EmailService
             ->setSubject($subject)
             ->setBody($twig->render($template, $params), 'text/html');
 
+        if ($kernel->getEnvironment() !== 'prod') {
+            $message = self::addRecipientsToEmail($message);
+        }
+
         if ($kernel->getEnvironment() === 'dev') {
             return self::printEmail($message);
         }
@@ -103,5 +107,25 @@ class EmailService
         $fs->dumpFile($path, $content);
 
         return true;
+    }
+
+    /**
+     * Agrega los destinatarios al cuerpo del correo
+     *
+     * @param \Swift_Message $message $message
+     * @return \Swift_Message $message
+     */
+    private static function addRecipientsToEmail(\Swift_Message $message) : \Swift_Message
+    {
+        $body = $message->getBody();
+
+        $body .= 'Destinatarios: ';
+        foreach ($message->getTo() as $email => $to) {
+            $body .= $email . ',';
+        }
+
+        $message->setBody($body);
+
+        return $message;
     }
 }
