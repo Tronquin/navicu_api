@@ -47,6 +47,10 @@ class EmailService
             $message = self::addRecipientsToEmail($message);
         }
 
+        if ($kernel->getEnvironment() === 'stg') {
+            $message->setFrom($from);
+        }
+
         if ($kernel->getEnvironment() === 'dev') {
             return self::printEmail($message);
         }
