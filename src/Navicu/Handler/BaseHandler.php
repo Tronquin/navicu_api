@@ -4,7 +4,9 @@ namespace App\Navicu\Handler;
 
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\NavicuValidator;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Maneja toda la logica de negocio de la aplicacion. La intención
@@ -15,6 +17,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 abstract class BaseHandler
 {
+    use ContainerAwareTrait;
+
     /** Codigos de respuesta */
     const CODE_UNDEFINED = 0;
     const CODE_SUCCESS = 200;
@@ -73,16 +77,24 @@ abstract class BaseHandler
     /**
      * Init Handler
      *
-     * @param array $parameters
+     * @param Request $request
      */
-    final public function __construct(array $parameters = [])
+    final public function __construct(Request $request = null)
     {
         $this->code = self::CODE_UNDEFINED;
-        $this->params = $parameters;
         $this->errors = [];
         $this->data = [];
         $this->rules = $this->validationRules();
         $this->processed = false;
+        $this->params = [];
+
+        global $kernel;
+
+        $this->setContainer($kernel->getContainer());
+
+        if ($request) {
+            $this->setParamsFromRequest($request);
+        }
     }
 
     /**
@@ -251,5 +263,28 @@ abstract class BaseHandler
         }
 
         return new JsonResponse($this->getErrors(), $this->codeHttp);
+    }
+
+    /**
+     * Obtiene todos los parametros del request al params del handler
+     *
+     * @param Request $request
+     * @return BaseHandler
+     */
+    private function setParamsFromRequest(Request $request)
+    {
+        $this->params = $request->attributes->get('_route_params');
+
+        foreach ($request->query->all() as $key => $value) {
+            if ('token' !== $key) {
+                $this->setParam($key, $value);
+            }
+        }
+
+        foreach ($request->request->all() as $key => $value) {
+            $this->setParam($key, $value);
+        }
+
+        return $this;
     }
 }

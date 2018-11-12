@@ -7,14 +7,17 @@ namespace App\Navicu\Service;
  *
  * Reglas disponibles:
  *
- * required             = Requerido
- * numeric              = Requiere un valor numerico
- * min:(param)          = Longitud minima de caracteres
- * max:(param)          = Longitud maxima de caracteres
- * min_value:(param)    = Valor numerico minimo
- * max_value:(param)    = Valor numerico maximo
- * in:(param,param)     = Permitir solo valores indicados
- * not_in:(param,param) = No permitir valores indicados
+ * required                 = Requerido
+ * numeric                  = Requiere un valor numerico
+ * min:(param)              = Longitud minima de caracteres
+ * max:(param)              = Longitud maxima de caracteres
+ * min_value:(param)        = Valor numerico minimo
+ * max_value:(param)        = Valor numerico maximo
+ * in:(param,param...)      = Permitir solo valores indicados
+ * not_in:(param,param...)  = No permitir valores indicados
+ * regex:(param)            = Valida expresion regular
+ * between:(param,param)    = Valor entre minimo y maximo
+ * date_format:(param)      = Valida formato de fecha
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
@@ -41,6 +44,9 @@ class NavicuValidator
         $this->checkMaxValue($params, $rules);
         $this->checkIn($params, $rules);
         $this->checkNotIn($params, $rules);
+        $this->checkRegex($params, $rules);
+        $this->checkBetween($params, $rules);
+        $this->checkDateFormat($params, $rules);
     }
 
     /**
@@ -271,6 +277,93 @@ class NavicuValidator
 
                     if (isset($params[$ruleTarget]) && in_array($params[$ruleTarget], $notInValues)) {
                         $this->addError("{$ruleTarget} not accept ({$ruleWithParam[1]})");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Valida los parametros para la regla "regex"
+     *
+     * @param array $params
+     * @param array $rules
+     */
+    private function checkRegex($params, $rules) : void
+    {
+        foreach ($rules as $ruleTarget => $rule) {
+
+            $rulesArray = explode('|', $rule);
+
+            foreach ($rulesArray as $r) {
+
+                $ruleWithParam = explode(':', $r);
+
+                if (count($ruleWithParam) > 1 && $ruleWithParam[0] === 'regex') {
+
+                    $regex = $ruleWithParam[1];
+
+                    if (isset($params[$ruleTarget]) && ! preg_match($regex, $params[$ruleTarget])) {
+                        $this->addError("{$ruleTarget} invalid format ({$ruleWithParam[1]})");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Valida los parametros para la regla "between"
+     *
+     * @param array $params
+     * @param array $rules
+     */
+    private function checkBetween($params, $rules) : void
+    {
+        foreach ($rules as $ruleTarget => $rule) {
+
+            $rulesArray = explode('|', $rule);
+
+            foreach ($rulesArray as $r) {
+
+                $ruleWithParam = explode(':', $r);
+
+                if (count($ruleWithParam) > 1 && $ruleWithParam[0] === 'between') {
+
+                    $betweenValue = explode(',', $ruleWithParam[1]);
+
+                    if (
+                        isset($params[$ruleTarget]) &&
+                        ($params[$ruleTarget] < $betweenValue[0] || $params[$ruleTarget] > $betweenValue[1])
+                    ) {
+                        $this->addError("{$ruleTarget} must be between {$betweenValue[0]} and {$betweenValue[1]}");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Valida los parametros para la regla "date_format"
+     *
+     * @param array $params
+     * @param array $rules
+     */
+    private function checkDateFormat($params, $rules) : void
+    {
+        foreach ($rules as $ruleTarget => $rule) {
+
+            $rulesArray = explode('|', $rule);
+
+            foreach ($rulesArray as $r) {
+
+                $ruleWithParam = explode(':', $r);
+
+                if (count($ruleWithParam) > 1 && $ruleWithParam[0] === 'date_format') {
+
+                    $format = str_replace('date_format:', '', $r);
+
+                    if (isset($params[$ruleTarget]) && ! \DateTime::createFromFormat($format, $params[$ruleTarget])) {
+                        $this->addError("{$ruleTarget} invalid format, require ({$format})");
                     }
                 }
             }
