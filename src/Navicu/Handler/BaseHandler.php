@@ -101,6 +101,7 @@ abstract class BaseHandler
      * Aqui va la logica
      *
      * @return array
+     * @throws NavicuException
      */
     protected abstract function handler() : array;
 
