@@ -284,6 +284,7 @@ class OtaService
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'origin' => 'required|regex:/^[A-Z]{3}$/',
             'dest' => 'required|regex:/^[A-Z]{3}$/',
             'date' => 'required|date_format:Y-m-d',
             'airline' => 'required|regex:/^[A-Z0-9]{2}$/',

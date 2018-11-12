@@ -15,12 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class FlightController extends AbstractController
 {
     /**
+     * Autocompletado para el buscador de boleteria
+     *
      * @Route("/autocomplete/{words}", name="flight_autocomplete", methods="GET")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function autoComplete(Request $request)
     {
         $handler = new AutocompleteHandler($request);
         $handler->processHandler();
@@ -29,6 +31,8 @@ class FlightController extends AbstractController
     }
 
     /**
+     * Obtiene listado de cabinas (First class, business, etc)
+     *
      * @Route("/cabins", name="flight_cabins", methods="GET")
      *
      * @param Request $request
