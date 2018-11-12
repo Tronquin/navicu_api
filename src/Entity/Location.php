@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Location
  *
- * @ORM\Table(name="location", indexes={@ORM\Index(name="idx_5e9e89cb2b099f37", columns={"location_type_id"}), @ORM\Index(name="idx_5e9e89cb727aca70", columns={"parent_id"}), @ORM\Index(name="idx_5e9e89cb82f1baf4", columns={"language_id"}), @ORM\Index(name="idx_5e9e89cb2f7fde18", columns={"destination_type"}), @ORM\Index(name="idx_5e9e89cb8bac62af", columns={"city_id"}), @ORM\Index(name="idx_5e9e89cb38248176", columns={"currency_id"}), @ORM\Index(name="idx_5e9e89cb79066886", columns={"root_id"})})
+ * @ORM\Table(name="location", indexes={@ORM\Index(name="idx_5e9e89cb2f7fde18", columns={"destination_type"}), @ORM\Index(name="idx_5e9e89cb79066886", columns={"root_id"}), @ORM\Index(name="idx_5e9e89cb727aca70", columns={"parent_id"}), @ORM\Index(name="idx_5e9e89cb2b099f37", columns={"location_type_id"}), @ORM\Index(name="idx_5e9e89cb8bac62af", columns={"city_id"})})
  * @ORM\Entity
  */
 class Location
@@ -25,18 +25,11 @@ class Location
     private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="language_id", type="string", length=3, nullable=true)
-     */
-    private $languageId;
-
-    /**
      * @var int|null
      *
-     * @ORM\Column(name="currency_id", type="integer", nullable=true)
+     * @ORM\Column(name="city_id", type="integer", nullable=true)
      */
-    private $currencyId;
+    private $cityId;
 
     /**
      * @var string
@@ -102,21 +95,18 @@ class Location
     private $slug;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="location_type_id", type="integer", nullable=true)
+     */
+    private $locationTypeId;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="visible", type="boolean", nullable=false, options={"default"="1"})
      */
     private $visible = true;
-
-    /**
-     * @var \LocationType
-     *
-     * @ORM\ManyToOne(targetEntity="LocationType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="location_type_id", referencedColumnName="id")
-     * })
-     */
-    private $locationType;
 
     /**
      * @var \Location
@@ -149,14 +139,19 @@ class Location
     private $root;
 
     /**
-     * @var \Location
+     * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="city_id", referencedColumnName="id")
-     * })
+     * @ORM\ManyToMany(targetEntity="Language", inversedBy="location")
+     * @ORM\JoinTable(name="location_language",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="location_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     *   }
+     * )
      */
-    private $city;
+    private $language;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -172,21 +167,6 @@ class Location
      * )
      */
     private $currency;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Language", inversedBy="location")
-     * @ORM\JoinTable(name="location_language",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="location_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $language;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -208,8 +188,8 @@ class Location
      */
     public function __construct()
     {
-        $this->currency = new \Doctrine\Common\Collections\ArrayCollection();
         $this->language = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->currency = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dependency = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -218,26 +198,14 @@ class Location
         return $this->id;
     }
 
-    public function getLanguageId(): ?string
+    public function getCityId(): ?int
     {
-        return $this->languageId;
+        return $this->cityId;
     }
 
-    public function setLanguageId(?string $languageId): self
+    public function setCityId(?int $cityId): self
     {
-        $this->languageId = $languageId;
-
-        return $this;
-    }
-
-    public function getCurrencyId(): ?int
-    {
-        return $this->currencyId;
-    }
-
-    public function setCurrencyId(?int $currencyId): self
-    {
-        $this->currencyId = $currencyId;
+        $this->cityId = $cityId;
 
         return $this;
     }
@@ -350,6 +318,18 @@ class Location
         return $this;
     }
 
+    public function getLocationTypeId(): ?int
+    {
+        return $this->locationTypeId;
+    }
+
+    public function setLocationTypeId(?int $locationTypeId): self
+    {
+        $this->locationTypeId = $locationTypeId;
+
+        return $this;
+    }
+
     public function getVisible(): ?bool
     {
         return $this->visible;
@@ -358,18 +338,6 @@ class Location
     public function setVisible(bool $visible): self
     {
         $this->visible = $visible;
-
-        return $this;
-    }
-
-    public function getLocationType(): ?LocationType
-    {
-        return $this->locationType;
-    }
-
-    public function setLocationType(?LocationType $locationType): self
-    {
-        $this->locationType = $locationType;
 
         return $this;
     }
@@ -410,14 +378,28 @@ class Location
         return $this;
     }
 
-    public function getCity(): ?self
+    /**
+     * @return Collection|Language[]
+     */
+    public function getLanguage(): Collection
     {
-        return $this->city;
+        return $this->language;
     }
 
-    public function setCity(?self $city): self
+    public function addLanguage(Language $language): self
     {
-        $this->city = $city;
+        if (!$this->language->contains($language)) {
+            $this->language[] = $language;
+        }
+
+        return $this;
+    }
+
+    public function removeLanguage(Language $language): self
+    {
+        if ($this->language->contains($language)) {
+            $this->language->removeElement($language);
+        }
 
         return $this;
     }
@@ -443,32 +425,6 @@ class Location
     {
         if ($this->currency->contains($currency)) {
             $this->currency->removeElement($currency);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Language[]
-     */
-    public function getLanguage(): Collection
-    {
-        return $this->language;
-    }
-
-    public function addLanguage(Language $language): self
-    {
-        if (!$this->language->contains($language)) {
-            $this->language[] = $language;
-        }
-
-        return $this;
-    }
-
-    public function removeLanguage(Language $language): self
-    {
-        if ($this->language->contains($language)) {
-            $this->language->removeElement($language);
         }
 
         return $this;

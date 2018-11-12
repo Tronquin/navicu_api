@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * RoomPackLinkage
  *
- * @ORM\Table(name="room_pack_linkage", indexes={@ORM\Index(name="idx_e7ee5f1ddd62c21b", columns={"child_id"}), @ORM\Index(name="idx_e7ee5f1d727aca70", columns={"parent_id"})})
+ * @ORM\Table(name="room_pack_linkage", indexes={@ORM\Index(name="idx_e7ee5f1d727aca70", columns={"parent_id"}), @ORM\Index(name="idx_e7ee5f1ddd62c21b", columns={"child_id"})})
  * @ORM\Entity
  */
 class RoomPackLinkage

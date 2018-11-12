@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AirlineAgreement
  *
- * @ORM\Table(name="airline_agreement", indexes={@ORM\Index(name="idx_38915d05def1561e", columns={"origin"}), @ORM\Index(name="idx_38915d053929001b", columns={"airline_return"}), @ORM\Index(name="idx_38915d057522fbab", columns={"destiny"}), @ORM\Index(name="idx_38915d05dfec3f39", columns={"rate"}), @ORM\Index(name="idx_38915d05e15e478", columns={"airline_one_way"})})
+ * @ORM\Table(name="airline_agreement", indexes={@ORM\Index(name="idx_38915d05dfec3f39", columns={"rate"}), @ORM\Index(name="idx_38915d05def1561e", columns={"origin"}), @ORM\Index(name="idx_38915d053929001b", columns={"airline_return"}), @ORM\Index(name="idx_38915d057522fbab", columns={"destiny"}), @ORM\Index(name="idx_38915d05e15e478", columns={"airline_one_way"})})
  * @ORM\Entity
  */
 class AirlineAgreement

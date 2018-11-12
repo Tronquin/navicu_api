@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SearchFlightLock
  *
- * @ORM\Table(name="search_flight_lock", indexes={@ORM\Index(name="idx_7dd85bf7878f9b0e", columns={"lock"}), @ORM\Index(name="idx_7dd85bf77bf6cc4d", columns={"searchflight"})})
+ * @ORM\Table(name="search_flight_lock", indexes={@ORM\Index(name="idx_7dd85bf77bf6cc4d", columns={"searchflight"}), @ORM\Index(name="idx_7dd85bf7878f9b0e", columns={"lock"})})
  * @ORM\Entity
  */
 class SearchFlightLock

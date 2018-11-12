@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Pack
  *
- * @ORM\Table(name="pack", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_97de5e23989d9b62", columns={"slug"})}, indexes={@ORM\Index(name="idx_97de5e23c54c8c93", columns={"type_id"}), @ORM\Index(name="idx_97de5e2354177093", columns={"room_id"})})
+ * @ORM\Table(name="pack", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_97de5e23989d9b62", columns={"slug"})}, indexes={@ORM\Index(name="idx_97de5e2354177093", columns={"room_id"}), @ORM\Index(name="idx_97de5e23c54c8c93", columns={"type_id"})})
  * @ORM\Entity
  */
 class Pack

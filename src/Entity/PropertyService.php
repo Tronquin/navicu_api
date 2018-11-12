@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PropertyService
  *
- * @ORM\Table(name="property_service", indexes={@ORM\Index(name="idx_b850d0aa549213ec", columns={"property_id"}), @ORM\Index(name="idx_b850d0aac54c8c93", columns={"type_id"})})
+ * @ORM\Table(name="property_service", indexes={@ORM\Index(name="idx_b850d0aac54c8c93", columns={"type_id"}), @ORM\Index(name="idx_b850d0aa549213ec", columns={"property_id"})})
  * @ORM\Entity
  */
 class PropertyService

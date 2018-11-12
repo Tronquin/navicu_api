@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FlightTicket
  *
- * @ORM\Table(name="flight_ticket", indexes={@ORM\Index(name="idx_a8c6fcb4f73df7ae", columns={"flight_reservation"}), @ORM\Index(name="idx_a8c6fcb4c257e60e", columns={"flight"})})
+ * @ORM\Table(name="flight_ticket", indexes={@ORM\Index(name="idx_a8c6fcb4c257e60e", columns={"flight"}), @ORM\Index(name="idx_a8c6fcb4f73df7ae", columns={"flight_reservation"}), @ORM\Index(name="IDX_A8C6FCB44502E565", columns={"passenger_id"})})
  * @ORM\Entity
  */
 class FlightTicket
@@ -21,6 +21,13 @@ class FlightTicket
      * @ORM\SequenceGenerator(sequenceName="flight_ticket_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="flight_reservation", type="integer", nullable=true)
+     */
+    private $flightReservation;
 
     /**
      * @var string
@@ -65,6 +72,13 @@ class FlightTicket
     private $way = '1';
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="flight", type="integer", nullable=true)
+     */
+    private $flight;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime", nullable=false)
@@ -72,28 +86,30 @@ class FlightTicket
     private $date;
 
     /**
-     * @var \Flight
+     * @var \Passenger
      *
-     * @ORM\ManyToOne(targetEntity="Flight")
+     * @ORM\ManyToOne(targetEntity="Passenger")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="passenger_id", referencedColumnName="id")
      * })
      */
-    private $flight;
-
-    /**
-     * @var \FlightReservation
-     *
-     * @ORM\ManyToOne(targetEntity="FlightReservation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_reservation", referencedColumnName="id")
-     * })
-     */
-    private $flightReservation;
+    private $passenger;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFlightReservation(): ?int
+    {
+        return $this->flightReservation;
+    }
+
+    public function setFlightReservation(?int $flightReservation): self
+    {
+        $this->flightReservation = $flightReservation;
+
+        return $this;
     }
 
     public function getNumber(): ?string
@@ -168,6 +184,18 @@ class FlightTicket
         return $this;
     }
 
+    public function getFlight(): ?int
+    {
+        return $this->flight;
+    }
+
+    public function setFlight(?int $flight): self
+    {
+        $this->flight = $flight;
+
+        return $this;
+    }
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
@@ -180,26 +208,14 @@ class FlightTicket
         return $this;
     }
 
-    public function getFlight(): ?Flight
+    public function getPassenger(): ?Passenger
     {
-        return $this->flight;
+        return $this->passenger;
     }
 
-    public function setFlight(?Flight $flight): self
+    public function setPassenger(?Passenger $passenger): self
     {
-        $this->flight = $flight;
-
-        return $this;
-    }
-
-    public function getFlightReservation(): ?FlightReservation
-    {
-        return $this->flightReservation;
-    }
-
-    public function setFlightReservation(?FlightReservation $flightReservation): self
-    {
-        $this->flightReservation = $flightReservation;
+        $this->passenger = $passenger;
 
         return $this;
     }

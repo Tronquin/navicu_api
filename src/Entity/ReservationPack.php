@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ReservationPack
  *
- * @ORM\Table(name="reservation_pack", indexes={@ORM\Index(name="idx_81e7934b7c361f66", columns={"type_room_id"}), @ORM\Index(name="idx_81e7934bb83297e7", columns={"reservation_id"}), @ORM\Index(name="idx_81e7934bbdb6797c", columns={"bedroom_id"}), @ORM\Index(name="idx_81e7934b3138dde2", columns={"type_pack_id"}), @ORM\Index(name="idx_81e7934b1919b217", columns={"pack_id"}), @ORM\Index(name="idx_81e7934b5183b04c", columns={"property_cancellation_policy_id"}), @ORM\Index(name="idx_81e7934bc54c8c93", columns={"type_cancellation_policy_id"})})
+ * @ORM\Table(name="reservation_pack", indexes={@ORM\Index(name="idx_81e7934bc54c8c93", columns={"type_cancellation_policy_id"}), @ORM\Index(name="idx_81e7934b1919b217", columns={"pack_id"}), @ORM\Index(name="idx_81e7934b5183b04c", columns={"property_cancellation_policy_id"}), @ORM\Index(name="idx_81e7934b7c361f66", columns={"type_room_id"}), @ORM\Index(name="idx_81e7934bbdb6797c", columns={"bedroom_id"}), @ORM\Index(name="idx_81e7934bb83297e7", columns={"reservation_id"}), @ORM\Index(name="idx_81e7934b3138dde2", columns={"type_pack_id"})})
  * @ORM\Entity
  */
 class ReservationPack

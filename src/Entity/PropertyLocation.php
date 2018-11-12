@@ -5,12 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PropertyGallery
+ * PropertyLocation
  *
- * @ORM\Table(name="property_gallery", indexes={@ORM\Index(name="idx_1ee632428bf21cde", columns={"property"}), @ORM\Index(name="idx_1ee63242c54c8c93", columns={"type_id"})})
+ * @ORM\Table(name="property_location", indexes={@ORM\Index(name="IDX_19BD8F549213EC", columns={"property_id"}), @ORM\Index(name="IDX_19BD8F64D218E", columns={"location_id"})})
  * @ORM\Entity
  */
-class PropertyGallery
+class PropertyLocation
 {
     /**
      * @var int
@@ -18,7 +18,7 @@ class PropertyGallery
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="property_gallery_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="property_location_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
@@ -27,20 +27,20 @@ class PropertyGallery
      *
      * @ORM\ManyToOne(targetEntity="Property")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="property_id", referencedColumnName="id")
      * })
      */
     private $property;
 
     /**
-     * @var \ServiceType
+     * @var \Location
      *
-     * @ORM\ManyToOne(targetEntity="ServiceType")
+     * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="type_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * })
      */
-    private $type;
+    private $location;
 
     public function getId(): ?int
     {
@@ -59,14 +59,14 @@ class PropertyGallery
         return $this;
     }
 
-    public function getType(): ?ServiceType
+    public function getLocation(): ?Location
     {
-        return $this->type;
+        return $this->location;
     }
 
-    public function setType(?ServiceType $type): self
+    public function setLocation(?Location $location): self
     {
-        $this->type = $type;
+        $this->location = $location;
 
         return $this;
     }

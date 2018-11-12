@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PropertyUnpublished
  *
- * @ORM\Table(name="property_unpublished", indexes={@ORM\Index(name="idx_1a8ccf11a76ed395", columns={"user_id"}), @ORM\Index(name="idx_1a8ccf11549213ec", columns={"property_id"})})
+ * @ORM\Table(name="property_unpublished", indexes={@ORM\Index(name="idx_1a8ccf11549213ec", columns={"property_id"}), @ORM\Index(name="idx_1a8ccf11a76ed395", columns={"user_id"})})
  * @ORM\Entity
  */
 class PropertyUnpublished

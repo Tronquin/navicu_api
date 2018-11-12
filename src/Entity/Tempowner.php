@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tempowner
  *
- * @ORM\Table(name="tempowner", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_3b4c192da76ed395", columns={"user_id"}), @ORM\UniqueConstraint(name="unique_slug", columns={"slug"})}, indexes={@ORM\Index(name="idx_3b4c192d90c13dc5", columns={"recruit_id"}), @ORM\Index(name="idx_3b4c192d7854071c", columns={"commercial_id"}), @ORM\Index(name="idx_3b4c192d1716ede3", columns={"nvc_profile_id"}), @ORM\Index(name="IDX_3B4C192D63905048", columns={"opt_profile"})})
+ * @ORM\Table(name="tempowner", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_3b4c192da76ed395", columns={"user_id"}), @ORM\UniqueConstraint(name="unique_slug", columns={"slug"})}, indexes={@ORM\Index(name="idx_3b4c192d7854071c", columns={"commercial_id"}), @ORM\Index(name="idx_3b4c192d1716ede3", columns={"nvc_profile_id"}), @ORM\Index(name="idx_3b4c192d90c13dc5", columns={"recruit_id"}), @ORM\Index(name="IDX_3B4C192D63905048", columns={"opt_profile"})})
  * @ORM\Entity
  */
 class Tempowner

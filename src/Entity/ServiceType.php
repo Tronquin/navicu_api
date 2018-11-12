@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ServiceType
  *
- * @ORM\Table(name="service_type", indexes={@ORM\Index(name="idx_429de3c5727aca70", columns={"parent_id"}), @ORM\Index(name="idx_429de3c579066886", columns={"root_id"})})
+ * @ORM\Table(name="service_type", indexes={@ORM\Index(name="idx_429de3c579066886", columns={"root_id"}), @ORM\Index(name="idx_429de3c5727aca70", columns={"parent_id"})})
  * @ORM\Entity
  */
 class ServiceType

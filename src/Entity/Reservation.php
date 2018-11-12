@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Reservation
  *
- * @ORM\Table(name="reservation", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_42c8495578da5ff", columns={"current_state"})}, indexes={@ORM\Index(name="idx_42c84955f30c1afa", columns={"aavv_reservation_group_id"}), @ORM\Index(name="idx_42c8495587414140", columns={"property_currency_id"}), @ORM\Index(name="idx_42c84955549213ec", columns={"property_id"}), @ORM\Index(name="idx_42c8495519eb6921", columns={"client_id"}), @ORM\Index(name="IDX_42C8495538248176", columns={"currency_id"})})
+ * @ORM\Table(name="reservation", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_42c8495578da5ff", columns={"current_state"})}, indexes={@ORM\Index(name="idx_42c84955549213ec", columns={"property_id"}), @ORM\Index(name="idx_42c8495519eb6921", columns={"client_id"}), @ORM\Index(name="idx_42c8495587414140", columns={"property_currency_id"}), @ORM\Index(name="idx_42c84955f30c1afa", columns={"aavv_reservation_group_id"}), @ORM\Index(name="IDX_42C8495538248176", columns={"currency_id"})})
  * @ORM\Entity
  */
 class Reservation
@@ -205,6 +205,20 @@ class Reservation
     private $origin;
 
     /**
+     * @var array|null
+     *
+     * @ORM\Column(name="exchange_rate", type="json_array", nullable=true)
+     */
+    private $exchangeRate;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="pay_in_bs", type="boolean", nullable=true)
+     */
+    private $payInBs;
+
+    /**
      * @var \ClienteProfile
      *
      * @ORM\ManyToOne(targetEntity="ClienteProfile")
@@ -245,16 +259,6 @@ class Reservation
     private $currentState;
 
     /**
-     * @var \ReservationGroup
-     *
-     * @ORM\ManyToOne(targetEntity="ReservationGroup")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="aavv_reservation_group_id", referencedColumnName="id")
-     * })
-     */
-    private $aavvReservationGroup;
-
-    /**
      * @var \PropertyCurrency
      *
      * @ORM\ManyToOne(targetEntity="PropertyCurrency")
@@ -263,6 +267,16 @@ class Reservation
      * })
      */
     private $propertyCurrency;
+
+    /**
+     * @var \ReservationGroup
+     *
+     * @ORM\ManyToOne(targetEntity="ReservationGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="aavv_reservation_group_id", referencedColumnName="id")
+     * })
+     */
+    private $aavvReservationGroup;
 
     public function getId(): ?int
     {
@@ -581,6 +595,30 @@ class Reservation
         return $this;
     }
 
+    public function getExchangeRate()
+    {
+        return $this->exchangeRate;
+    }
+
+    public function setExchangeRate($exchangeRate): self
+    {
+        $this->exchangeRate = $exchangeRate;
+
+        return $this;
+    }
+
+    public function getPayInBs(): ?bool
+    {
+        return $this->payInBs;
+    }
+
+    public function setPayInBs(?bool $payInBs): self
+    {
+        $this->payInBs = $payInBs;
+
+        return $this;
+    }
+
     public function getClient(): ?ClienteProfile
     {
         return $this->client;
@@ -629,18 +667,6 @@ class Reservation
         return $this;
     }
 
-    public function getAavvReservationGroup(): ?ReservationGroup
-    {
-        return $this->aavvReservationGroup;
-    }
-
-    public function setAavvReservationGroup(?ReservationGroup $aavvReservationGroup): self
-    {
-        $this->aavvReservationGroup = $aavvReservationGroup;
-
-        return $this;
-    }
-
     public function getPropertyCurrency(): ?PropertyCurrency
     {
         return $this->propertyCurrency;
@@ -649,6 +675,18 @@ class Reservation
     public function setPropertyCurrency(?PropertyCurrency $propertyCurrency): self
     {
         $this->propertyCurrency = $propertyCurrency;
+
+        return $this;
+    }
+
+    public function getAavvReservationGroup(): ?ReservationGroup
+    {
+        return $this->aavvReservationGroup;
+    }
+
+    public function setAavvReservationGroup(?ReservationGroup $aavvReservationGroup): self
+    {
+        $this->aavvReservationGroup = $aavvReservationGroup;
 
         return $this;
     }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FlightReservation
  *
- * @ORM\Table(name="flight_reservation", indexes={@ORM\Index(name="idx_f73df7ae6956883f", columns={"currency"})})
+ * @ORM\Table(name="flight_reservation", indexes={@ORM\Index(name="IDX_F73DF7AE18E5767C", columns={"currency_type_id"}), @ORM\Index(name="IDX_F73DF7AE7E6A667", columns={"flight_type_schedule_id"}), @ORM\Index(name="IDX_F73DF7AEF3EFD182", columns={"flight_class_id"})})
  * @ORM\Entity
  */
 class FlightReservation
@@ -23,32 +23,11 @@ class FlightReservation
     private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=true)
-     */
-    private $code;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="reservation_date", type="datetime", nullable=false)
      */
     private $reservationDate;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="state", type="integer", nullable=true)
-     */
-    private $state;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="total_to_pay", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $totalToPay;
 
     /**
      * @var string
@@ -72,11 +51,67 @@ class FlightReservation
     private $adultNumber;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="inf_number", type="integer", nullable=true)
+     */
+    private $infNumber;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="ins_number", type="integer", nullable=true)
+     */
+    private $insNumber;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="subtotal_no_extra_increment", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $subtotalNoExtraIncrement = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="subtotal", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $subtotal = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="tax", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $tax = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="increment_expenses", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $incrementExpenses = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="increment_guarantee", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $incrementGuarantee = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="discount", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $discount = '0';
+
+    /**
      * @var float|null
      *
-     * @ORM\Column(name="tax", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="total", type="float", precision=10, scale=0, nullable=true)
      */
-    private $tax;
+    private $total;
 
     /**
      * @var float|null
@@ -93,11 +128,18 @@ class FlightReservation
     private $currencyRateCovertion;
 
     /**
-     * @var string|null
+     * @var float|null
      *
-     * @ORM\Column(name="code_return", type="string", length=255, nullable=true)
+     * @ORM\Column(name="dollar_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
      */
-    private $codeReturn;
+    private $dollarRateSellCovertion;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="currency_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $currencyRateSellCovertion;
 
     /**
      * @var int|null
@@ -123,27 +165,6 @@ class FlightReservation
     /**
      * @var string|null
      *
-     * @ORM\Column(name="payment_method", type="string", length=255, nullable=true, options={"default"="TDC"})
-     */
-    private $paymentMethod = 'TDC';
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="dollar_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $dollarRateSellCovertion;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="currency_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $currencyRateSellCovertion;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="ip_address", type="string", length=16, nullable=true)
      */
     private $ipAddress;
@@ -156,30 +177,45 @@ class FlightReservation
     private $origin;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
      * @var \CurrencyType
      *
      * @ORM\ManyToOne(targetEntity="CurrencyType")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="currency", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="currency_type_id", referencedColumnName="id")
      * })
      */
-    private $currency;
+    private $currencyType;
+
+    /**
+     * @var \FlightTypeSchedule
+     *
+     * @ORM\ManyToOne(targetEntity="FlightTypeSchedule")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="flight_type_schedule_id", referencedColumnName="id")
+     * })
+     */
+    private $flightTypeSchedule;
+
+    /**
+     * @var \FlightClass
+     *
+     * @ORM\ManyToOne(targetEntity="FlightClass")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="flight_class_id", referencedColumnName="id")
+     * })
+     */
+    private $flightClass;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(?string $code): self
-    {
-        $this->code = $code;
-
-        return $this;
     }
 
     public function getReservationDate(): ?\DateTimeInterface
@@ -190,30 +226,6 @@ class FlightReservation
     public function setReservationDate(\DateTimeInterface $reservationDate): self
     {
         $this->reservationDate = $reservationDate;
-
-        return $this;
-    }
-
-    public function getState(): ?int
-    {
-        return $this->state;
-    }
-
-    public function setState(?int $state): self
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function getTotalToPay(): ?float
-    {
-        return $this->totalToPay;
-    }
-
-    public function setTotalToPay(?float $totalToPay): self
-    {
-        $this->totalToPay = $totalToPay;
 
         return $this;
     }
@@ -254,14 +266,110 @@ class FlightReservation
         return $this;
     }
 
+    public function getInfNumber(): ?int
+    {
+        return $this->infNumber;
+    }
+
+    public function setInfNumber(?int $infNumber): self
+    {
+        $this->infNumber = $infNumber;
+
+        return $this;
+    }
+
+    public function getInsNumber(): ?int
+    {
+        return $this->insNumber;
+    }
+
+    public function setInsNumber(?int $insNumber): self
+    {
+        $this->insNumber = $insNumber;
+
+        return $this;
+    }
+
+    public function getSubtotalNoExtraIncrement(): ?float
+    {
+        return $this->subtotalNoExtraIncrement;
+    }
+
+    public function setSubtotalNoExtraIncrement(float $subtotalNoExtraIncrement): self
+    {
+        $this->subtotalNoExtraIncrement = $subtotalNoExtraIncrement;
+
+        return $this;
+    }
+
+    public function getSubtotal(): ?float
+    {
+        return $this->subtotal;
+    }
+
+    public function setSubtotal(float $subtotal): self
+    {
+        $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
     public function getTax(): ?float
     {
         return $this->tax;
     }
 
-    public function setTax(?float $tax): self
+    public function setTax(float $tax): self
     {
         $this->tax = $tax;
+
+        return $this;
+    }
+
+    public function getIncrementExpenses(): ?float
+    {
+        return $this->incrementExpenses;
+    }
+
+    public function setIncrementExpenses(float $incrementExpenses): self
+    {
+        $this->incrementExpenses = $incrementExpenses;
+
+        return $this;
+    }
+
+    public function getIncrementGuarantee(): ?float
+    {
+        return $this->incrementGuarantee;
+    }
+
+    public function setIncrementGuarantee(float $incrementGuarantee): self
+    {
+        $this->incrementGuarantee = $incrementGuarantee;
+
+        return $this;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(float $discount): self
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getTotal(): ?float
+    {
+        return $this->total;
+    }
+
+    public function setTotal(?float $total): self
+    {
+        $this->total = $total;
 
         return $this;
     }
@@ -290,14 +398,26 @@ class FlightReservation
         return $this;
     }
 
-    public function getCodeReturn(): ?string
+    public function getDollarRateSellCovertion(): ?float
     {
-        return $this->codeReturn;
+        return $this->dollarRateSellCovertion;
     }
 
-    public function setCodeReturn(?string $codeReturn): self
+    public function setDollarRateSellCovertion(?float $dollarRateSellCovertion): self
     {
-        $this->codeReturn = $codeReturn;
+        $this->dollarRateSellCovertion = $dollarRateSellCovertion;
+
+        return $this;
+    }
+
+    public function getCurrencyRateSellCovertion(): ?float
+    {
+        return $this->currencyRateSellCovertion;
+    }
+
+    public function setCurrencyRateSellCovertion(?float $currencyRateSellCovertion): self
+    {
+        $this->currencyRateSellCovertion = $currencyRateSellCovertion;
 
         return $this;
     }
@@ -338,42 +458,6 @@ class FlightReservation
         return $this;
     }
 
-    public function getPaymentMethod(): ?string
-    {
-        return $this->paymentMethod;
-    }
-
-    public function setPaymentMethod(?string $paymentMethod): self
-    {
-        $this->paymentMethod = $paymentMethod;
-
-        return $this;
-    }
-
-    public function getDollarRateSellCovertion(): ?float
-    {
-        return $this->dollarRateSellCovertion;
-    }
-
-    public function setDollarRateSellCovertion(?float $dollarRateSellCovertion): self
-    {
-        $this->dollarRateSellCovertion = $dollarRateSellCovertion;
-
-        return $this;
-    }
-
-    public function getCurrencyRateSellCovertion(): ?float
-    {
-        return $this->currencyRateSellCovertion;
-    }
-
-    public function setCurrencyRateSellCovertion(?float $currencyRateSellCovertion): self
-    {
-        $this->currencyRateSellCovertion = $currencyRateSellCovertion;
-
-        return $this;
-    }
-
     public function getIpAddress(): ?string
     {
         return $this->ipAddress;
@@ -398,14 +482,50 @@ class FlightReservation
         return $this;
     }
 
-    public function getCurrency(): ?CurrencyType
+    public function getStatus(): ?int
     {
-        return $this->currency;
+        return $this->status;
     }
 
-    public function setCurrency(?CurrencyType $currency): self
+    public function setStatus(?int $status): self
     {
-        $this->currency = $currency;
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCurrencyType(): ?CurrencyType
+    {
+        return $this->currencyType;
+    }
+
+    public function setCurrencyType(?CurrencyType $currencyType): self
+    {
+        $this->currencyType = $currencyType;
+
+        return $this;
+    }
+
+    public function getFlightTypeSchedule(): ?FlightTypeSchedule
+    {
+        return $this->flightTypeSchedule;
+    }
+
+    public function setFlightTypeSchedule(?FlightTypeSchedule $flightTypeSchedule): self
+    {
+        $this->flightTypeSchedule = $flightTypeSchedule;
+
+        return $this;
+    }
+
+    public function getFlightClass(): ?FlightClass
+    {
+        return $this->flightClass;
+    }
+
+    public function setFlightClass(?FlightClass $flightClass): self
+    {
+        $this->flightClass = $flightClass;
 
         return $this;
     }

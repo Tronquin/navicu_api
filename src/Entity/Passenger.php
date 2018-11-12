@@ -44,9 +44,9 @@ class Passenger
     private $documentType;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="document_number", type="integer", nullable=false)
+     * @ORM\Column(name="document_number", type="string", length=15, nullable=false)
      */
     private $documentNumber;
 
@@ -63,6 +63,13 @@ class Passenger
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="padre_id", type="integer", nullable=true)
+     */
+    private $padreId;
 
     /**
      * @var \FlightReservation
@@ -115,12 +122,12 @@ class Passenger
         return $this;
     }
 
-    public function getDocumentNumber(): ?int
+    public function getDocumentNumber(): ?string
     {
         return $this->documentNumber;
     }
 
-    public function setDocumentNumber(int $documentNumber): self
+    public function setDocumentNumber(string $documentNumber): self
     {
         $this->documentNumber = $documentNumber;
 
@@ -147,6 +154,18 @@ class Passenger
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPadreId(): ?int
+    {
+        return $this->padreId;
+    }
+
+    public function setPadreId(?int $padreId): self
+    {
+        $this->padreId = $padreId;
 
         return $this;
     }

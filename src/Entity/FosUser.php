@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FosUser
  *
- * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_957a647992fc23a8", columns={"username_canonical"}), @ORM\UniqueConstraint(name="uniq_957a64792995fd7e", columns={"reservation_change_history_id"}), @ORM\UniqueConstraint(name="uniq_957a64799e908bfd", columns={"owner_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a6479a0d96fbf", columns={"email_canonical"}), @ORM\UniqueConstraint(name="uniq_957a6479289427d2", columns={"aavv_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a64791716ede3", columns={"nvc_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a64791e342518", columns={"temp_owner_id"})}, indexes={@ORM\Index(name="idx_957a64798530a5dc", columns={"subdomain_id"}), @ORM\Index(name="idx_957a6479a108e8d", columns={"logs_users_id"})})
+ * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_957a64791e342518", columns={"temp_owner_id"}), @ORM\UniqueConstraint(name="uniq_957a6479289427d2", columns={"aavv_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a64791716ede3", columns={"nvc_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a64799e908bfd", columns={"owner_profile_id"}), @ORM\UniqueConstraint(name="uniq_957a6479a0d96fbf", columns={"email_canonical"}), @ORM\UniqueConstraint(name="uniq_957a64792995fd7e", columns={"reservation_change_history_id"}), @ORM\UniqueConstraint(name="uniq_957a647992fc23a8", columns={"username_canonical"})}, indexes={@ORM\Index(name="idx_957a64798530a5dc", columns={"subdomain_id"}), @ORM\Index(name="idx_957a6479a108e8d", columns={"logs_users_id"})})
  * @ORM\Entity
  */
 class FosUser

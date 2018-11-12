@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PaymentInfoProperty
  *
- * @ORM\Table(name="payment_info_property", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_61c36e798bf21cde", columns={"property"}), @ORM\UniqueConstraint(name="uniq_61c36e79e447aca8", columns={"rif_id"})}, indexes={@ORM\Index(name="idx_61c36e7938248176", columns={"currency_id"}), @ORM\Index(name="idx_61c36e795e9e89cb", columns={"location"})})
+ * @ORM\Table(name="payment_info_property", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_61c36e79e447aca8", columns={"rif_id"}), @ORM\UniqueConstraint(name="uniq_61c36e798bf21cde", columns={"property"})}, indexes={@ORM\Index(name="idx_61c36e7938248176", columns={"currency_id"}), @ORM\Index(name="idx_61c36e795e9e89cb", columns={"location"})})
  * @ORM\Entity
  */
 class PaymentInfoProperty

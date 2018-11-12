@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PropertyCurrency
  *
- * @ORM\Table(name="property_currency", indexes={@ORM\Index(name="idx_37d1bc7b549213ec", columns={"property_id"}), @ORM\Index(name="idx_37d1bc7b16fe72e1", columns={"updated_by"}), @ORM\Index(name="idx_37d1bc7bde12ab56", columns={"created_by"}), @ORM\Index(name="idx_37d1bc7b38248176", columns={"currency_id"})})
+ * @ORM\Table(name="property_currency", indexes={@ORM\Index(name="idx_37d1bc7b549213ec", columns={"property_id"}), @ORM\Index(name="idx_37d1bc7b38248176", columns={"currency_id"}), @ORM\Index(name="idx_37d1bc7bde12ab56", columns={"created_by"}), @ORM\Index(name="idx_37d1bc7b16fe72e1", columns={"updated_by"})})
  * @ORM\Entity
  */
 class PropertyCurrency
@@ -58,14 +58,14 @@ class PropertyCurrency
     private $rateType = '2';
 
     /**
-     * @var \Property
+     * @var \NvcProfile
      *
-     * @ORM\ManyToOne(targetEntity="Property")
+     * @ORM\ManyToOne(targetEntity="NvcProfile")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
      * })
      */
-    private $property;
+    private $updatedBy;
 
     /**
      * @var \CurrencyType
@@ -78,6 +78,16 @@ class PropertyCurrency
     private $currency;
 
     /**
+     * @var \Property
+     *
+     * @ORM\ManyToOne(targetEntity="Property")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="property_id", referencedColumnName="id")
+     * })
+     */
+    private $property;
+
+    /**
      * @var \NvcProfile
      *
      * @ORM\ManyToOne(targetEntity="NvcProfile")
@@ -86,16 +96,6 @@ class PropertyCurrency
      * })
      */
     private $createdBy;
-
-    /**
-     * @var \NvcProfile
-     *
-     * @ORM\ManyToOne(targetEntity="NvcProfile")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     * })
-     */
-    private $updatedBy;
 
     public function getId(): ?int
     {
@@ -162,14 +162,14 @@ class PropertyCurrency
         return $this;
     }
 
-    public function getProperty(): ?Property
+    public function getUpdatedBy(): ?NvcProfile
     {
-        return $this->property;
+        return $this->updatedBy;
     }
 
-    public function setProperty(?Property $property): self
+    public function setUpdatedBy(?NvcProfile $updatedBy): self
     {
-        $this->property = $property;
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }
@@ -186,6 +186,18 @@ class PropertyCurrency
         return $this;
     }
 
+    public function getProperty(): ?Property
+    {
+        return $this->property;
+    }
+
+    public function setProperty(?Property $property): self
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
     public function getCreatedBy(): ?NvcProfile
     {
         return $this->createdBy;
@@ -194,18 +206,6 @@ class PropertyCurrency
     public function setCreatedBy(?NvcProfile $createdBy): self
     {
         $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?NvcProfile
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?NvcProfile $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }
