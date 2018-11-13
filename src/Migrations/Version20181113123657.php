@@ -17,8 +17,6 @@ final class Version20181113123657 extends AbstractMigration
 
         $this->addSql('ALTER TABLE airport ADD city_name VARCHAR(255)');
 
-
-
         $this->addSql("UPDATE airport set city_name = 'AMBLER' WHERE iata = 'ABL'");
         $this->addSql("UPDATE airport set city_name = 'ALBUQUERQUE' WHERE iata = 'ABQ'");
         $this->addSql("UPDATE airport set city_name = 'ABERDEEN' WHERE iata = 'ABR'");
