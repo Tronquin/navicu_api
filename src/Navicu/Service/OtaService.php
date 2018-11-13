@@ -2,7 +2,7 @@
 
 namespace App\Navicu\Service;
 
-use App\Navicu\Exception\NavicuException;
+use App\Navicu\Exception\OtaException;
 use Symfony\Component\Dotenv\Dotenv;
 
 /**
@@ -28,12 +28,15 @@ class OtaService
     const URL_SEAT_MAP = 'seatMap';
     const URL_CANCEL = 'cancel';
 
+    /** Codigos de respuesta de OTA */
+    const CODE_SUCCESS = 1;
+
     /**
      * Hace una busqueda one way en OTA
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function oneWay(array $params) : array
     {
@@ -55,7 +58,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_ONE_WAY, $params);
@@ -66,7 +69,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function roundTrip(array $params) : array
     {
@@ -89,7 +92,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_ROUND_TRIP, $params);
@@ -100,7 +103,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function multiple(array $params) : array
     {
@@ -120,7 +123,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_MULTIPLE, $params);
@@ -131,7 +134,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function calendar(array $params) : array
     {
@@ -152,7 +155,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_CALENDAR, $params);
@@ -163,7 +166,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function book(array $params) : array
     {
@@ -181,7 +184,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_BOOK, $params);
@@ -192,7 +195,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function ticket(array $params) : array
     {
@@ -207,7 +210,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_TICKET, $params);
@@ -218,7 +221,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function ticketTest(array $params) : array
     {
@@ -233,7 +236,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_TICKET_TEST, $params);
@@ -244,7 +247,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function fareFamily(array $params) : array
     {
@@ -261,7 +264,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_FARE_FAMILY, $params);
@@ -272,7 +275,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function seatMap(array $params) : array
     {
@@ -281,6 +284,7 @@ class OtaService
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'origin' => 'required|regex:/^[A-Z]{3}$/',
             'dest' => 'required|regex:/^[A-Z]{3}$/',
             'date' => 'required|date_format:Y-m-d',
             'airline' => 'required|regex:/^[A-Z0-9]{2}$/',
@@ -289,7 +293,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_SEAT_MAP, $params);
@@ -300,7 +304,7 @@ class OtaService
      *
      * @param array $params
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     public static function cancel(array $params) : array
     {
@@ -313,7 +317,7 @@ class OtaService
         ]);
 
         if ($validator->hasError()) {
-            throw new NavicuException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
         return self::send(self::URL_CANCEL, $params);
@@ -326,7 +330,7 @@ class OtaService
      * @param array $params
      * @param string $method
      * @return array
-     * @throws NavicuException
+     * @throws OtaException
      */
     private static function send(string $url, array $params, string $method = self::METHOD_GET) : array
     {
@@ -364,7 +368,7 @@ class OtaService
         $response = json_decode(curl_exec($ch), true);
 
         if (! $response) {
-            throw new NavicuException('Bad request to OTA');
+            throw new OtaException('Bad request to OTA');
         }
 
         return $response;

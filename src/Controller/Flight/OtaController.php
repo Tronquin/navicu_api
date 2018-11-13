@@ -2,45 +2,45 @@
 
 namespace App\Controller\Flight;
 
-use App\Navicu\Handler\Flight\AutocompleteHandler;
-use App\Navicu\Handler\Flight\CabinHandler;
+use App\Navicu\Handler\Ota\FareFamilyHandler;
+use App\Navicu\Handler\Ota\SeatMapHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/flight")
+ * @Route("/ota")
  */
-class FlightController extends AbstractController
+class OtaController extends AbstractController
 {
     /**
-     * Autocompletado para el buscador de boleteria
+     * Obtiene informacion de Fare Family
      *
-     * @Route("/autocomplete/{words}", name="flight_autocomplete", methods="GET")
+     * @Route("/fare_family", name="flight_ota_fare_family", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function autoComplete(Request $request)
+    public function fareFamily(Request $request)
     {
-        $handler = new AutocompleteHandler($request);
+        $handler = new FareFamilyHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
     }
 
     /**
-     * Obtiene listado de cabinas (First class, business, etc)
+     * Obtiene el mapa de asientos del avion
      *
-     * @Route("/cabins", name="flight_cabins", methods="GET")
+     * @Route("/seat_map", name="flight_ota_seat_map", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function cabins(Request $request)
+    public function seatMap(Request $request)
     {
-        $handler = new CabinHandler($request);
+        $handler = new SeatMapHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
