@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Airport;
 use App\Entity\OAuthUser;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -13,14 +12,15 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method OAuthUser[]    findAll()
  * @method OAuthUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AirportRepository extends ServiceEntityRepository
+class AirportRepository extends BaseRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Airport::class);
     }
 
-    /**
+        /**
      * Busqueda por autocompletado
      *
      * @param $words
@@ -29,6 +29,9 @@ class AirportRepository extends ServiceEntityRepository
     public function findByWords(string $words) : array
     {
         $words = strtolower($words);
+        $separatedWords = $this->separateByType($words, []);
+
+        $tsQuery = $this->getTsQuery($separatedWords['tsQuery'], "vector");
 
         return $this->getEntityManager()
             ->getConnection()
@@ -40,7 +43,7 @@ class AirportRepository extends ServiceEntityRepository
                     a.location_name as city,
                     a.city_name
                 FROM web_fligths_autocompleted_view a
-                WHERE a.visible = TRUE AND LOWER(a.vector::varchar) LIKE '%{$words}%'
+                WHERE a.visible = TRUE AND ".$tsQuery. "
                 LIMIT 10
             ")
             ->fetchAll()

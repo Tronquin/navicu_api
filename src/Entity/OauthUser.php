@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * OauthUser
  *
  * @ORM\Table(name="oauth_user", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_86da15d877153098", columns={"code"})})
- * @ORM\Entity
- */
+ * @ORM\Entity* @ORM\Entity(repositoryClass="App\Repository\OAuthUserRepository"))*/
 class OauthUser
 {
     /**

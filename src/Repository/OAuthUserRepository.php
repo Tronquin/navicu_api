@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method OAuthUser[]    findAll()
  * @method OAuthUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OAuthUserRepository extends ServiceEntityRepository
+class OAuthUserRepository extends BaseRepository
 {
     public function __construct(RegistryInterface $registry)
     {
