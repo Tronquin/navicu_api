@@ -160,9 +160,6 @@ final class Version20181113145730 extends AbstractMigration
 			        ON UPDATE NO ACTION
 			        ON DELETE NO ACTION	");
 
-
-
-
 			$this->addSql('
 			create table public.gds (
 				id integer NOT NULL,
@@ -223,97 +220,6 @@ final class Version20181113145730 extends AbstractMigration
 			        ON DELETE NO ACTION)");
 
 
-
-
-
-				$this->addSql("alter table flight drop CONSTRAINT fk_c257e60ef73df7ae");
-
-				$this->addSql("update flight set flight_reservation =
-				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
-				and flight.flight_reservation = fr.id)");
-
-
-				$this->addSql("alter table flight add constraint fk_c257e60ef73df7ae
-				FOREIGN KEY (flight_reservation)
-				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
-		
-
-				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4c257e60e");
-				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4f73df7ae");
-				$this->addSql("alter table flight_ticket add passenger_id integer");
-				$this->addSql("alter table flight_ticket add constraint fk_flight_ticket_passenger
-				FOREIGN KEY (passenger_id)
-				        REFERENCES public.passenger (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
-
-				$this->addSql("
-				update flight_ticket set flight_reservation =
-				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
-				and flight_ticket.flight_reservation = fr.id)");
-
-				$this->addSql("
-				alter table flight add constraint fk_a8c6fcb4f73df7ae
-				FOREIGN KEY (flight_reservation)
-				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
-						
-				$this->addSql("		
-				create table public.flight_seat_reservation (
-					id serial,
-					passenger_id integer not null,
-					flight_id integer not null,
-					seat character varying(15),
-					description text, -- (DC2Type:json_array)
-					CONSTRAINT flight_seat_reservation_pkey PRIMARY KEY (id)
-				)");
-
-				$this->addSql("		
-				alter table flight_seat_reservation add constraint fk_passenger_seat_flight
-				FOREIGN KEY (passenger_id)
-				        REFERENCES public.passenger (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
-						
-				$this->addSql("				
-				alter table flight_seat_reservation add constraint fk_flight_seat_flight
-				FOREIGN KEY (flight_id)
-				        REFERENCES public.flight (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");	
-						
-				$this->addSql("alter table passenger add padre_id integer");
-
-
-				$this->addSql("
-				create table flight_fare_family (
-					id serial NOT NULL,
-					flight_reservation_gds_id integer,
-					name character varying(255),
-					description text,
-					itinerary text,-- (DC2Type:json_array)
-					services text,-- (DC2Type:json_array)
-					search_options text, -- (DC2Type:json_array)
-					prices text, -- (DC2Type:json_array)
-					selected boolean,
-					status integer,
-					
-					CONSTRAINT pk_flight_fare_family PRIMARY KEY (id)
-				)");
-
-				$this->addSql("
-				alter table flight_fare_family add constraint fk_flight_fare_family_reservation
-				FOREIGN KEY (flight_reservation_gds_id)
-				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");	
-
-
-
-
 				$this->addSql("
 				insert into public.flight_reservation_gds (
 				id,
@@ -370,8 +276,85 @@ final class Version20181113145730 extends AbstractMigration
 					1
 					
 				from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id group by fr.id");
+				
+
+				$this->addSql("alter table flight drop CONSTRAINT fk_c257e60ef73df7ae");
+
+				$this->addSql("update flight set flight_reservation =
+				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
+				and flight.flight_reservation = fr.id)");
 
 
+				$this->addSql("alter table flight add constraint fk_c257e60ef73df7ae
+				FOREIGN KEY (flight_reservation)
+				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");
+		
+
+				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4c257e60e");
+				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4f73df7ae");
+				$this->addSql("alter table flight_ticket add passenger_id integer");
+				$this->addSql("alter table flight_ticket add constraint fk_flight_ticket_passenger
+				FOREIGN KEY (passenger_id)
+				        REFERENCES public.passenger (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");
+
+				$this->addSql("
+				update flight_ticket set flight_reservation =
+				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
+				and flight_ticket.flight_reservation = fr.id)");
+						
+				$this->addSql("		
+				create table public.flight_seat_reservation (
+					id serial,
+					passenger_id integer not null,
+					flight_id integer not null,
+					seat character varying(15),
+					description text, -- (DC2Type:json_array)
+					CONSTRAINT flight_seat_reservation_pkey PRIMARY KEY (id)
+				)");
+
+				$this->addSql("		
+				alter table flight_seat_reservation add constraint fk_passenger_seat_flight
+				FOREIGN KEY (passenger_id)
+				        REFERENCES public.passenger (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");
+						
+				$this->addSql("				
+				alter table flight_seat_reservation add constraint fk_flight_seat_flight
+				FOREIGN KEY (flight_id)
+				        REFERENCES public.flight (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");	
+						
+				$this->addSql("alter table passenger add padre_id integer");
+
+
+				$this->addSql("
+				create table flight_fare_family (
+					id serial NOT NULL,
+					flight_reservation_gds_id integer,
+					name character varying(255),
+					description text,
+					itinerary text,-- (DC2Type:json_array)
+					services text,-- (DC2Type:json_array)
+					search_options text, -- (DC2Type:json_array)
+					prices text, -- (DC2Type:json_array)
+					selected boolean,
+					status integer,
+					
+					CONSTRAINT pk_flight_fare_family PRIMARY KEY (id)
+				)");
+
+				$this->addSql("
+				alter table flight_fare_family add constraint fk_flight_fare_family_reservation
+				FOREIGN KEY (flight_reservation_gds_id)
+				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");	
 
 
 				$this->addSql("alter table flight drop increment_expenses");
