@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ExchangeRateHistory
  *
  * @ORM\Table(name="exchange_rate_history", indexes={@ORM\Index(name="idx_51c18a99669145d", columns={"currency_type"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ExchangeRateHistoryRepository")
  */
 class ExchangeRateHistory
 {
