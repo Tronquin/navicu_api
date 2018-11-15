@@ -224,4 +224,137 @@ class CurrencyType
         return $this;
     }
 
+
+
+
+
+
+
+
+
+
+     /**
+     * Consulta la moneda local activa de venezuela
+     * @return CurrencyType
+     */
+    public static function getLocalActiveCurrency(){
+        global  $kernel;
+        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        $activeCurrency = $em->getRepository(CurrencyType::class)->findOneBy(['localActive' => true]);
+        return $activeCurrency;
+    }
+
+    /**
+     * Consulta la moneda local activa anterior de venezuela
+     * @return CurrencyType
+     */
+    public static function getLocalPreviousCurrency(){
+        global  $kernel;
+        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        $previousCurrency = $em->getRepository(CurrencyType::class)->findOneBy(['id' => 148]);
+        return $previousCurrency;
+    }
+
+    /**
+     * Indica si una moneda en dolar
+     * @param $alpha3
+     * @return bool
+     */
+
+    public static function getExtraPreviousCurrency(){
+        global  $kernel;
+        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        $previousCurrency = $em->getRepository(CurrencyType::class)->findOneBy(['id' => 145]);
+        return $previousCurrency;
+    }
+
+
+    /**
+     * Indica si una moneda es la anterior activa en Venezuela
+     * @param $alpha3
+     * @return bool
+     */
+    public static function isLocalPreviousCurrency($alpha3) {
+        $previousCurrency = self::getLocalPreviousCurrency();
+        if ($alpha3 === $previousCurrency->getAlfa3())
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Indica si una moneda es la actual activa en venezuela
+     * @param $alpha3
+     * @return bool
+     */
+    public static function isLocalActiveCurrency($alpha3) {
+        $activeCurrency = self::getLocalActiveCurrency();
+        if ($alpha3 === $activeCurrency->getAlfa3())
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Obtiene las monedas locales de venezuela
+     * @return mixed
+     */
+    public static function getLocalCurrencies(){
+        global  $kernel;
+        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        $activeCurrencies = $em->getRepository(CurrencyType::class)->findBy(['local' => true]);
+
+        return $activeCurrencies;
+    }
+
+    /**
+     * Indica si una moneda es de venezuela
+     *
+     * @param $alpha3
+     * @return bool
+     */
+    public static function isLocalCurrency($alpha3) {
+        $activeCurrencies = self::getLocalCurrencies();
+
+        foreach ($activeCurrencies as $activeCurrency){
+            if ($alpha3 === $activeCurrency->getAlfa3())
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve la tasa de reconversión
+     *     * 
+     * @return float
+     */
+    public static function getRateReconversion() {
+        return 100000;
+    }
+    /**
+     * Convierte la cantidad a moneda local actual (Venezuela)
+     *
+     * @param $alfa3
+     * @return bool
+     */
+    public static function showActiveCurrencyAmount($amount, $alfa3){
+        if ((self::isLocalActiveCurrency($alfa3) || (! self::isLocalCurrency($alfa3)))){
+            return $amount;
+        }
+        return round($amount/self::getRateReconversion(), 2);
+    }
+
+    /**
+     * Convierte la cantidad a moneda local anterior (Venezuela)
+     *
+     * @param $alfa3
+     * @return bool
+     */
+    public static function showPreviousCurrencyAmount($amount, $alfa3){
+        if (self::isLocalPreviousCurrency($alfa3)) {
+            return $amount;
+        }
+        return $amount*self::getRateReconversion();
+    }
+
 }

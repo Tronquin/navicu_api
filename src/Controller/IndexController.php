@@ -18,4 +18,5 @@ class IndexController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
+   
 }

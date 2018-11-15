@@ -184,12 +184,19 @@ class FlightReservationGds
     /**
      * @var \FlightReservation
      *
-     * @ORM\ManyToOne(targetEntity="FlightReservation")
+     * @ORM\ManyToOne(targetEntity="FlightReservation", inversedBy="gdsReservations")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="flight_reservation_id", referencedColumnName="id")
      * })
      */
     private $flightReservation;
+
+        /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flight") 
+     */
+    private $flights;
+
 
     public function getId(): ?int
     {

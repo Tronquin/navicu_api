@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * FlightReservation
  *
  * @ORM\Table(name="flight_reservation", indexes={@ORM\Index(name="IDX_F73DF7AE18E5767C", columns={"currency_type_id"}), @ORM\Index(name="IDX_F73DF7AE7E6A667", columns={"flight_type_schedule_id"}), @ORM\Index(name="IDX_F73DF7AEF3EFD182", columns={"flight_class_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\FlightReservationRepository"))
  */
 class FlightReservation
 {
@@ -212,6 +212,20 @@ class FlightReservation
      * })
      */
     private $flightClass;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="FlightReservationGds", mappedBy="flightReservation") 
+     */
+    private $gdsReservations;
+
+
+
+    public function __construct()
+    {
+        $this->$gdsReservations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -528,6 +542,32 @@ class FlightReservation
         $this->flightClass = $flightClass;
 
         return $this;
+    }
+
+    /**
+     * Add FlightReservationGds
+     *   
+     */
+    public function addFlightReservationGds(FlightReservationGds $flightReservationGds)
+    {
+        $this->gdsReservations[] = $flightReservationGds;
+
+        $flightReservationGds->setReservation($this);
+
+        return $this;
+    }
+
+    public function removeFlightReservationGds(FlightReservationGds $flightReservationGds)
+    {
+        $this->gdsReservation->removeElement($flightReservationGds);
+    }
+
+    /**
+    *
+    */
+    public function getFlightReservationGds()
+    {
+        return $this->gdsReservations;
     }
 
 

@@ -22,6 +22,7 @@ class TokenSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
+    /*    
         if (! $request->headers->has('navicu_token')) {
 
             return $event->setController(function () {
@@ -32,7 +33,7 @@ class TokenSubscriber implements EventSubscriberInterface
         $manager = $this->container->get('doctrine')->getManager();
         $token = $request->headers->get('navicu_token');
 
-        /** @var OAuthUser $oAuthUser */
+
         $oAuthUser = $manager->getRepository(OauthUser::class)->findOneBy(['token' => $token]);
 
         if (! $oAuthUser) {
@@ -51,6 +52,7 @@ class TokenSubscriber implements EventSubscriberInterface
                 return new JsonResponse(['code' => 400, 'errors' => ['token expired']]);
             });
         }
+     */   
     }
 
     public static function getSubscribedEvents()

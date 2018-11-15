@@ -4,6 +4,8 @@ namespace App\Controller\Flight;
 
 use App\Navicu\Handler\Flight\AutocompleteHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
+use App\Navicu\Handler\Flight\ListHandler;
+use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,4 +47,39 @@ class FlightController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
+
+
+     /**
+     * Obtiene listado de vuelos 
+     *
+     * @Route("/list", name="flight_list", methods="GET")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function list(Request $request)
+    {
+        $handler = new ListHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+
+    /**
+     * Obtiene listado de vuelos 
+     *
+     * @Route("/resume", name="flight_resume_resevation", methods="GET")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function resumeReservation(Request $request)
+    {
+        $handler = new ResumeReservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
 }
