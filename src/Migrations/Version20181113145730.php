@@ -17,72 +17,54 @@ final class Version20181113145730 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('create table public.flight_type_schedule (
-							id integer NOT NULL,
-							name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-							description text,
-							CONSTRAINT flight_type_schedule_pkey PRIMARY KEY (id)
+                            id integer NOT NULL,
+                            name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+                            description text,
+                            CONSTRAINT flight_type_schedule_pkey PRIMARY KEY (id)
 
-					 )');
+                     )');
 
 		$this->addSql("insert into flight_type_schedule values (1, 'oneWay', 'oneWay')");
 		$this->addSql("insert into flight_type_schedule values (2, 'roundTrip', 'roundTrip')");
 		$this->addSql("alter table flight_reservation rename to flight_reservation_v1");
 
-		$this->addSql('create table public.flight_class (
-							id integer NOT NULL,
-							name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-							description text,
-							CONSTRAINT flight_class_pkey PRIMARY KEY (id)
-					)
-		');
+		$this->addSql('create table public.flight_cabin (
+                            id integer NOT NULL,
+                            name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+                            description text,
+                            CONSTRAINT flight_cabin_pkey PRIMARY KEY (id)
+                    )');
 
-		$this->addSql("insert into flight_class values (1, 'undefined', 'no registrado')");
-		$this->addSql("insert into flight_class values (2, 'Economica', 'Economica')");
+		$this->addSql("insert into flight_cabin values (1, 'undefined', 'no registrado')");
+		$this->addSql("insert into flight_cabin values (2, 'Economica', 'Economica')");
 
 		$this->addSql("
 		CREATE TABLE public.flight_reservation
-		(
-		    id serial,
-		    reservation_date timestamp(0) without time zone NOT NULL,    
-		    public_id character varying(255) NOT NULL,
-		    flight_class_id integer,
-		    currency_type_id integer,
-		    flight_type_schedule_id integer,
-		    child_number integer,
-		    adult_number integer,
-		    inf_number integer,
-			ins_number integer,    
-			subtotal_no_extra_increment double precision NOT NULL DEFAULT 0,
-			subtotal double precision NOT NULL DEFAULT 0,	
-			tax double precision NOT NULL DEFAULT 0,	
-			increment_expenses double precision NOT NULL DEFAULT 0,
-		    increment_guarantee double precision NOT NULL DEFAULT 0,	    
-		    discount double precision NOT NULL DEFAULT 0,
-		    total double precision,
-			dollar_rate_covertion double precision,
-		    currency_rate_covertion double precision,
-		    dollar_rate_sell_covertion double precision,
-		    currency_rate_sell_covertion double precision,	    
-			confirmation_status integer,
-		    confirmation_log text ,		
-		    type character varying(255) DEFAULT 'WEB'::character varying,
-		    ip_address character varying(16) DEFAULT NULL::character varying,
-		    origin character varying(255)  DEFAULT NULL::character varying,
-		    status integer,
-			CONSTRAINT flight_reservation_v2_pkey PRIMARY KEY (id),
-		    CONSTRAINT fk_f73df7ae6956883f_v2 FOREIGN KEY (currency_type_id)
-		        REFERENCES public.currency_type (id) MATCH SIMPLE
-		        ON UPDATE NO ACTION
-		        ON DELETE NO ACTION,
-		        CONSTRAINT fk_flight_reservation_nav_type_schedule FOREIGN KEY (flight_type_schedule_id )
-		        REFERENCES public.flight_type_schedule(id) MATCH SIMPLE
-		        ON UPDATE NO ACTION
-		        ON DELETE NO ACTION,
-			CONSTRAINT fk_flight_reservation_class FOREIGN KEY (flight_class_id)
-		        REFERENCES public.flight_class (id) MATCH SIMPLE
-		        ON UPDATE NO ACTION
-		        ON DELETE NO ACTION)	"
-		    );
+        (
+            id serial,
+            reservation_date timestamp(0) without time zone NOT NULL,   
+            public_id character varying(255) NOT NULL,
+            flight_cabin_id integer,
+            flight_type_schedule_id integer,
+            child_number integer,
+            adult_number integer,
+            inf_number integer,
+            ins_number integer,         
+            confirmation_status integer,
+            confirmation_log text ,       
+            type character varying(255) DEFAULT 'WEB'::character varying,
+            ip_address character varying(16) DEFAULT NULL::character varying,
+            origin character varying(255)  DEFAULT NULL::character varying,
+            status integer,
+            CONSTRAINT flight_reservation_v2_pkey PRIMARY KEY (id),
+                CONSTRAINT fk_flight_reservation_nav_type_schedule FOREIGN KEY (flight_type_schedule_id )
+                REFERENCES public.flight_type_schedule(id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION,
+            CONSTRAINT fk_flight_reservation_cabin FOREIGN KEY (flight_cabin_id)
+                REFERENCES public.flight_cabin (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION)    "   );
 
 
 
@@ -90,24 +72,12 @@ final class Version20181113145730 extends AbstractMigration
 			id,	
 			reservation_date,        
 			    public_id ,
-				flight_class_id,   
-				currency_type_id ,
+				flight_cabin_id,   
 				flight_type_schedule_id,
 			    child_number,
 			    adult_number,	
 				inf_number, 
-				ins_number,    
-				subtotal_no_extra_increment ,
-				subtotal,
-				tax ,
-				increment_expenses ,
-			    increment_guarantee,	    
-			    discount,
-			    total,
-				dollar_rate_covertion ,
-			    currency_rate_covertion ,
-			    dollar_rate_sell_covertion ,
-			    currency_rate_sell_covertion,	    
+				ins_number,    	    
 				confirmation_status,
 			    confirmation_log,	
 			    type,
@@ -119,21 +89,11 @@ final class Version20181113145730 extends AbstractMigration
 				fr.reservation_date,   
 			    fr.public_id ,
 			    1,
-			    fr.currency,
 			    1,
 			    fr.child_number,
 			    fr.adult_number ,
 				0,
-				0,    
-			    sum(f.subtotal_no_extra_increment),
-				sum(price),
-				fr.tax ,
-				sum(f.increment_expenses), sum(f.increment_guarantee), sum(f.discount) ,
-				fr.total_to_pay,
-				fr.dollar_rate_covertion ,
-			    fr.currency_rate_covertion ,
-			    fr.dollar_rate_sell_covertion ,
-			    fr.currency_rate_sell_covertion,	    
+				0, 			    
 				fr.confirmation_status,
 			    fr.confirmation_log,	
 			    fr.type,
@@ -143,8 +103,6 @@ final class Version20181113145730 extends AbstractMigration
 
 			from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id group by fr.id");
 
-
-			
 			$this->addSql("alter table passenger drop constraint fk_3befe8ddf73df7ae");
 			$this->addSql("alter table flight_payment drop constraint fk_eec4679bf73df7ae");
 
@@ -160,6 +118,11 @@ final class Version20181113145730 extends AbstractMigration
 			        ON UPDATE NO ACTION
 			        ON DELETE NO ACTION	");
 
+
+		// fin reservation
+			
+			
+
 			$this->addSql('
 			create table public.gds (
 				id integer NOT NULL,
@@ -173,109 +136,123 @@ final class Version20181113145730 extends AbstractMigration
 
 			$this->addSql("
 			CREATE TABLE public.flight_reservation_gds
-			(
-			    id serial,
-			    currency_type_id integer,
-			    flight_reservation_id integer,
-			    flight_type_schedule_id integer,
-			    gds_id integer,
-			    book_code character varying(12),
-			    reservation_date timestamp(0) without time zone NOT NULL,    
-			    child_number integer,
-			    adult_number integer,
-			    inf_number integer,
-				ins_number integer,    
-				subtotal double precision NOT NULL DEFAULT 0,
-				tax double precision NOT NULL DEFAULT 0,
-				total double precision NOT NULL DEFAULT 0,
-				taxes character varying(255) ,
-				increment_consolidator double precision NOT NULL DEFAULT 0,
-				markup_increment_amount double precision,
-				markup_increment_type character varying(255) DEFAULT NULL::character varying,
-				markup_currency character varying(255) DEFAULT NULL::character varying,	
-				airline_provider integer,
-				airline_commision double precision,
-				is_refundable boolean,
-				status integer,
-				CONSTRAINT flight_reservation_gds_pkey PRIMARY KEY (id),
-			    CONSTRAINT fk_f73df7ae6956883f_currency FOREIGN KEY (currency_type_id)
-			        REFERENCES public.currency_type (id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION,
-				CONSTRAINT fk_flight_reservation_gds FOREIGN KEY (gds_id)
-			        REFERENCES public.gds (id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION,
-				CONSTRAINT fk_flight_reservation_type_schedule FOREIGN KEY (flight_type_schedule_id )
-			        REFERENCES public.flight_type_schedule(id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION,
-			        CONSTRAINT fk_flight_reservation_airline FOREIGN KEY (airline_provider)
-			        REFERENCES public.airline(id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION,
-				CONSTRAINT fk_gds_flight_reservation FOREIGN KEY (flight_reservation_id)
-			        REFERENCES public.flight_reservation (id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION)");
+            (
+                id serial,
+                currency_gds integer,
+                currency_reservation integer,
+                flight_reservation_id integer,
+                gds_id integer,
+                book_code character varying(12),
+                reservation_date timestamp(0) without time zone NOT NULL,   
+                child_number integer,
+                adult_number integer,
+                inf_number integer,
+                ins_number integer,   
+                subtotal_original double precision NOT NULL DEFAULT 0,
+                tax_original double precision NOT NULL DEFAULT 0,
+                taxes character varying(255) ,
+                subtotal double precision NOT NULL DEFAULT 0,   
+                tax double precision NOT NULL DEFAULT 0,
+                increment_consolidator double precision NOT NULL DEFAULT 0,
+                markup_increment_amount double precision,
+                markup_increment_type character varying(255) DEFAULT NULL::character varying,
+                markup_currency character varying(255) DEFAULT NULL::character varying,       
+                increment_expenses double precision NOT NULL DEFAULT 0,
+                increment_guarantee double precision NOT NULL DEFAULT 0,       
+                discount double precision NOT NULL DEFAULT 0,
+                tax_total double precision,               
+                airline_provider integer,
+                airline_commision double precision,
+                dollar_rate_covertion double precision,
+                currency_rate_covertion double precision,
+                is_refundable boolean,
+                status integer,
+                CONSTRAINT flight_reservation_gds_pkey PRIMARY KEY (id),
+                CONSTRAINT fk_f73df7ae6956883f1_currency_gds FOREIGN KEY (currency_gds)
+                    REFERENCES public.currency_type (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION,
+                CONSTRAINT fk_f73df7ae6956883f2_currency_res FOREIGN KEY (currency_reservation)
+                    REFERENCES public.currency_type (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION,   
+                CONSTRAINT fk_flight_reservation_gds FOREIGN KEY (gds_id)
+                    REFERENCES public.gds (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION,
+                    CONSTRAINT fk_flight_reservation_airline FOREIGN KEY (airline_provider)
+                    REFERENCES public.airline(id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION,
+                CONSTRAINT fk_gds_flight_reservation FOREIGN KEY (flight_reservation_id)
+                    REFERENCES public.flight_reservation (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION)");
 
 
 				$this->addSql("
 				insert into public.flight_reservation_gds (
-				id,
-				    currency_type_id,
-				    flight_reservation_id,
-				    flight_type_schedule_id,
-				    gds_id,
-				    book_code,
-				    reservation_date,    
-				    child_number,
-				    adult_number,
-				    inf_number,
-					ins_number,    
-					subtotal,
-					tax,
-					total,
-					taxes,
-					increment_consolidator,
-					markup_increment_amount,
-					markup_increment_type,
-					markup_currency,	
-					airline_provider,
-					airline_commision,
-					is_refundable,
-					status
-				) 
-				select nextval('flight_reservation_gds_id_seq'), 
-				fr.currency,
-				fr.id, 
-				1, 
+                id,                currency_reservation,                currency_gds,
+                flight_reservation_id,
+                gds_id,
+                book_code,
+                reservation_date,   
+                child_number,
+                adult_number,
+                inf_number,
+                ins_number,
+                subtotal_original,
+                tax_original ,
+                taxes  ,
+                subtotal,   
+                tax ,
+                markup_increment_amount ,
+                markup_increment_type ,
+                markup_currency,       
+                increment_expenses ,
+                increment_guarantee ,       
+                discount,
+                increment_consolidator, 
+                airline_provider,
+                airline_commision,
+                dollar_rate_covertion,
+                currency_rate_covertion,
+                is_refundable,
+                status 
+                )
+                select nextval('flight_reservation_gds_id_seq'),
+                fr.currency,                max(f.currency),                fr.id,
+                case
+					WHEN max(f.provider) = 'AMA' then 2
+					else 1
+				end as prov,		fr.code,
+				fr.reservation_date,		fr.child_number,
+				fr.adult_number , 0, 0,
+				sum(f.original_price_no_tax),
+				sum(f.original_price)-sum(f.original_price_no_tax),
+				max(f.gds_taxes),  
+				sum(f.price),
+				sum(f.tax_total),
+				sum(f.type_rate_increment) ,
+		                max(f.type_rate_increment_type),
+		                max(f.type_rate_increment_currency) ,
+				sum(f.increment_expenses), sum(f.increment_guarantee), sum(f.discount) ,	 
+				max(f.increment_consolidator),		
+		                max(f.airline),
+		                max(f.airline_commission),   
 				case
-						WHEN max(f.provider) = 'AMA' then 2
-						else 1
-					end as prov,
-					fr.code,
-
-					fr.reservation_date, 
-				    fr.child_number,
-				    fr.adult_number , 0, 0,
-					sum(f.original_price_no_tax), 
-					sum(f.original_price)-sum(f.original_price_no_tax),
-					sum(f.original_price),
-				    max(f.gds_taxes),	
-				    CASE
-				            WHEN (max(f.provider)) = 'AMA' THEN 10
-				            ELSE 0
-				        END as consolidator_amount,
-					sum(f.type_rate_increment) ,
-				  max(f.type_rate_increment_type),
-				  max(f.type_rate_increment_currency) ,
-				  max(f.airline),
-				  max(f.airline_commission),
-					false,
-					1
-					
-				from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id group by fr.id");
+					when dollar_rate_covertion > 0 then dollar_rate_covertion
+					else dollar_rate_sell_covertion 
+				end as dolar_rate,
+				case
+					when currency_rate_covertion > 0 then currency_rate_covertion
+					else currency_rate_sell_covertion 
+				end as currency_rate,
+		        false,
+		        1
+		                   
+                from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id 
+                group by fr.id");
 				
 
 				$this->addSql("alter table flight drop CONSTRAINT fk_c257e60ef73df7ae");

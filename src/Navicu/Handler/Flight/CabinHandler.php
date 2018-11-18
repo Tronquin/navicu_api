@@ -2,7 +2,7 @@
 
 namespace App\Navicu\Handler\Flight;
 
-use App\Entity\FlightClass;
+use App\Entity\FlightCabin;
 use App\Navicu\Handler\BaseHandler;
 
 /**
@@ -21,7 +21,7 @@ class CabinHandler extends BaseHandler
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $cabins = $manager->getRepository(FlightClass::class)->findAll();
+        $cabins = $manager->getRepository(FlightCabin::class)->findAll();
 
         $response = [];
         /** @var FlightClass $cabin */
