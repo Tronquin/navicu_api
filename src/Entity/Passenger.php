@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Passenger
@@ -74,12 +76,21 @@ class Passenger
     /**
      * @var \FlightReservation
      *
-     * @ORM\ManyToOne(targetEntity="FlightReservation")
+     * @ORM\ManyToOne(targetEntity="FlightReservation", inversedBy="passengers")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="flight_reservation", referencedColumnName="id")
      * })
      */
     private $flightReservation;
+
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="FlightTicket", mappedBy="passenger") 
+     */
+    private $tickets;
+
+
 
     public function getId(): ?int
     {
@@ -180,6 +191,14 @@ class Passenger
         $this->flightReservation = $flightReservation;
 
         return $this;
+    }
+
+     /**
+     * @return Collection|FlightTicket[]
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
     }
 
 

@@ -241,19 +241,19 @@ final class Version20181113145730 extends AbstractMigration
 		                max(f.airline),
 		                max(f.airline_commission),   
 				case
-					when dollar_rate_covertion > 0 then dollar_rate_covertion
+					when currency_gds <> 145 then dollar_rate_covertion
 					else dollar_rate_sell_covertion 
 				end as dolar_rate,
-				case
-					when currency_rate_covertion > 0 then currency_rate_covertion
-					else currency_rate_sell_covertion 
-				end as currency_rate,
+				0,
 		        false,
 		        1
 		                   
                 from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id 
                 group by fr.id");
 				
+
+				$this->addSql("update flight_reservation_gds set currency_rate_covertion = (
+								select max(t.rate_api) from exchange_rate_history t where t.date = reservation_date and t.currency_type = currency_reservation)");
 
 				$this->addSql("alter table flight drop CONSTRAINT fk_c257e60ef73df7ae");
 
@@ -278,11 +278,18 @@ final class Version20181113145730 extends AbstractMigration
 				        ON UPDATE NO ACTION
 				        ON DELETE NO ACTION");
 
-				$this->addSql("
-				update flight_ticket set flight_reservation =
+				$this->addSql("update flight_ticket set flight_reservation =
 				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
-				and flight_ticket.flight_reservation = fr.id)");
+				and flight_ticket.flight_reservation = fr.id");
+
+				$this->addSql("alter table flight_ticket add  CONSTRAINT fk_flight_ticket_reservation_gds FOREIGN KEY (flight_reservation)
+				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
+				        ON UPDATE NO ACTION
+				        ON DELETE NO ACTION");
 						
+				$this->addSql("drop view admin_flight_reservation_list_view");		
+				$this->addSql("alter table flight_ticket drop flight");
+
 				$this->addSql("		
 				create table public.flight_seat_reservation (
 					id serial,

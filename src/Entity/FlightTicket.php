@@ -71,14 +71,7 @@ class FlightTicket
      */
     private $way = '1';
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="flight", type="integer", nullable=true)
-     */
-    private $flight;
-
-    /**
+      /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime", nullable=false)
@@ -88,7 +81,7 @@ class FlightTicket
     /**
      * @var \Passenger
      *
-     * @ORM\ManyToOne(targetEntity="Passenger")
+     * @ORM\ManyToOne(targetEntity="Passenger", inversedBy="tickets")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="passenger_id", referencedColumnName="id")
      * })

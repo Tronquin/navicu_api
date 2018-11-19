@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * FlightReservationGds
  *
- * @ORM\Table(name="flight_reservation_gds", indexes={@ORM\Index(name="IDX_6321B70A18E5767C", columns={"currency_type_id"}), @ORM\Index(name="IDX_6321B70A280B5C9C", columns={"gds_id"}), @ORM\Index(name="IDX_6321B70A7E6A667", columns={"flight_type_schedule_id"}), @ORM\Index(name="IDX_6321B70AA0C1743", columns={"airline_provider"}), @ORM\Index(name="IDX_6321B70AB6328EC6", columns={"flight_reservation_id"})})
+ * @ORM\Table(name="flight_reservation_gds", indexes={@ORM\Index(name="IDX_6321B70AA8CE1289", columns={"currency_gds"}), @ORM\Index(name="IDX_6321B70AF32047F4", columns={"currency_reservation"}), @ORM\Index(name="IDX_6321B70A280B5C9C", columns={"gds_id"}), @ORM\Index(name="IDX_6321B70AA0C1743", columns={"airline_provider"}), @ORM\Index(name="IDX_6321B70AB6328EC6", columns={"flight_reservation_id"})})
  * @ORM\Entity
  */
 class FlightReservationGds
@@ -67,6 +69,27 @@ class FlightReservationGds
     /**
      * @var float
      *
+     * @ORM\Column(name="subtotal_original", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $subtotalOriginal = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="tax_original", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $taxOriginal = '0';
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="taxes", type="string", length=255, nullable=true)
+     */
+    private $taxes;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="subtotal", type="float", precision=10, scale=0, nullable=false)
      */
     private $subtotal = '0';
@@ -77,20 +100,6 @@ class FlightReservationGds
      * @ORM\Column(name="tax", type="float", precision=10, scale=0, nullable=false)
      */
     private $tax = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="total", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $total = '0';
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="taxes", type="string", length=255, nullable=true)
-     */
-    private $taxes;
 
     /**
      * @var float
@@ -121,11 +130,53 @@ class FlightReservationGds
     private $markupCurrency;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="increment_expenses", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $incrementExpenses = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="increment_guarantee", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $incrementGuarantee = '0';
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="discount", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $discount = '0';
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="tax_total", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $taxTotal;
+
+    /**
      * @var float|null
      *
      * @ORM\Column(name="airline_commision", type="float", precision=10, scale=0, nullable=true)
      */
     private $airlineCommision;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="dollar_rate_covertion", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $dollarRateCovertion;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="currency_rate_covertion", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $currencyRateCovertion;
 
     /**
      * @var bool|null
@@ -146,10 +197,20 @@ class FlightReservationGds
      *
      * @ORM\ManyToOne(targetEntity="CurrencyType")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="currency_type_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="currency_gds", referencedColumnName="id")
      * })
      */
-    private $currencyType;
+    private $currencyGds;
+
+    /**
+     * @var \CurrencyType
+     *
+     * @ORM\ManyToOne(targetEntity="CurrencyType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="currency_reservation", referencedColumnName="id")
+     * })
+     */
+    private $currencyReservation;
 
     /**
      * @var \Gds
@@ -162,16 +223,6 @@ class FlightReservationGds
     private $gds;
 
     /**
-     * @var \FlightTypeSchedule
-     *
-     * @ORM\ManyToOne(targetEntity="FlightTypeSchedule")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_type_schedule_id", referencedColumnName="id")
-     * })
-     */
-    private $flightTypeSchedule;
-
-    /**
      * @var \Airline
      *
      * @ORM\ManyToOne(targetEntity="Airline")
@@ -180,7 +231,7 @@ class FlightReservationGds
      * })
      */
     private $airlineProvider;
-
+  
     /**
      * @var \FlightReservation
      *
@@ -193,10 +244,15 @@ class FlightReservationGds
 
         /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flight") 
+     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservation") 
      */
     private $flights;
 
+
+    public function __construct()
+    {
+        $this->flights = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -275,6 +331,42 @@ class FlightReservationGds
         return $this;
     }
 
+    public function getSubtotalOriginal(): ?float
+    {
+        return $this->subtotalOriginal;
+    }
+
+    public function setSubtotalOriginal(float $subtotalOriginal): self
+    {
+        $this->subtotalOriginal = $subtotalOriginal;
+
+        return $this;
+    }
+
+    public function getTaxOriginal(): ?float
+    {
+        return $this->taxOriginal;
+    }
+
+    public function setTaxOriginal(float $taxOriginal): self
+    {
+        $this->taxOriginal = $taxOriginal;
+
+        return $this;
+    }
+
+    public function getTaxes(): ?string
+    {
+        return $this->taxes;
+    }
+
+    public function setTaxes(?string $taxes): self
+    {
+        $this->taxes = $taxes;
+
+        return $this;
+    }
+
     public function getSubtotal(): ?float
     {
         return $this->subtotal;
@@ -295,30 +387,6 @@ class FlightReservationGds
     public function setTax(float $tax): self
     {
         $this->tax = $tax;
-
-        return $this;
-    }
-
-    public function getTotal(): ?float
-    {
-        return $this->total;
-    }
-
-    public function setTotal(float $total): self
-    {
-        $this->total = $total;
-
-        return $this;
-    }
-
-    public function getTaxes(): ?string
-    {
-        return $this->taxes;
-    }
-
-    public function setTaxes(?string $taxes): self
-    {
-        $this->taxes = $taxes;
 
         return $this;
     }
@@ -371,6 +439,54 @@ class FlightReservationGds
         return $this;
     }
 
+    public function getIncrementExpenses(): ?float
+    {
+        return $this->incrementExpenses;
+    }
+
+    public function setIncrementExpenses(float $incrementExpenses): self
+    {
+        $this->incrementExpenses = $incrementExpenses;
+
+        return $this;
+    }
+
+    public function getIncrementGuarantee(): ?float
+    {
+        return $this->incrementGuarantee;
+    }
+
+    public function setIncrementGuarantee(float $incrementGuarantee): self
+    {
+        $this->incrementGuarantee = $incrementGuarantee;
+
+        return $this;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(float $discount): self
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getTaxTotal(): ?float
+    {
+        return $this->taxTotal;
+    }
+
+    public function setTaxTotal(?float $taxTotal): self
+    {
+        $this->taxTotal = $taxTotal;
+
+        return $this;
+    }
+
     public function getAirlineCommision(): ?float
     {
         return $this->airlineCommision;
@@ -379,6 +495,30 @@ class FlightReservationGds
     public function setAirlineCommision(?float $airlineCommision): self
     {
         $this->airlineCommision = $airlineCommision;
+
+        return $this;
+    }
+
+    public function getDollarRateCovertion(): ?float
+    {
+        return $this->dollarRateCovertion;
+    }
+
+    public function setDollarRateCovertion(?float $dollarRateCovertion): self
+    {
+        $this->dollarRateCovertion = $dollarRateCovertion;
+
+        return $this;
+    }
+
+    public function getCurrencyRateCovertion(): ?float
+    {
+        return $this->currencyRateCovertion;
+    }
+
+    public function setCurrencyRateCovertion(?float $currencyRateCovertion): self
+    {
+        $this->currencyRateCovertion = $currencyRateCovertion;
 
         return $this;
     }
@@ -407,14 +547,26 @@ class FlightReservationGds
         return $this;
     }
 
-    public function getCurrencyType(): ?CurrencyType
+    public function getCurrencyGds(): ?CurrencyType
     {
-        return $this->currencyType;
+        return $this->currencyGds;
     }
 
-    public function setCurrencyType(?CurrencyType $currencyType): self
+    public function setCurrencyGds(?CurrencyType $currencyGds): self
     {
-        $this->currencyType = $currencyType;
+        $this->currencyGds = $currencyGds;
+
+        return $this;
+    }
+
+    public function getCurrencyReservation(): ?CurrencyType
+    {
+        return $this->currencyReservation;
+    }
+
+    public function setCurrencyReservation(?CurrencyType $currencyReservation): self
+    {
+        $this->currencyReservation = $currencyReservation;
 
         return $this;
     }
@@ -427,18 +579,6 @@ class FlightReservationGds
     public function setGds(?Gds $gds): self
     {
         $this->gds = $gds;
-
-        return $this;
-    }
-
-    public function getFlightTypeSchedule(): ?FlightTypeSchedule
-    {
-        return $this->flightTypeSchedule;
-    }
-
-    public function setFlightTypeSchedule(?FlightTypeSchedule $flightTypeSchedule): self
-    {
-        $this->flightTypeSchedule = $flightTypeSchedule;
 
         return $this;
     }
@@ -463,6 +603,37 @@ class FlightReservationGds
     public function setFlightReservation(?FlightReservation $flightReservation): self
     {
         $this->flightReservation = $flightReservation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Flight[]
+     */
+    public function getFlights(): Collection
+    {
+        return $this->flights;
+    }
+
+    public function addFlight(Flight $flight): self
+    {
+        if (!$this->flights->contains($flight)) {
+            $this->flights[] = $flight;
+            $flight->setFlight($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlight(Flight $flight): self
+    {
+        if ($this->flights->contains($flight)) {
+            $this->flights->removeElement($flight);
+            // set the owning side to null (unless already changed)
+            if ($flight->getFlight() === $this) {
+                $flight->setFlight(null);
+            }
+        }
 
         return $this;
     }

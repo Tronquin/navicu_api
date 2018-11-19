@@ -35,6 +35,49 @@ class NavicuCurrencyConverter
      */
     private static $currencies = [];
 
+
+     /**
+     * Convierte un monto de una moneda a otra
+     *
+     * @param float $amount, Monto a convertir
+     * @param string $currency, Moneda en la cual esta expresado el monto
+     * @param string $toCurrency, Moneda a convertir
+     * @param string $date, Fecha de la tasa de conversion
+     * @param bool $rateSell, Indica si se usa la tasa de venta, en su defecto la de compra
+     * @return float
+     * @throws NavicuException
+     */
+    public static function convertToRate(float $amount, string $currency, string $toCurrency, float $dollarRate, float $currencyRate) : float
+    {
+        //$currency = self::getCurrency($currency);
+        //$toCurrency = self::getCurrency($toCurrency);
+
+        if (! $currency || ! $toCurrency) {
+            throw new NavicuException('Currency not found');
+        }
+
+        if (! $dollarRate || ! $currencyRate) {
+            throw new NavicuException('Currency Rate not found');
+        }
+
+        if (($currency) === ($toCurrency)) {
+            return $amount;
+        }
+
+        if ($currency !== self::CURRENCY_DOLLAR) {
+            // Si el monto es en bolivares, convierto a dolar
+            $amount = $amount / $dollarRate;
+        }
+
+        if ($toCurrency !== self::CURRENCY_DOLLAR) {
+            // Si el monto es en bolivares, convierto a dolar
+            $amount = $amount * $currencyRate;
+        }    
+
+        return $amount;
+    }
+
+
     /**
      * Convierte un monto de una moneda a otra
      *

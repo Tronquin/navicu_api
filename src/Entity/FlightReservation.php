@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,83 +66,7 @@ class FlightReservation
      */
     private $insNumber;
 
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="subtotal_no_extra_increment", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $subtotalNoExtraIncrement = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="subtotal", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $subtotal = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="tax", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $tax = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="increment_expenses", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $incrementExpenses = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="increment_guarantee", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $incrementGuarantee = '0';
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="discount", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $discount = '0';
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="total", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $total;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="dollar_rate_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $dollarRateCovertion;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="currency_rate_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $currencyRateCovertion;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="dollar_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $dollarRateSellCovertion;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="currency_rate_sell_covertion", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $currencyRateSellCovertion;
-
+   
     /**
      * @var int|null
      *
@@ -183,15 +109,6 @@ class FlightReservation
      */
     private $status;
 
-    /**
-     * @var \CurrencyType
-     *
-     * @ORM\ManyToOne(targetEntity="CurrencyType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="currency_type_id", referencedColumnName="id")
-     * })
-     */
-    private $currencyType;
 
     /**
      * @var \FlightTypeSchedule
@@ -204,14 +121,14 @@ class FlightReservation
     private $flightTypeSchedule;
 
     /**
-     * @var \FlightClass
+     * @var \FlightCabin
      *
-     * @ORM\ManyToOne(targetEntity="FlightClass")
+     * @ORM\ManyToOne(targetEntity="FlightCabin")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_class_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="flight_cabin_id", referencedColumnName="id")
      * })
      */
-    private $flightClass;
+    private $flightCabin;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -219,11 +136,18 @@ class FlightReservation
      */
     private $gdsReservations;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="Passenger", mappedBy="flightReservation") 
+     */
+    private $passengers;
+
 
 
     public function __construct()
     {
         $this->$gdsReservations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->gdsReservations = new ArrayCollection();
     }
 
 
@@ -304,138 +228,7 @@ class FlightReservation
         return $this;
     }
 
-    public function getSubtotalNoExtraIncrement(): ?float
-    {
-        return $this->subtotalNoExtraIncrement;
-    }
-
-    public function setSubtotalNoExtraIncrement(float $subtotalNoExtraIncrement): self
-    {
-        $this->subtotalNoExtraIncrement = $subtotalNoExtraIncrement;
-
-        return $this;
-    }
-
-    public function getSubtotal(): ?float
-    {
-        return $this->subtotal;
-    }
-
-    public function setSubtotal(float $subtotal): self
-    {
-        $this->subtotal = $subtotal;
-
-        return $this;
-    }
-
-    public function getTax(): ?float
-    {
-        return $this->tax;
-    }
-
-    public function setTax(float $tax): self
-    {
-        $this->tax = $tax;
-
-        return $this;
-    }
-
-    public function getIncrementExpenses(): ?float
-    {
-        return $this->incrementExpenses;
-    }
-
-    public function setIncrementExpenses(float $incrementExpenses): self
-    {
-        $this->incrementExpenses = $incrementExpenses;
-
-        return $this;
-    }
-
-    public function getIncrementGuarantee(): ?float
-    {
-        return $this->incrementGuarantee;
-    }
-
-    public function setIncrementGuarantee(float $incrementGuarantee): self
-    {
-        $this->incrementGuarantee = $incrementGuarantee;
-
-        return $this;
-    }
-
-    public function getDiscount(): ?float
-    {
-        return $this->discount;
-    }
-
-    public function setDiscount(float $discount): self
-    {
-        $this->discount = $discount;
-
-        return $this;
-    }
-
-    public function getTotal(): ?float
-    {
-        return $this->total;
-    }
-
-    public function setTotal(?float $total): self
-    {
-        $this->total = $total;
-
-        return $this;
-    }
-
-    public function getDollarRateCovertion(): ?float
-    {
-        return $this->dollarRateCovertion;
-    }
-
-    public function setDollarRateCovertion(?float $dollarRateCovertion): self
-    {
-        $this->dollarRateCovertion = $dollarRateCovertion;
-
-        return $this;
-    }
-
-    public function getCurrencyRateCovertion(): ?float
-    {
-        return $this->currencyRateCovertion;
-    }
-
-    public function setCurrencyRateCovertion(?float $currencyRateCovertion): self
-    {
-        $this->currencyRateCovertion = $currencyRateCovertion;
-
-        return $this;
-    }
-
-    public function getDollarRateSellCovertion(): ?float
-    {
-        return $this->dollarRateSellCovertion;
-    }
-
-    public function setDollarRateSellCovertion(?float $dollarRateSellCovertion): self
-    {
-        $this->dollarRateSellCovertion = $dollarRateSellCovertion;
-
-        return $this;
-    }
-
-    public function getCurrencyRateSellCovertion(): ?float
-    {
-        return $this->currencyRateSellCovertion;
-    }
-
-    public function setCurrencyRateSellCovertion(?float $currencyRateSellCovertion): self
-    {
-        $this->currencyRateSellCovertion = $currencyRateSellCovertion;
-
-        return $this;
-    }
-
+    
     public function getConfirmationStatus(): ?int
     {
         return $this->confirmationStatus;
@@ -508,18 +301,6 @@ class FlightReservation
         return $this;
     }
 
-    public function getCurrencyType(): ?CurrencyType
-    {
-        return $this->currencyType;
-    }
-
-    public function setCurrencyType(?CurrencyType $currencyType): self
-    {
-        $this->currencyType = $currencyType;
-
-        return $this;
-    }
-
     public function getFlightTypeSchedule(): ?FlightTypeSchedule
     {
         return $this->flightTypeSchedule;
@@ -532,12 +313,12 @@ class FlightReservation
         return $this;
     }
 
-    public function getFlightClass(): ?FlightClass
+    public function getFlightCabin(): ?FlightClass
     {
         return $this->flightClass;
     }
 
-    public function setFlightClass(?FlightClass $flightClass): self
+    public function setFlightCabin(?FlightClass $flightClass): self
     {
         $this->flightClass = $flightClass;
 
@@ -563,12 +344,45 @@ class FlightReservation
     }
 
     /**
-    *
-    */
-    public function getFlightReservationGds()
+     * @return Collection|FlightReservationGds[]
+     */
+    public function getGdsReservations(): Collection
     {
         return $this->gdsReservations;
     }
 
+    public function addGdsReservation(FlightReservationGds $gdsReservation): self
+    {
+        if (!$this->gdsReservations->contains($gdsReservation)) {
+            $this->gdsReservations[] = $gdsReservation;
+            $gdsReservation->setFlightReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGdsReservation(FlightReservationGds $gdsReservation): self
+    {
+        if ($this->gdsReservations->contains($gdsReservation)) {
+            $this->gdsReservations->removeElement($gdsReservation);
+            // set the owning side to null (unless already changed)
+            if ($gdsReservation->getFlightReservation() === $this) {
+                $gdsReservation->setFlightReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+    *
+    */
+    public function getPassengers(): Collection
+    {
+        return $this->passengers;
+    }
+
+    
 
 }
