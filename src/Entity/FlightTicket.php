@@ -20,14 +20,7 @@ class FlightTicket
      * @ORM\GeneratedValue(strategy="SEQUENCE")
      * @ORM\SequenceGenerator(sequenceName="flight_ticket_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="flight_reservation", type="integer", nullable=true)
-     */
-    private $flightReservation;
+    private $id;   
 
     /**
      * @var string
@@ -88,19 +81,30 @@ class FlightTicket
      */
     private $passenger;
 
+     /**
+     * @var \FlightReservationGds
+     *
+     * @ORM\ManyToOne(targetEntity="FlightReservationGds")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="flight_reservation_gds_id", referencedColumnName="id")
+     * })
+     */
+    private $flightReservationGds;
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFlightReservation(): ?int
+    public function getFlightReservationGds(): ?FlightReservation
     {
-        return $this->flightReservation;
+        return $this->flightReservationGds;
     }
 
-    public function setFlightReservation(?int $flightReservation): self
+    public function setFlightReservationGds(?FlightReservation $flightReservation): self
     {
-        $this->flightReservation = $flightReservation;
+        $this->flightReservationGds = $flightReservation;
 
         return $this;
     }

@@ -167,16 +167,16 @@ class FlightReservationGds
     /**
      * @var float|null
      *
-     * @ORM\Column(name="dollar_rate_covertion", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="dollar_rate_convertion", type="float", precision=10, scale=0, nullable=true)
      */
-    private $dollarRateCovertion;
+    private $dollarRateConvertion;
 
     /**
      * @var float|null
      *
-     * @ORM\Column(name="currency_rate_covertion", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="currency_rate_convertion", type="float", precision=10, scale=0, nullable=true)
      */
-    private $currencyRateCovertion;
+    private $currencyRateConvertion;
 
     /**
      * @var bool|null
@@ -244,7 +244,7 @@ class FlightReservationGds
 
         /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservation") 
+     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservationGds") 
      */
     private $flights;
 
@@ -499,26 +499,26 @@ class FlightReservationGds
         return $this;
     }
 
-    public function getDollarRateCovertion(): ?float
+    public function getDollarRateConvertion(): ?float
     {
-        return $this->dollarRateCovertion;
+        return $this->dollarRateConvertion;
     }
 
-    public function setDollarRateCovertion(?float $dollarRateCovertion): self
+    public function setDollarRateConvertion(?float $dollarRateConvertion): self
     {
-        $this->dollarRateCovertion = $dollarRateCovertion;
+        $this->dollarRateConvertion = $dollarRateConvertion;
 
         return $this;
     }
 
-    public function getCurrencyRateCovertion(): ?float
+    public function getCurrencyRateConvertion(): ?float
     {
-        return $this->currencyRateCovertion;
+        return $this->currencyRateConvertion;
     }
 
-    public function setCurrencyRateCovertion(?float $currencyRateCovertion): self
+    public function setCurrencyRateConvertion(?float $currencyRateConvertion): self
     {
-        $this->currencyRateCovertion = $currencyRateCovertion;
+        $this->currencyRateConvertion = $currencyRateConvertion;
 
         return $this;
     }

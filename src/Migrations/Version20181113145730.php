@@ -241,7 +241,7 @@ final class Version20181113145730 extends AbstractMigration
 		                max(f.airline),
 		                max(f.airline_commission),   
 				case
-					when currency_gds <> 145 then dollar_rate_covertion
+					when fr.currency <> 145 then dollar_rate_covertion
 					else dollar_rate_sell_covertion 
 				end as dolar_rate,
 				0,
@@ -262,6 +262,10 @@ final class Version20181113145730 extends AbstractMigration
 				and flight.flight_reservation = fr.id)");
 
 
+				$this->addSql("update flight_ticket set passenger_id = (select p.id from passenger p, flight_reservation fr, flight_reservation_gds frg 
+				where concat(flight_ticket.firstname, flight_ticket.lastname) = concat(p.name,p.lastname) 
+				and p.flight_reservation=fr.id and flight_ticket.flight_reservation=frg.id and frg.flight_reservation_id=fr.id)");
+
 				$this->addSql("alter table flight add constraint fk_c257e60ef73df7ae
 				FOREIGN KEY (flight_reservation)
 				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
@@ -280,7 +284,7 @@ final class Version20181113145730 extends AbstractMigration
 
 				$this->addSql("update flight_ticket set flight_reservation =
 				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
-				and flight_ticket.flight_reservation = fr.id");
+				and flight_ticket.flight_reservation = fr.id)");
 
 				$this->addSql("alter table flight_ticket add  CONSTRAINT fk_flight_ticket_reservation_gds FOREIGN KEY (flight_reservation)
 				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
@@ -363,6 +367,10 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("alter table flight drop  subtotal_no_extra_increment");
 				$this->addSql("alter table flight drop  tax_total");
 
+				$this->addSql("alter table flight_reservation_gds rename dollar_rate_covertion to dollar_rate_convertion");
+				$this->addSql("alter table flight_reservation_gds rename currency_rate_covertion to currency_rate_convertion");
+				$this->addSql("alter table flight_ticket rename flight_reservation to flight_reservation_gds_id");
+				$this->addSql("alter table flight rename flight_reservation_id to flight_reservation_gds_id");
 
 				$this->addSql("
 				create table public.flight_type (

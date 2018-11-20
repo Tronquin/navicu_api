@@ -133,10 +133,10 @@ class Flight
      *
      * @ORM\ManyToOne(targetEntity="FlightReservationGds", inversedBy="flights")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_reservation_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="flight_reservation_gds_id", referencedColumnName="id")
      * })
      */
-    private $flightReservation;
+    private $flightReservationGds;
 
     /**
      * @var \FlightType
@@ -309,14 +309,14 @@ class Flight
         return $this;
     }
 
-    public function getFlightReservation(): ?FlightReservationGds
+    public function getFlightReservationGds(): ?FlightReservationGds
     {
-        return $this->flightReservation;
+        return $this->flightReservationGds;
     }
 
     public function setFlightReservation(?FlightReservationGds $flightReservation): self
     {
-        $this->flightReservation = $flightReservation;
+        $this->flightReservationGds = $flightReservation;
 
         return $this;
     }
