@@ -10,6 +10,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Exception\OtaException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\OtaService;
+use App\Navicu\Service\NavicuFlightConverter;
 
 /**
  * Listado de vuelos
@@ -30,11 +31,30 @@ class ListHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
 
-        $response = OtaService::oneWay($this->getParams());
+        if ($params['roundTrip'] == 0) {
+            $response = OtaService::oneWay($this->getParams());
+        }    
+        else {
+            $response = OtaService::roundTrip($this->getParams());
+        }   
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
-        }
+        }  
+
+        $segments = [];
+        foreach ($response['oneWay'] as $key => $segment) {
+            $segment['original_price'] = $segment['price'];
+            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],[],$params['userCurrency'], []);
+            $segment['price'] = $convertedAmounts['subTotal'];
+            $segments[] = $segment;
+        }    
+
+        $response = [];
+        $response['segments'] = $segments; 
+
+        dump($response);
+        die;
 
         return $response;
     }

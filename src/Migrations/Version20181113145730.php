@@ -117,10 +117,6 @@ final class Version20181113145730 extends AbstractMigration
 			        REFERENCES public.flight_reservation (id) MATCH SIMPLE
 			        ON UPDATE NO ACTION
 			        ON DELETE NO ACTION	");
-
-
-		// fin reservation
-			
 			
 
 			$this->addSql('
@@ -132,7 +128,7 @@ final class Version20181113145730 extends AbstractMigration
 			)');
 
 			$this->addSql("insert into gds values (1, 'KIU', 'KIU')");
-			$this->addSql("insert into gds values (2, 'AMA', 'AMADEUS')");
+			$this->addSql("insert into gds values (2, 'AMADEUS', 'AMADEUS')");
 
 			$this->addSql("
 			CREATE TABLE public.flight_reservation_gds
@@ -241,8 +237,10 @@ final class Version20181113145730 extends AbstractMigration
 		                max(f.airline),
 		                max(f.airline_commission),   
 				case
-					when fr.currency <> 145 then dollar_rate_covertion
-					else dollar_rate_sell_covertion 
+					when (max(f.currency) = 145 and dollar_rate_sell_covertion is not null) then dollar_rate_sell_covertion
+					when (max(f.currency) = 145 and currency_rate_sell_covertion is not null) then currency_rate_sell_covertion
+					when (max(f.currency) <> 145 and currency_rate_covertion is not null) then currency_rate_covertion
+					when (max(f.currency) <> 145 and dollar_rate_covertion is not null) then dollar_rate_covertion
 				end as dolar_rate,
 				0,
 		        false,
@@ -252,8 +250,9 @@ final class Version20181113145730 extends AbstractMigration
                 group by fr.id");
 				
 
-				$this->addSql("update flight_reservation_gds set currency_rate_covertion = (
-								select max(t.rate_api) from exchange_rate_history t where t.date = reservation_date and t.currency_type = currency_reservation)");
+				$this->addSql("update flight_reservation_gds set currency_rate_convertion = (
+							select max(t.rate_api) from exchange_rate_history t where to_char(t.date,'YYYY/MM/DD') = to_char(reservation_date,'YYYY/MM/DD') 
+							and t.currency_type = flight_reservation_gds.currency_reservation)");
 
 				$this->addSql("alter table flight drop CONSTRAINT fk_c257e60ef73df7ae");
 
