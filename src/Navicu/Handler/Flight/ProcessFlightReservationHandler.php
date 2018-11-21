@@ -58,7 +58,11 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
+
             $this->addErrorToHandler( $handler->getErrors() );
+
+            // En caso de error envia correo de notificacion a navicu
+            $this->sendPaymentDeniedEmail($params['publicId']);
 
             throw new NavicuException('PayFlightReservationHandler fail', $handler->getCode());
         }
@@ -82,7 +86,6 @@ class ProcessFlightReservationHandler extends BaseHandler
         /*| **********************************************************************
          *| Paso 4:
          *| - Envia correo de confirmacion a los pasajeros y a navicu
-         *| - Si falla el correo se notifica a navicu para gestion offline
          * .......................................................................
          */
         $handler = new SendFlightReservationEmailHandler();
@@ -90,6 +93,7 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
+            // Si falla el correo se notifica a navicu para gestion offline
             $this->sendEmailAlternative($params['publicId']);
         }
 
@@ -133,7 +137,7 @@ class ProcessFlightReservationHandler extends BaseHandler
      *
      * @param string $publicId
      */
-    private function sendEmailAlternative($publicId) : void
+    private function sendEmailAlternative(string $publicId) : void
     {
         EmailService::sendFromEmailRecipients(
             'flightResume',
@@ -141,5 +145,18 @@ class ProcessFlightReservationHandler extends BaseHandler
             'Email/emailTicketFail.html.twig',
             compact('publicId')
         );
+    }
+
+    /**
+     * Envia un correo de notificacion a navicu con la informacion
+     * de la respuesta de la pasarela de pago
+     *
+     * @param string $publicId
+     */
+    private function sendPaymentDeniedEmail(string $publicId) : void
+    {
+        $handler = new SendFlightDeniedEmailHandler();
+        $handler->setParam('publicId', $publicId);
+        $handler->processHandler();
     }
 }
