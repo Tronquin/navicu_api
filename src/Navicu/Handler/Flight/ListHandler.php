@@ -49,7 +49,8 @@ class ListHandler extends BaseHandler
         $segments = [];
         foreach ($response[$resp] as $key => $segment) {
             
-            $segment['original_price'] = $segment['price'];
+            $segment['amounts'] = [];
+            $segment['amounts']['original_price'] = $segment['price'];
 
             $negotiatedRate = false;
             foreach ($segment['flights'] as $key => $flight) {
@@ -73,15 +74,16 @@ class ListHandler extends BaseHandler
                         'negotiatedRate' =>  $negotiatedRate,                    
                     ]
                 );
-            $segment['price'] = $convertedAmounts['subTotal'];
-            $segment['original_price_no_tax'] = $segment['priceNoTax'];
-            $segment['incrementLock'] = $convertedAmounts['subTotal'];
-            $segment['incrementConsolidator'] = $convertedAmounts['incrementConsolidator'];
-            $segment['incrementMarkup'] = $convertedAmounts['incrementMarkup'];
-            $segment['incrementExpenses'] = $convertedAmounts['incrementExpenses'];
-            $segment['incrementGuarantee'] = $convertedAmounts['incrementGuarantee'];
-            $segment['discount'] = $convertedAmounts['discount'];
-            $segment['tax'] = $convertedAmounts['tax'];
+            
+            $segment['amounts']['price'] = $convertedAmounts['subTotal'];
+            $segment['amounts']['original_price_no_tax'] = $segment['priceNoTax'];
+            $segment['amounts']['incrementLock'] = $convertedAmounts['subTotal'];
+            $segment['amounts']['incrementConsolidator'] = $convertedAmounts['incrementConsolidator'];
+            $segment['amounts']['incrementMarkup'] = $convertedAmounts['incrementMarkup'];
+            $segment['amounts']['incrementExpenses'] = $convertedAmounts['incrementExpenses'];
+            $segment['amounts']['incrementGuarantee'] = $convertedAmounts['incrementGuarantee'];
+            $segment['amounts']['discount'] = $convertedAmounts['discount'];
+            $segment['amounts']['tax'] = $convertedAmounts['tax'];
             $segments[] = $segment;
 
         }    

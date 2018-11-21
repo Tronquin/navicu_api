@@ -103,14 +103,8 @@ final class Version20181113145730 extends AbstractMigration
 
 			from public.flight_reservation_v1 fr join public.flight f on f.flight_reservation = fr.id group by fr.id");
 
-			$this->addSql("alter table passenger drop constraint fk_3befe8ddf73df7ae");
-			$this->addSql("alter table flight_payment drop constraint fk_eec4679bf73df7ae");
-
-			$this->addSql("alter table passenger add 
-			CONSTRAINT fk_3befe8ddf73df7ae FOREIGN KEY (flight_reservation)
-			        REFERENCES public.flight_reservation (id) MATCH SIMPLE
-			        ON UPDATE NO ACTION
-			        ON DELETE NO ACTION	");
+			
+			$this->addSql("alter table flight_payment drop constraint fk_eec4679bf73df7ae");			
 					
 			$this->addSql("alter table flight_payment add 
 			CONSTRAINT fk_eec4679bf73df7ae FOREIGN KEY (flight_reservation)
@@ -250,7 +244,7 @@ final class Version20181113145730 extends AbstractMigration
                 group by fr.id");
 				
 
-				$this->addSql("update flight_reservation_gds set currency_rate_convertion = (
+				$this->addSql("update flight_reservation_gds set currency_rate_covertion = (
 							select max(t.rate_api) from exchange_rate_history t where to_char(t.date,'YYYY/MM/DD') = to_char(reservation_date,'YYYY/MM/DD') 
 							and t.currency_type = flight_reservation_gds.currency_reservation)");
 
@@ -271,14 +265,15 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("
 					CREATE TABLE public.flight_reservation_passenger
 					(
+						id serial,
 					    flight_reservation_gds_id integer,
 						passenger_id integer,
-					    ticket character varying(255) COLLATE pg_catalog."default" NOT NULL,
-					    price double precision NOT NULL,
-					    commision double precision NOT NULL,
-					    date timestamp(0) without time zone NOT NULL,
+					    ticket character varying(255) ,
+					    price double precision,
+					    commision double precision,
+					    date timestamp(0) without time zone,
 						status integer,	
-					    CONSTRAINT flight_reservation_passenger_pkey PRIMARY KEY (flight_reservation_gds_id, passenger_id),
+					    CONSTRAINT flight_reservation_passenger_pkey PRIMARY KEY (id),
 					    CONSTRAINT fk_flight_ticket_passenger FOREIGN KEY (passenger_id)
 					        REFERENCES public.passenger (id) MATCH SIMPLE
 					        ON UPDATE NO ACTION
@@ -287,11 +282,107 @@ final class Version20181113145730 extends AbstractMigration
 					        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
 					        ON UPDATE NO ACTION
 					        ON DELETE NO ACTION
-					)");
+					)");				
 
-				$this->addSql("drop table flight_ticket");	
 
-				$this->addSql("drop view admin_flight_reservation_list_view");
+				$this->addSql("				
+					
+					
+					CREATE OR REPLACE FUNCTION public.insert_passenger_reservation()
+					    RETURNS boolean
+					    LANGUAGE 'plpgsql'
+					    COST 100
+					    VOLATILE 
+					AS \$BODY\$
+
+					DECLARE
+					    reservation RECORD;
+						reservation_gds RECORD;
+						passenger RECORD;
+						ticket RECORD;
+						
+					BEGIN
+
+						for reservation in select * from  flight_reservation loop	
+							for reservation_gds in select * from flight_reservation_gds where flight_reservation_id=reservation.id loop		
+							for passenger in select * from passenger where flight_reservation = reservation.id loop
+							
+						 			select ft.id,ft.price, ft.commision, ft.date, ft.number, f.provider into ticket from 
+									flight_ticket ft, passenger p, flight f
+									where concat(ft.firstname, ft.lastname) = concat(p.name,p.lastname) and p.flight_reservation=
+									ft.flight_reservation and ft.flight_reservation=reservation.id and ft.flight= f.id;								
+								
+								if (ticket is not null) then
+									if ((ticket.provider='AMA' and reservation_gds.gds_id=2) or (ticket.provider='KIU' and reservation_gds.gds_id=1)) then
+											
+										insert into public.flight_reservation_passenger
+											(
+												id,
+												flight_reservation_gds_id,
+												passenger_id,
+												ticket,
+												price ,
+												commision ,
+												date,
+												status 	
+											) values (						
+												nextval('flight_reservation_passenger_id_seq'), reservation_gds.id, passenger.id,
+												ticket.number, ticket.price, ticket.commision, ticket.date,1
+											);
+									else
+																								 
+										insert into public.flight_reservation_passenger
+											(
+												id,
+												flight_reservation_gds_id,
+												passenger_id,
+												ticket,
+												price ,
+												commision ,
+												date,
+												status 
+											) values (						
+												nextval('flight_reservation_passenger_id_seq'), reservation_gds.id, passenger.id,
+												NULL, NULL, NULL, NULL,0
+											);																	 
+								    end if;
+								else   
+								
+									insert into public.flight_reservation_passenger
+												(
+													id,
+													flight_reservation_gds_id,
+													passenger_id,
+													ticket,
+													price ,
+													commision ,
+													date,
+													status 
+												) values (						
+													nextval('flight_reservation_passenger_id_seq'), reservation_gds.id, passenger.id,
+													NULL, NULL, NULL, NULL,0
+												);	 
+
+									end if;			
+								
+							end loop;			
+							end loop;
+						
+						end loop;
+					    
+						RETURN true;
+					END;
+
+					\$BODY\$;					;
+
+					");
+
+				$this->addSql("select * from public.insert_passenger_reservation()");
+
+
+				$this->addSql("alter table passenger drop constraint fk_3befe8ddf73df7ae");
+			    $this->addSql("alter table passenger drop flight_reservation");
+				
 
 				$this->addSql("		
 				create table public.flight_seat_reservation (
@@ -397,6 +488,10 @@ final class Version20181113145730 extends AbstractMigration
 				        ON UPDATE NO ACTION
 				        ON DELETE NO ACTION");
 
+
+				$this->addSql("drop view admin_flight_reservation_list_view");					 
+	
+				$this->addSql("drop table flight_ticket");	
 
 				$this->addSql("drop table currency_type_temporal");
 				$this->addSql("drop table daily_pack_history_reconvertion");

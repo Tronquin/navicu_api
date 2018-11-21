@@ -74,19 +74,8 @@ class Passenger
     private $padreId;
 
     /**
-     * @var \FlightReservation
-     *
-     * @ORM\ManyToOne(targetEntity="FlightReservation", inversedBy="passengers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="flight_reservation", referencedColumnName="id")
-     * })
-     */
-    private $flightReservation;
-
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="FlightTicket", mappedBy="passenger") 
+     * @ORM\OneToMany(targetEntity="FlightReservationPassenger", mappedBy="passenger") 
      */
     private $tickets;
 
