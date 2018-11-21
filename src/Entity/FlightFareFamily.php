@@ -81,7 +81,7 @@ class FlightFareFamily
     /**
      * @var \FlightReservationGds
      *
-     * @ORM\ManyToOne(targetEntity="FlightReservationGds")
+     * @ORM\ManyToOne(targetEntity="FlightReservationGds", inversedBy="flightFareFamily")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="flight_reservation_gds_id", referencedColumnName="id")
      * })

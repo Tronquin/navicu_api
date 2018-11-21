@@ -69,7 +69,7 @@ class EmailService
      * @return bool
      * @throws NavicuException
      */
-    public static function sendFromEmailRecipients(string $emailName, string $subject, string $template, array $params) : bool
+    public static function sendFromEmailRecipients(string $emailName, string $subject, string $template, array $params = []) : bool
     {
         global $kernel;
         $container = $kernel->getContainer();
