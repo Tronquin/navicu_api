@@ -76,6 +76,79 @@ class NavicuFlightConverter
 
         return $incrementLock;
     }
+
+     /**
+     * Calcula el incremento por incremento por bloqueo
+     *
+     * @param RepositoryFactoryInterface $rf
+     * @param $amount
+     * @param $lockData array
+     * @return float
+     */
+    public static function calculateIncrementConsolidator($amount, $currency, array $consolidator_array) {
+
+        if (count($consolidator_array) > 0 && $consolidator_array['provider'] === FlightReservationGds::PROVIDER_AMADEUS && $consolidator_array['key'] === 0) {
+   
+            /** @var Consolidator $consolidator */
+            global $kernel;
+            $container = $kernel->getContainer();
+            $manager = $container->get('doctrine')->getManager();
+
+            $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
+
+            if (! $consolidator) {
+                return 0;
+            }
+
+            $type = $consolidator_array['negotiatedRate'] ? $consolidator->getIncrementTypeTarifaNeg() : $consolidator->getIncrementType();
+            $increment = $consolidator_array['negotiatedRate'] ? $consolidator->getIncrementTarifaNeg() : $consolidator->getIncrement();
+
+            $valor = 0;
+
+            if ($type === Consolidator::INCREMENT_TYPE_PERCENTAGE) {
+
+                $valor = $amount * ($increment / 100);
+
+            } elseif ($type === Consolidator::INCREMENT_TYPE_USD) {
+                $valor = self::convert($increment, 'USD', $rf, true, $currency);
+            }
+
+            return $valor;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Calcula el incremento por markup de aerolinea
+     *
+     * @param RepositoryFactoryInterface $rf
+     * @param $amount
+     * @param $rate
+     * @param $iso
+     * @return float
+     */
+    public static function calculateIncrementMarkup($amount, $rate, $iso, $otaCurrency)
+    {
+        if (! self::isRateSell($otaCurrency)) {
+            return 0;
+        }
+
+        global $kernel;
+        /** @var FlightGeneralCondition $generalConditions */
+        $container = $kernel->getContainer();
+        $manager = $container->get('doctrine')->getManager();
+        $generalConditions= $manager->getRepository(FlightGeneralConditions::class)->findOneById(1);        
+
+        if ($generalConditions && $generalConditions->getMarkup()) {
+            // Si estan configuradas las condiciones generales se aplica el markup
+            $incrementMarkup = $amount * ($generalConditions->getMarkup() / 100);
+
+            return $incrementMarkup;
+        }
+
+        return 0;
+    }
 	
 
 	/**

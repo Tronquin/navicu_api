@@ -28,7 +28,7 @@ class FlightLockRepository extends BaseRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, FlightReservation::class);
+        parent::__construct($registry, FlightLock::class);
     }
 
 

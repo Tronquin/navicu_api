@@ -14,6 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FlightReservationGds
 {
+
+    /** Proveedores */
+    const PROVIDER_AMADEUS = 'AMA';
+    const PROVIDER_KIU = 'KIU';
     /**
      * @var int
      *
