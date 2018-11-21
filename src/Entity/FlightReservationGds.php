@@ -157,13 +157,6 @@ class FlightReservationGds
     /**
      * @var float|null
      *
-     * @ORM\Column(name="tax_total", type="float", precision=10, scale=0, nullable=true)
-     */
-    private $taxTotal;
-
-    /**
-     * @var float|null
-     *
      * @ORM\Column(name="airline_commision", type="float", precision=10, scale=0, nullable=true)
      */
     private $airlineCommision;
@@ -252,10 +245,17 @@ class FlightReservationGds
      */
     private $flights;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="FlightFareFamily", mappedBy="flightReservationGds")
+     */
+    private $flightFareFamily;
+
 
     public function __construct()
     {
         $this->flights = new ArrayCollection();
+        $this->flightFareFamily = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -479,18 +479,6 @@ class FlightReservationGds
         return $this;
     }
 
-    public function getTaxTotal(): ?float
-    {
-        return $this->taxTotal;
-    }
-
-    public function setTaxTotal(?float $taxTotal): self
-    {
-        $this->taxTotal = $taxTotal;
-
-        return $this;
-    }
-
     public function getAirlineCommision(): ?float
     {
         return $this->airlineCommision;
@@ -642,5 +630,48 @@ class FlightReservationGds
         return $this;
     }
 
+    public function isAmadeus()
+    {
+        return $this->getGds()->getName() === 'AMA';
+    }
 
+    /**
+     * @return Collection|FlightFareFamily[]
+     */
+    public function getFlightFareFamily(): Collection
+    {
+        return $this->flightFareFamily;
+    }
+
+    public function addFlightFareFamily(FlightFareFamily $flightFareFamily): self
+    {
+        if (!$this->flightFareFamily->contains($flightFareFamily)) {
+            $this->flightFareFamily[] = $flightFareFamily;
+            $flightFareFamily->setFlightReservationGds($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlightFareFamily(FlightFareFamily $flightFareFamily): self
+    {
+        if ($this->flightFareFamily->contains($flightFareFamily)) {
+            $this->flightFareFamily->removeElement($flightFareFamily);
+            // set the owning side to null (unless already changed)
+            if ($flightFareFamily->getFlightReservationGds() === $this) {
+                $flightFareFamily->setFlightReservationGds(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTotal()
+    {
+        return  $this->getSubtotal() +
+                $this->getIncrementExpenses() +
+                $this->getIncrementGuarantee() +
+                $this->getTax() -
+                $this->getDiscount();
+    }
 }

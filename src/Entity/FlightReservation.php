@@ -14,6 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FlightReservation
 {
+    /** Flight reservation states */
+    const STATE_IN_PROCESS = 1;
+    const STATE_ACCEPTED = 2;
+    const STATE_CANCEL = 3;
+
     /**
      * @var int
      *
@@ -142,12 +147,17 @@ class FlightReservation
      */
     private $passengers;
 
-
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation")
+     */
+    private $payments;
 
     public function __construct()
     {
-        $this->$gdsReservations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->gdsReservations = new ArrayCollection();
+        $this->passengers = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
 
@@ -381,6 +391,60 @@ class FlightReservation
     public function getPassengers(): Collection
     {
         return $this->passengers;
+    }
+
+    public function addPassenger(Passenger $passenger): self
+    {
+        if (!$this->passengers->contains($passenger)) {
+            $this->passengers[] = $passenger;
+            $passenger->setFlightReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePassenger(Passenger $passenger): self
+    {
+        if ($this->passengers->contains($passenger)) {
+            $this->passengers->removeElement($passenger);
+            // set the owning side to null (unless already changed)
+            if ($passenger->getFlightReservation() === $this) {
+                $passenger->setFlightReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FlightPayment[]
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(FlightPayment $payment): self
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setFlightReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(FlightPayment $payment): self
+    {
+        if ($this->payments->contains($payment)) {
+            $this->payments->removeElement($payment);
+            // set the owning side to null (unless already changed)
+            if ($payment->getFlightReservation() === $this) {
+                $payment->setFlightReservation(null);
+            }
+        }
+
+        return $this;
     }
 
     

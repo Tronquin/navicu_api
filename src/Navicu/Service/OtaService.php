@@ -174,8 +174,6 @@ class OtaService
         $validator->validate($params, [
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
-            'Passengers' => 'required|numeric',
-            'Segments' => 'required|numeric',
             'passengersData' => 'required',
             'fareFamily' => 'required',
             'flights'=> 'required',
@@ -205,7 +203,6 @@ class OtaService
             'currency' => 'required|in:VES,USD',
             'PaymentType' => 'required|numeric',
             'BookingID' => 'required|regex:/^[A-Z0-9]{6}$/',
-            'Carrier'=>'regex:/^\w{2}$/',
             'provider' => 'required|regex:/^[A-Za-z]+$/'
         ]);
 

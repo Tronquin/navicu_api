@@ -24,6 +24,7 @@ abstract class BaseHandler
     const CODE_SUCCESS = 200;
     const CODE_BAD_REQUEST = 400;
     const CODE_EXCEPTION = 500;
+    const CODE_NOT_AVAILABILITY = 11;
 
     /**
      * Codigo de respuesta del flujo
@@ -264,6 +265,26 @@ abstract class BaseHandler
         }
 
         return new JsonResponse($this->getErrors(), $this->codeHttp);
+    }
+
+    /**
+     * Codigo de respuesta personalizado
+     *
+     * @return int
+     */
+    public function getCode() : int
+    {
+        return $this->code;
+    }
+
+    /**
+     * Codigo de respuesta http
+     *
+     * @return int
+     */
+    public function getCodeHttp() : int
+    {
+        return $this->codeHttp;
     }
 
     /**

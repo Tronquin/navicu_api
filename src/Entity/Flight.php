@@ -333,5 +333,10 @@ class Flight
         return $this;
     }
 
+    public function setFlightReservationGds(?FlightReservationGds $flightReservationGds): self
+    {
+        $this->flightReservationGds = $flightReservationGds;
 
+        return $this;
+    }
 }

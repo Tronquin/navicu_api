@@ -90,6 +90,11 @@ class Passenger
      */
     private $tickets;
 
+    public function __construct()
+    {
+        $this->tickets = new ArrayCollection();
+    }
+
 
 
     public function getId(): ?int
@@ -199,6 +204,29 @@ class Passenger
     public function getTickets(): Collection
     {
         return $this->tickets;
+    }
+
+    public function addTicket(FlightTicket $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(FlightTicket $ticket): self
+    {
+        if ($this->tickets->contains($ticket)) {
+            $this->tickets->removeElement($ticket);
+            // set the owning side to null (unless already changed)
+            if ($ticket->getPassenger() === $this) {
+                $ticket->setPassenger(null);
+            }
+        }
+
+        return $this;
     }
 
 
