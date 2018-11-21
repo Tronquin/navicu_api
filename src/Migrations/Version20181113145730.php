@@ -267,30 +267,31 @@ final class Version20181113145730 extends AbstractMigration
 				        ON UPDATE NO ACTION
 				        ON DELETE NO ACTION");		
 
-				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4c257e60e");
-				$this->addSql("alter table flight_ticket drop CONSTRAINT fk_a8c6fcb4f73df7ae");
-				$this->addSql("alter table flight_ticket add passenger_id integer");
-				$this->addSql("alter table flight_ticket add constraint fk_flight_ticket_passenger
-				FOREIGN KEY (passenger_id)
-				        REFERENCES public.passenger (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
+				
+				$this->addSql("
+					CREATE TABLE public.flight_reservation_passenger
+					(
+					    flight_reservation_gds_id integer,
+						passenger_id integer,
+					    ticket character varying(255) COLLATE pg_catalog."default" NOT NULL,
+					    price double precision NOT NULL,
+					    commision double precision NOT NULL,
+					    date timestamp(0) without time zone NOT NULL,
+						status integer,	
+					    CONSTRAINT flight_reservation_passenger_pkey PRIMARY KEY (flight_reservation_gds_id, passenger_id),
+					    CONSTRAINT fk_flight_ticket_passenger FOREIGN KEY (passenger_id)
+					        REFERENCES public.passenger (id) MATCH SIMPLE
+					        ON UPDATE NO ACTION
+					        ON DELETE NO ACTION,
+					    CONSTRAINT fk_flight_ticket_reservation_gds FOREIGN KEY (flight_reservation_gds_id)
+					        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
+					        ON UPDATE NO ACTION
+					        ON DELETE NO ACTION
+					)");
 
-				$this->addSql("update flight_ticket set passenger_id = (select p.id from passenger p, flight_reservation fr, flight_reservation_gds frg 
-				where concat(flight_ticket.firstname, flight_ticket.lastname) = concat(p.name,p.lastname) 
-				and p.flight_reservation=fr.id and flight_ticket.flight_reservation=frg.id and frg.flight_reservation_id=fr.id limit 1) ");
+				$this->addSql("drop table flight_ticket");	
 
-				$this->addSql("update flight_ticket set flight_reservation =
-				(select frg.id from flight_reservation_gds frg, flight_reservation fr where frg.flight_reservation_id=fr.id
-				and flight_ticket.flight_reservation = fr.id)");
-
-				$this->addSql("alter table flight_ticket add  CONSTRAINT fk_flight_ticket_reservation_gds FOREIGN KEY (flight_reservation)
-				        REFERENCES public.flight_reservation_gds (id) MATCH SIMPLE
-				        ON UPDATE NO ACTION
-				        ON DELETE NO ACTION");
-						
-				$this->addSql("drop view admin_flight_reservation_list_view");		
-				$this->addSql("alter table flight_ticket drop flight");
+				$this->addSql("drop view admin_flight_reservation_list_view");
 
 				$this->addSql("		
 				create table public.flight_seat_reservation (
@@ -367,8 +368,11 @@ final class Version20181113145730 extends AbstractMigration
 
 				$this->addSql("alter table flight_reservation_gds rename dollar_rate_covertion to dollar_rate_convertion");
 				$this->addSql("alter table flight_reservation_gds rename currency_rate_covertion to currency_rate_convertion");
-				$this->addSql("alter table flight_ticket rename flight_reservation to flight_reservation_gds_id");
+				
 				$this->addSql("alter table flight rename flight_reservation to flight_reservation_gds_id");
+
+				$this->addSql("alter table flight_general_conditions rename markup to markup_divisa");
+				$this->addSql("alter table flight_general_conditions add markup_local float");
 
 				$this->addSql("
 				create table public.flight_type (

@@ -72,9 +72,16 @@ class FlightGeneralConditions
     /**
      * @var float|null
      *
-     * @ORM\Column(name="markup", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="markup_divisa", type="float", precision=10, scale=0, nullable=true)
      */
-    private $markup;
+    private $markup_divisa;
+
+    /**
+     * @var float|null
+     *
+     * @ORM\Column(name="markup_local", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $markup_local;
 
     public function getId(): ?int
     {
@@ -153,14 +160,26 @@ class FlightGeneralConditions
         return $this;
     }
 
-    public function getMarkup(): ?float
+    public function getMarkupDivisa(): ?float
     {
-        return $this->markup;
+        return $this->markup_divisa;
     }
 
-    public function setMarkup(?float $markup): self
+    public function setMarkupDivisa(?float $markup): self
     {
-        $this->markup = $markup;
+        $this->markup = $markup_divisa;
+
+        return $this;
+    }
+
+    public function getMarkupLocal(): ?float
+    {
+        return $this->markup_local;
+    }
+
+    public function setMarkupLocal(?float $markup): self
+    {
+        $this->markup = $markup_local;
 
         return $this;
     }

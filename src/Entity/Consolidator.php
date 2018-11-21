@@ -8,10 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
  * Consolidator
  *
  * @ORM\Table(name="consolidator")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConsolidatorRepository"))
  */
 class Consolidator
 {
+
+    const INCREMENT_TYPE_USD = 0;
+    const INCREMENT_TYPE_PERCENTAGE = 1;
     /**
      * @var int
      *

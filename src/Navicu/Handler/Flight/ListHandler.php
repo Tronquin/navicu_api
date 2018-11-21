@@ -32,9 +32,11 @@ class ListHandler extends BaseHandler
         $params = $this->getParams();
 
         if ($params['roundTrip'] == 0) {
+            $resp = 'oneWay';
             $response = OtaService::oneWay($this->getParams());
         }    
         else {
+            $resp = 'roundTrip';
             $response = OtaService::roundTrip($this->getParams());
         }   
 
@@ -42,19 +44,50 @@ class ListHandler extends BaseHandler
             throw new OtaException($response['errors']);
         }  
 
+   
+         
         $segments = [];
-        foreach ($response['oneWay'] as $key => $segment) {
+        foreach ($response[$resp] as $key => $segment) {
+            
             $segment['original_price'] = $segment['price'];
-            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],[],$params['userCurrency'], []);
+
+            $negotiatedRate = false;
+            foreach ($segment['flights'] as $key => $flight) {
+                $negotiatedRate = $flight['negotiated_rate'];
+                if ($negotiatedRate) {
+                    break;
+                }
+            }
+
+            $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+
+            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
+                    [   'iso' => $segment['flights'][0]['airline'],
+                        'rate' => $segment['flights'][0]['rate'],
+                        'from' => $segment['flights'][0]['origin'],
+                        'to' => $segment['flights'][0]['destination'],
+                        'departureDate' => $flightLockDate
+                    ],$params['userCurrency'], 
+                    [
+                        'provider' => $params['provider'],
+                        'negotiatedRate' =>  $negotiatedRate,                    
+                    ]
+                );
             $segment['price'] = $convertedAmounts['subTotal'];
+            $segment['original_price_no_tax'] = $segment['priceNoTax'];
+            $segment['incrementLock'] = $convertedAmounts['subTotal'];
+            $segment['incrementConsolidator'] = $convertedAmounts['incrementConsolidator'];
+            $segment['incrementMarkup'] = $convertedAmounts['incrementMarkup'];
+            $segment['incrementExpenses'] = $convertedAmounts['incrementExpenses'];
+            $segment['incrementGuarantee'] = $convertedAmounts['incrementGuarantee'];
+            $segment['discount'] = $convertedAmounts['discount'];
+            $segment['tax'] = $convertedAmounts['tax'];
             $segments[] = $segment;
+
         }    
 
         $response = [];
         $response['segments'] = $segments; 
-
-        dump($response);
-        die;
 
         return $response;
     }

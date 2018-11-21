@@ -3,7 +3,12 @@
 namespace App\Navicu\Service;
 
 use App\Entity\CurrencyType;
+use App\Entity\FlightLock;
+use App\Entity\AirlineFlightTypeRate;
+use App\Entity\Flight;
+use App\Entity\Consolidator;
 use App\Entity\FlightGeneralConditions;
+use App\Entity\FlightReservationGds;
 use App\Entity\ExchangeRateHistory;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\NavicuCurrencyConverter;
@@ -26,24 +31,48 @@ class NavicuFlightConverter
         $today = (new \DateTime())->format('Y-m-d');
         $isRateSell = self::isRateSell($otaCurrency); 
 
+        global $kernel;
+    	$container = $kernel->getContainer();
+        $manager = $container->get('doctrine')->getManager();
+
+        $originalAmount = $otaAmount;
+
         // se transforma el monto a la moneda del usuario
         $otaAmount = NavicuCurrencyConverter::convert($otaAmount, $otaCurrency ,$currency, $today, $isRateSell); 
+
         // Calcula el incremento por bloqueo
-        $incrementLock = self::calculateIncrementLock($rf, $otaAmount, $currency, $lockData);
+        $incrementLock = self::calculateIncrementLock($otaAmount, $otaCurrency, $currency, $lockData);
+
+        // Calcula el incremento por bloqueo
+        $incrementConsolidator = self::calculateIncrementConsolidator($otaAmount, $otaCurrency, $currency, $today, $consolidator);
+
+        // Calcula el incremento por markup de aerolinea
+        $incrementMarkup = self::calculateIncrementMarkup($manager, $otaAmount, $otaCurrency, $currency);
+       
+        // Subtotal
+        $subTotal = $otaAmount + $incrementLock + $incrementMarkup + $incrementConsolidator;
+
         // Calcula los gastos de gestion
         $managementExpenses = self::calculateManagementExpenses($otaAmount, $currency, $currency);
 
-        // Subtotal
-        
+        // Calcula tax
+        $tax =  ($incrementLock + $incrementMarkup + $managementExpenses['incrementExpenses']
+                      + $managementExpenses['incrementGuarantee'] - $managementExpenses['discount'] + $incrementConsolidator) * self::TAX;        
 
         return [
             'otaCurrency' => $otaCurrency, // Moneda que envio la ota
-            'subTotal' => $subTotal,
             'userCurrency' => $currency, // Moneda que maneja el usuario
+            'originalAmount' => $originalAmount, // Monto en la moneda de la ota
+            'convertedAmount' => $otaAmount, // Monto convertido a la moneda del usuario
+            'incrementLock' => $incrementLock, // Incremento por bloqueo en moneda del usuario
+            'incrementConsolidator' => $incrementConsolidator, // Incremento por comnsolidador para ciertos proveedores
+            'incrementMarkup' => $incrementMarkup, // Incremento por markup en moneda del usuario           
+            'subTotal' => $subTotal, // Subtotal en moneda del usuario
             'incrementExpenses' => $managementExpenses['incrementExpenses'], // Gastos de gestion en moneda del usuario
             'incrementGuarantee' => $managementExpenses['incrementGuarantee'], // Incremento por garantia en moneda del usuario
-            'discount' => $managementExpenses['discount'] // Descuento navicu
-        ] ;  
+            'discount' => $managementExpenses['discount'], // Descuento navicu
+            'tax' => $tax, // Impuesto Navicu
+        ];
     }
 
     /**
@@ -54,12 +83,14 @@ class NavicuFlightConverter
      * @param $lockData array
      * @return float
     */
-    public static function calculateIncrementLock($amount,$currency, array $lockData)
+    public static function calculateIncrementLock($amount, $otaCurrency, $currency, array $lockData)
     {
+    	
+    	global $kernel;
     	$container = $kernel->getContainer();
         $manager = $container->get('doctrine')->getManager();
 
-        $lock = $manager->getRepository(FlightGLock::class)->findLock($lockData['iso'], $lockData['rate'], $lockData['from'], $lockData['to'], $lockData['departureDate'], $currency);
+        $lock = $manager->getRepository(FlightLock::class)->findLock($lockData['iso'], $lockData['rate'], $lockData['from'], $lockData['to'], $lockData['departureDate'], $currency);
 
         if (! $lock) {
             return 0;
@@ -70,8 +101,7 @@ class NavicuFlightConverter
             $incrementLock = $amount * ($lock->getIncrementValue() / 100);
         } else {
             $lockCurrency = $lock->getAirlineFlightTypeRate()->getCurrency()->getAlfa3();
-            $incrementLock = self::convert($lock->getIncrementValue(), $lockCurrency, $rf, self::isRateSell($otaCurrency));
-            NavicuCurrencyConverter::convert($lock->getIncrementValue(),$lockCurrency ,$currency, $today, $isRateSell);
+            $incrementLock = NavicuCurrencyConverter::convert($lock->getIncrementValue(),$lockCurrency ,$currency, $today, self::isRateSell($otaCurrency));
         }
 
         return $incrementLock;
@@ -85,9 +115,9 @@ class NavicuFlightConverter
      * @param $lockData array
      * @return float
      */
-    public static function calculateIncrementConsolidator($amount, $currency, array $consolidator_array) {
+    public static function calculateIncrementConsolidator($amount, $otaCurrency, $currency, $date, array $consolidator_array) {
 
-        if (count($consolidator_array) > 0 && $consolidator_array['provider'] === FlightReservationGds::PROVIDER_AMADEUS && $consolidator_array['key'] === 0) {
+        if (count($consolidator_array) > 0 && $consolidator_array['provider'] === FlightReservationGds::PROVIDER_AMADEUS) {
    
             /** @var Consolidator $consolidator */
             global $kernel;
@@ -110,7 +140,7 @@ class NavicuFlightConverter
                 $valor = $amount * ($increment / 100);
 
             } elseif ($type === Consolidator::INCREMENT_TYPE_USD) {
-                $valor = self::convert($increment, 'USD', $rf, true, $currency);
+                $valor = NavicuCurrencyConverter::convert($increment,'USD',$currency, $date, self::isRateSell($otaCurrency));
             }
 
             return $valor;
@@ -128,21 +158,21 @@ class NavicuFlightConverter
      * @param $iso
      * @return float
      */
-    public static function calculateIncrementMarkup($amount, $rate, $iso, $otaCurrency)
+    public static function calculateIncrementMarkup($manager, $amount, $otaCurrency, $currency)
     {
         if (! self::isRateSell($otaCurrency)) {
             return 0;
         }
 
-        global $kernel;
-        /** @var FlightGeneralCondition $generalConditions */
-        $container = $kernel->getContainer();
-        $manager = $container->get('doctrine')->getManager();
-        $generalConditions= $manager->getRepository(FlightGeneralConditions::class)->findOneById(1);        
+        
+        $generalConditions = $manager->getRepository(FlightGeneralConditions::class)->findOneById(1);        
 
-        if ($generalConditions && $generalConditions->getMarkup()) {
+        $markup = (CurrencyType::getLocalActiveCurrency()->getAlfa3() === $otaCurrency ? $generalConditions->getMarkupLocal() :
+    				$generalConditions->getMarkupDivisa());
+
+        if ($generalConditions) {
             // Si estan configuradas las condiciones generales se aplica el markup
-            $incrementMarkup = $amount * ($generalConditions->getMarkup() / 100);
+            $incrementMarkup = $amount * ($markup / 100);
 
             return $incrementMarkup;
         }
@@ -159,10 +189,9 @@ class NavicuFlightConverter
      * @param $airlineIso
      * @param $typeRate
      * @return float
-     */
+     *
     public static function calculateIncrementTypeRate($manager, $amount, $airlineIso, $typeRate, $otaCurrency, $currency)
     {
-        /** @var AirlineFlightTypeRate $airlineTypeRate */
         $airlineTypeRate  = $manager->getRepository(AirlineFlightTypeRate::class)->findByAirlineTypeRateAndCurrency($airlineIso, $typeRate, $otaCurrency);
 
         if (! $airlineTypeRate) {
@@ -179,8 +208,8 @@ class NavicuFlightConverter
 
         return $incrementTypeRate;
     }
-	
-	
+	*/
+
 
 	/**
      * Calcula los gastos de gestion
