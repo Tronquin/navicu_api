@@ -2,10 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\FlightLock;
 use App\Entity\Airline;
 use App\Entity\AirlineFlightTypeRate;
-use App\Entity\FlightLockRepository;
+use App\Entity\FlightLock;
 use App\Entity\FlightTypeRate;
 use App\Entity\Airport;
 use App\Entity\CurrencyType;
@@ -21,7 +20,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @author Currently Working: Javier Vásquez
  * @version 20/11/18
  */
-
 
 
 class FlightLockRepository extends BaseRepository

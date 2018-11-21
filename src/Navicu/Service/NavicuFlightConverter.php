@@ -151,6 +151,37 @@ class NavicuFlightConverter
     }
 	
 
+     /**
+     * Calcula el incremento por tarifa
+     *
+     * @param RepositoryFactoryInterface $rf
+     * @param $amount
+     * @param $airlineIso
+     * @param $typeRate
+     * @return float
+     */
+    public static function calculateIncrementTypeRate($manager, $amount, $airlineIso, $typeRate, $otaCurrency, $currency)
+    {
+        /** @var AirlineFlightTypeRate $airlineTypeRate */
+        $airlineTypeRate  = $manager->getRepository(AirlineFlightTypeRate::class)->findByAirlineTypeRateAndCurrency($airlineIso, $typeRate, $otaCurrency);
+
+        if (! $airlineTypeRate) {
+            return 0;
+        }
+
+        // Existe incremento por tarifa
+        if ($airlineTypeRate->getIncrementType() === AirlineFlightTypeRate::INCREMENT_TYPE_PERCENTAGE) {
+            $incrementTypeRate = $amount * ($airlineTypeRate->getIncrementValue() / 100);
+        } else {
+            $typeRateCurrency = $airlineTypeRate->getCurrency()->getAlfa3();
+            $incrementTypeRate = self::convert($airlineTypeRate->getIncrementValue(), $typeRateCurrency, $rf, self::isRateSell($currency), $currency);
+        }
+
+        return $incrementTypeRate;
+    }
+	
+	
+
 	/**
      * Calcula los gastos de gestion
      *
