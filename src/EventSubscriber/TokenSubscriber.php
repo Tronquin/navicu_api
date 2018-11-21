@@ -22,7 +22,8 @@ class TokenSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-    /*    
+       
+      /*
         if (! $request->headers->has('navicu_token')) {
 
             return $event->setController(function () {
@@ -52,7 +53,8 @@ class TokenSubscriber implements EventSubscriberInterface
                 return new JsonResponse(['code' => 400, 'errors' => ['token expired']]);
             });
         }
-     */   
+        */
+       
     }
 
     public static function getSubscribedEvents()

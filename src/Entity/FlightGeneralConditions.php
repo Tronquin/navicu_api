@@ -11,7 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class FlightGeneralConditions
-{
+{    
+
+    const INCREMENT_TYPE_PERCENTAGE = 0;
+    const INCREMENT_TYPE_LOCAL = 1;
+    const INCREMENT_TYPE_USD = 2;
+
     /**
      * @var int
      *

@@ -50,7 +50,7 @@ class OtaService
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
-            'date' => 'required|date_format:Y-m-d H:i',
+            'date' => 'required|date_format:Y-m-d',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
             'cabin' => 'required|in:C,F,N,W,Y,ALL',
             'scale' => 'required|numeric|between:0,3',
@@ -355,6 +355,7 @@ class OtaService
 
         $url = $url . '?' . http_build_query($params);
 
+
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -363,6 +364,7 @@ class OtaService
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
+
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');

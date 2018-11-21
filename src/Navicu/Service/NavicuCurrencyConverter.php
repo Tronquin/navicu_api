@@ -42,8 +42,8 @@ class NavicuCurrencyConverter
      * @param float $amount, Monto a convertir
      * @param string $currency, Moneda en la cual esta expresado el monto
      * @param string $toCurrency, Moneda a convertir
-     * @param string $date, Fecha de la tasa de conversion
-     * @param bool $rateSell, Indica si se usa la tasa de venta, en su defecto la de compra
+     * @param float $dollarRate tasa del dollar 
+     * @param float $dollarCurrency tasa de la moneda de la reserva
      * @return float
      * @throws NavicuException
      */
