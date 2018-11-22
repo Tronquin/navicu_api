@@ -6,6 +6,7 @@ use App\Entity\CurrencyType;
 use App\Entity\ExchangeRateHistory;
 use App\Entity\FlightReservation;
 use App\Entity\FlightReservationGds;
+use App\Entity\FlightReservationPassenger;
 use App\Entity\Passenger;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
@@ -85,11 +86,20 @@ class BookFlightHandler extends BaseHandler
             // Guarda la informacion de los pasajeros
             $passenger = $this->createPassengerFromData($passengerData);
             $manager->persist($passenger);
+            $manager->flush();
 
-            $reservation->addPassenger($passenger);
+            foreach ($reservation->getGdsReservations() as $gdsReservation) {
+                // FlightReservationPassenger es la pivot entre flightReservationGds y Passenger
+                // creo la relacion con cada reservationGds
+                $flightReservationPassenger = new FlightReservationPassenger();
+                $flightReservationPassenger->setStatus(FlightReservationPassenger::STATUS_WITHOUT_TICKET);
+                $flightReservationPassenger->setPassenger($passenger);
+                $flightReservationPassenger->setFlightReservationGds($gdsReservation);
+
+                $manager->persist($flightReservationPassenger);
+                $manager->flush();
+            }
         }
-
-        $manager->flush();
 
         return compact('reservation');
     }
@@ -147,10 +157,11 @@ class BookFlightHandler extends BaseHandler
      * @param array $passengerData
      * @return Passenger
      */
-    private function createPassengerFromData($passengerData) {
-
+    private function createPassengerFromData($passengerData) : Passenger
+    {
         $passenger = new Passenger();
         $passengerNames = explode(' ', $passengerData['fullName']);
+
         $passenger
             ->setName($passengerNames[0])
             ->setDocumentType($passengerData['docType'])

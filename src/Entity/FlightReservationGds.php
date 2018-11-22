@@ -251,11 +251,17 @@ class FlightReservationGds
      */
     private $flightFareFamily;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="FlightReservationPassenger", mappedBy="flightReservationGds")
+     */
+    private $flightReservationPassengers;
 
     public function __construct()
     {
         $this->flights = new ArrayCollection();
         $this->flightFareFamily = new ArrayCollection();
+        $this->flightReservationPassengers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -673,5 +679,36 @@ class FlightReservationGds
                 $this->getIncrementGuarantee() +
                 $this->getTax() -
                 $this->getDiscount();
+    }
+
+    /**
+     * @return Collection|FlightReservationPassenger[]
+     */
+    public function getFlightReservationPassengers(): Collection
+    {
+        return $this->flightReservationPassengers;
+    }
+
+    public function addFlightReservationPassenger(FlightReservationPassenger $flightReservationPassenger): self
+    {
+        if (!$this->flightReservationPassengers->contains($flightReservationPassenger)) {
+            $this->flightReservationPassengers[] = $flightReservationPassenger;
+            $flightReservationPassenger->setFlightReservationGds($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlightReservationPassenger(FlightReservationPassenger $flightReservationPassenger): self
+    {
+        if ($this->flightReservationPassengers->contains($flightReservationPassenger)) {
+            $this->flightReservationPassengers->removeElement($flightReservationPassenger);
+            // set the owning side to null (unless already changed)
+            if ($flightReservationPassenger->getFlightReservationGds() === $this) {
+                $flightReservationPassenger->setFlightReservationGds(null);
+            }
+        }
+
+        return $this;
     }
 }

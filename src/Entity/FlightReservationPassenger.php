@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FlightReservationPassenger
 {
+    const STATUS_WITHOUT_TICKET = 0;
+    const STATUS_WITH_TICKET = 1;
+
     /**
      * @var int
      *
@@ -166,5 +169,8 @@ class FlightReservationPassenger
         return $this;
     }
 
-
+    public function hasTicket()
+    {
+        return $this->status === self::STATUS_WITH_TICKET && ! is_null($this->ticket);
+    }
 }

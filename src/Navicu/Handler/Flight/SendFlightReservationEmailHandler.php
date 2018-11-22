@@ -3,7 +3,6 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
-use App\Entity\Passenger;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\EmailService;
@@ -34,13 +33,12 @@ class SendFlightReservationEmailHandler extends BaseHandler
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
 
-        // TODO get pasajeros de la reserva
-        $passengers = [];
-
         $recipients = [];
-        /** @var Passenger $passenger */
-        foreach ($passengers as $passenger) {
-            $recipients[] = $passenger->getEmail();
+        foreach ($reservation->getGdsReservations() as $gdsReservation) {
+            foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
+                $recipients = $flightReservationPassenger->getPassenger()->getEmail();
+            }
+            break;
         }
 
         // Envia correo a los pasajeros
@@ -53,7 +51,7 @@ class SendFlightReservationEmailHandler extends BaseHandler
 
         // Envia correo a navicu
         EmailService::sendFromEmailRecipients(
-            'flight_resume',
+            'flightResume',
             'Confirmación de la Reserva - navicu.com',
             'Email/Flight/flightReservationConfirmation.html.twig',
             []

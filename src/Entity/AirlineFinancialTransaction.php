@@ -185,5 +185,17 @@ class AirlineFinancialTransaction
         return $this;
     }
 
+    public function updateObject($data)
+    {
+        $this->description = $data["description"];
+        $this->sign = $data["sign"];
+        $this->amount = $data["amount"];
+        $this->typeTransaction = $data["type"];
+        $this->status = $data["status"];
+        $this->dateTransaction = $data["date"];
+        $this->description = $data["description"];
+        $this->currency = $data["currency"];
 
+        return $this;
+    }
 }

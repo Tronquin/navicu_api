@@ -6,6 +6,7 @@ use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
 
 class PayFlightReservationHandler extends BaseHandler
@@ -51,7 +52,7 @@ class PayFlightReservationHandler extends BaseHandler
 
         // Movimientos en los creditos de aerolinea y consolidador
         ConsolidatorService::setMovementFromReservation($reservation);
-        // TODO servicio para credito de aerolinea
+        AirlineService::setMovementFromReservation($reservation, '-');
 
         $manager->flush();
 

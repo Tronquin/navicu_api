@@ -3,7 +3,6 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
-use App\Entity\FlightTicket;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\OtaService;
@@ -48,18 +47,28 @@ class IssueTicketHandler extends BaseHandler
 
             foreach ($response['TicketItemInfo'] as $data) {
 
-                $ticket = new FlightTicket();
-                $ticket
-                    ->setFirstName($data['GivenName'])
-                    ->setLastName($data['Surname'])
-                    ->setPrice($data['Amount'])
-                    ->setCommision($data['Commission'])
-                    ->setNumber($data['Ticket'])
-                    ->setFlightReservationGds($gdsReservation)
-                    ->setDate(new \DateTime())
-                ;
+                foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
+                    // A cada pasajero le asigno su numero de ticket
 
-                $manager->persist($ticket);
+                    $name = $flightReservationPassenger->getPassenger()->getName();
+                    $lastName = $flightReservationPassenger->getPassenger()->getLastname();
+
+                    if (
+                        $name === $data['GivenName'] &&
+                        $lastName === $data['Surname'] &&
+                        ! $flightReservationPassenger->hasTicket()
+                    ) {
+
+                        $flightReservationPassenger
+                            ->setPrice($data['Amount'])
+                            ->setCommision($data['Commission'])
+                            ->setTicket($data['Ticket'])
+                            ->setDate(new \DateTime())
+                        ;
+
+                        break;
+                    }
+                }
             }
 
             $gdsReservation->setStatus(FlightReservation::STATE_ACCEPTED);

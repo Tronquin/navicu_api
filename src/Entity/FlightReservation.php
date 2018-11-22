@@ -143,12 +143,6 @@ class FlightReservation
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="Passenger", mappedBy="flightReservation") 
-     */
-    private $passengers;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
      * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation")
      */
     private $payments;
@@ -156,7 +150,6 @@ class FlightReservation
     public function __construct()
     {
         $this->gdsReservations = new ArrayCollection();
-        $this->passengers = new ArrayCollection();
         $this->payments = new ArrayCollection();
     }
 
@@ -378,38 +371,6 @@ class FlightReservation
             // set the owning side to null (unless already changed)
             if ($gdsReservation->getFlightReservation() === $this) {
                 $gdsReservation->setFlightReservation(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
-    *
-    */
-    public function getPassengers(): Collection
-    {
-        return $this->passengers;
-    }
-
-    public function addPassenger(Passenger $passenger): self
-    {
-        if (!$this->passengers->contains($passenger)) {
-            $this->passengers[] = $passenger;
-            $passenger->setFlightReservation($this);
-        }
-
-        return $this;
-    }
-
-    public function removePassenger(Passenger $passenger): self
-    {
-        if ($this->passengers->contains($passenger)) {
-            $this->passengers->removeElement($passenger);
-            // set the owning side to null (unless already changed)
-            if ($passenger->getFlightReservation() === $this) {
-                $passenger->setFlightReservation(null);
             }
         }
 

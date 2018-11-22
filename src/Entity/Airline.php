@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -205,6 +207,17 @@ class Airline
      * })
      */
     private $currency;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="AirlineFinancialTransaction", mappedBy="airline")
+     */
+    private $financialTransactions;
+
+    public function __construct()
+    {
+        $this->financialTransactions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -507,6 +520,37 @@ class Airline
     public function setCurrency(?CurrencyType $currency): self
     {
         $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AirlineFinancialTransaction[]
+     */
+    public function getFinancialTransactions(): Collection
+    {
+        return $this->financialTransactions;
+    }
+
+    public function addFinancialTransaction(AirlineFinancialTransaction $financialTransaction): self
+    {
+        if (!$this->financialTransactions->contains($financialTransaction)) {
+            $this->financialTransactions[] = $financialTransaction;
+            $financialTransaction->setAirline($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinancialTransaction(AirlineFinancialTransaction $financialTransaction): self
+    {
+        if ($this->financialTransactions->contains($financialTransaction)) {
+            $this->financialTransactions->removeElement($financialTransaction);
+            // set the owning side to null (unless already changed)
+            if ($financialTransaction->getAirline() === $this) {
+                $financialTransaction->setAirline(null);
+            }
+        }
 
         return $this;
     }
