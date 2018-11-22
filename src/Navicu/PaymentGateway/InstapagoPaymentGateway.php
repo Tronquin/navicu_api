@@ -5,6 +5,7 @@ namespace App\Navicu\PaymentGateway;
 use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Clase para la comunicación con la pasarela de pago: Instapago.
@@ -109,12 +110,15 @@ class InstapagoPaymentGateway implements PaymentGateway
      */
     private $statusId = 2;
 
+
+    private $logger;
+
     /**
      * constructor de la clase
      *
      * @var Array;
      */
-    public function __construct(array $config)
+    public function __construct(array $config, LoggerInterface $logger = null)
     {
         /*
          * Tipos de estados de la transacción
@@ -188,6 +192,9 @@ class InstapagoPaymentGateway implements PaymentGateway
             '97' => 7,
             '99' => 1,//'Hubo un error de comunicación con el banco, por favor intente mas tarde',
         ];
+
+        $this->logger = $logger;
+
     }
 
     /**
@@ -255,7 +262,7 @@ class InstapagoPaymentGateway implements PaymentGateway
             //$logfligth->writeLog('.......................................................................................');
             $logger->warning('.......................................................................................');
             */
-            
+
             while ($this->success && count($request) > $i) {
 
                 $formatedRequest = $this->formaterRequestData($request[$i]);
@@ -346,6 +353,8 @@ class InstapagoPaymentGateway implements PaymentGateway
         $request['KeyId'] = $this->config['private_id'];
         $request['description'] = 'pago automatico';
 
+        //$this->logger->warning('Instapago::executePayment');
+
         $ch = curl_init();
         //$url = 'https://api.instapago.com/payment' . '?' . http_build_query($request);
         $url = 'https://api.instapago.com/payment';
@@ -356,6 +365,9 @@ class InstapagoPaymentGateway implements PaymentGateway
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
+
+        dump($response);
+        die;
 
         return $response;
     }

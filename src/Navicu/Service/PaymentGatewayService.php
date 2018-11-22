@@ -3,10 +3,11 @@ namespace App\Navicu\Service;
 
 use App\Navicu\PaymentGateway\InstapagoPaymentGateway;
 use App\Navicu\PaymentGateway\PayeezyPaymentGateway;
-use App\Navicu\Resources\PaymentGateway\StripeTDCPaymentGateway;
+use App\Navicu\PaymentGateway\StripePaymentGateway;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use Symfony\Component\Dotenv\Dotenv;
+use Psr\Log\LoggerInterface;
 
 class PaymentGatewayService
 {
@@ -18,7 +19,7 @@ class PaymentGatewayService
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
 
-        if ($type==PaymentGateway::BANESCO_TDC) {
+        if ($type === PaymentGateway::BANESCO_TDC) {
             //pago con TDC            
             $config['public_id'] = getenv('INSTAPAGO_PUBLIC_ID');
             $config['private_id'] = getenv('INSTAPAGO_PRIVATE_ID');
