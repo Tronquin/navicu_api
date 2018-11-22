@@ -63,10 +63,7 @@ class ExecuteTdcTransactionInstapagoHandler extends BaseHandler
        
         $response = $paymentGateway->executePayment(array('amount'=>10, 'id' => '123456')); 
         
-        dump($response);
-        die;
-
-        return $response;
+        return compact($response);
     }
 
      /**

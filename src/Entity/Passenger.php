@@ -195,7 +195,7 @@ class Passenger
         return $this->tickets;
     }
 
-    public function addTicket(FlightTicket $ticket): self
+    public function addTicket(FlightReservationPassenger $ticket): self
     {
         if (!$this->tickets->contains($ticket)) {
             $this->tickets[] = $ticket;
@@ -205,7 +205,7 @@ class Passenger
         return $this;
     }
 
-    public function removeTicket(FlightTicket $ticket): self
+    public function removeTicket(FlightReservationPassenger $ticket): self
     {
         if ($this->tickets->contains($ticket)) {
             $this->tickets->removeElement($ticket);

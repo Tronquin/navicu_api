@@ -3,10 +3,11 @@ namespace App\Navicu\Service;
 
 use App\Navicu\PaymentGateway\InstapagoPaymentGateway;
 use App\Navicu\PaymentGateway\PayeezyPaymentGateway;
-use App\Navicu\Resources\PaymentGateway\StripeTDCPaymentGateway;
+use App\Navicu\PaymentGateway\StripePaymentGateway;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use Symfony\Component\Dotenv\Dotenv;
+use Psr\Log\LoggerInterface;
 
 class PaymentGatewayService
 {
@@ -26,33 +27,25 @@ class PaymentGatewayService
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
 
-        if ($type === PaymentGateway::BANESCO_TDC) {
-            //pago con TDC            
+        if ($type === PaymentGateway::INSTAPAGO_TDC) {                   
             $config['public_id'] = getenv('INSTAPAGO_PUBLIC_ID');
             $config['private_id'] = getenv('INSTAPAGO_PRIVATE_ID');
             $config['url_payment_petition'] = getenv('INSTAPAGO_URL_PAYMENT');
-            $paymenGateway = new InstapagoPaymentGateway($config);
-        /*} elseif ($type === PaymentGateway::NATIONAL_TRANSFER) {
-            //Pago por transferencia bancaria nacional
-            $paymenGateway = new BanckTransferPaymentGateway();
-        */} elseif ($type === PaymentGateway::STRIPE_TDC) {
-            //Pago por TDC en moneda extranjera
+            $paymenGateway = new InstapagoPaymentGateway($config);      
+
+        } elseif ($type === PaymentGateway::STRIPE_TDC) {
+            $config['api_key'] = getenv('STRIPE_API_KEY');
             $paymenGateway = new StripeTDCPaymentGateway();
-        /*} elseif ($type === PaymentGateway::INTERNATIONAL_TRANSFER) {
-            //Pago por Transferencia en moneda extranjera
-            $paymenGateway = new InternationalBanckTransferPaymentGateway();
-        } else if ($type == PaymentGateway::AAVV) {
-            //Pago por agencia de viaje
-            $paymenGateway = new AAVVPaymentGateway();
-        */} else if($type === PaymentGateway::PAYEEZY){
+
+        } else if($type === PaymentGateway::PAYEEZY){
+            $config['api_key'] = getenv('PAYEEZY_API_KEY');
+            $config['api_secret'] = getenv('PAYEEZY_API_SECRET');
+            $config['merchat_token'] = getenv('PAYEEZY_MERCHANT_TOKEN');
+            $config['base_url'] = getenv('PAYEEZY_BASEURL');
+            $config['url'] = getenv('PAYEEZY_URl');
             $paymenGateway = new PayeezyPaymentGateway();
-        /*} else if($type === PaymentGateway::PANDCO_TRANSFER){
-            //Pago por pandco
-            $paymenGateway = new PandcoTransferPaymentGateway();
-          } else if($type == PaymentGateway::Paypal ){
-            //Pago por Paypal
-            $paymenGateway = new PaypalpaymentGateway();
-       */} else {
+
+        } else {
             throw new NavicuException('Payment Type Undefined');
         }
         return $paymenGateway;

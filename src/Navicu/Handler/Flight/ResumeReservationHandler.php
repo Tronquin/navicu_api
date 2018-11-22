@@ -15,7 +15,6 @@ use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\OtaService;
 use App\Navicu\Service\NavicuCurrencyConverter;
 
-
 /**
  * Resumen de Reservacion de vuelos
  *
@@ -38,9 +37,12 @@ class ResumeReservationHandler extends BaseHandler
         $dir = $kernel->getRootDir() . '/../web/images/airlines/';
 
         $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);     
-        //$response = $this->processStructure($reservation,$params['currency']);
+   
+        if (is_null($reservation)) {
+            throw new NavicuException(\get_class($this) . ': reservation no exist');
+        }
 
-        $countPassengers = $reservation->getChildNumber()+$reservation->getAdultNumber()+ $reservation->getInfNumber() + $reservation->getInsNumber();
+        $countPassengers = $reservation->getChildNumber() + $reservation->getAdultNumber() + $reservation->getInfNumber() + $reservation->getInsNumber();
         $price = 0;
         $incrementExpenses = 0;
         $incrementGuarantee = 0;
@@ -51,7 +53,6 @@ class ResumeReservationHandler extends BaseHandler
         $tax = 0;
         $total = 0;
         $round = 2;
-
 
         foreach ($reservation->getGdsReservations() as $reservationGds) {  
 
@@ -71,7 +72,6 @@ class ResumeReservationHandler extends BaseHandler
          
             $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());            
         
-
                
             $j = 0;
             $l = 0;
@@ -103,6 +103,30 @@ class ResumeReservationHandler extends BaseHandler
                     $l++;
                 }
             }  
+
+            $passengers = [];
+
+            foreach( $reservationGds->getFlightReservationPassengers() as $key=>$passengerReservation) {
+
+                $passenger = $passengerReservation->getPassenger();               
+                
+                /*
+                $tickets = [];                
+                foreach ($passenger->getTickets() as $ticket) {
+                    $tickets[]['number'] = $ticket->getNumber();
+                }
+                */
+
+                $passengers[] = [
+                    'firstName' => $passenger->getName(),
+                    'lastName' => $passenger->getLastName(),
+                    'docType' => $passenger->getDocumentType(),
+                    'docNumber' => $passenger->getDocumentNumber(),
+                    'email' => $passenger->getEmail(),
+                    'phone' => $passenger->getPhone(),
+                    'ticket' => $passengerReservation->getTicket(),
+                ];
+            }
         }       
 
         $subTotal = round($subTotal, $round) ;
@@ -127,7 +151,7 @@ class ResumeReservationHandler extends BaseHandler
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
             'fligths' => [],
-            'passengers' => []
+            'passengers' => $passengers
         ];          
 
 
@@ -162,25 +186,6 @@ class ResumeReservationHandler extends BaseHandler
         }
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
         $structure['fligths'] = $flightsArray;
-
-        foreach($reservation->getPassengers() as $passenger) {
-            
-            $tickets = [];
-            foreach ($passenger->getTickets() as $ticket) {
-                $tickets[]['number'] = $ticket->getNumber();
-            }
-         
-
-            $structure['passengers'][] = [
-                'firstName' => $passenger->getName(),
-                'lastName' => $passenger->getLastName(),
-                'docType' => $passenger->getDocumentType(),
-                'docNumber' => $passenger->getDocumentNumber(),
-                'email' => $passenger->getEmail(),
-                'phone' => $passenger->getPhone(),
-                'tickets' => $tickets,
-            ];
-        }
 
 
         return $structure;          
