@@ -13,32 +13,40 @@ class PaymentGatewayService
 
     private $container;
 
-    public function getPaymentGateway($type)
+    /**
+     * Obtiene la implementacion del PaymentGateway acorde a la pasarela
+     * de pago a utilizar
+     *
+     * @param int $type
+     * @return PaymentGateway
+     * @throws NavicuException
+     */
+    public static function getPaymentGateway(int $type) : PaymentGateway
     {
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
 
-        if ($type==PaymentGateway::BANESCO_TDC) {
+        if ($type === PaymentGateway::BANESCO_TDC) {
             //pago con TDC            
             $config['public_id'] = getenv('INSTAPAGO_PUBLIC_ID');
             $config['private_id'] = getenv('INSTAPAGO_PRIVATE_ID');
             $config['url_payment_petition'] = getenv('INSTAPAGO_URL_PAYMENT');
             $paymenGateway = new InstapagoPaymentGateway($config);
-        /*} elseif ($type==PaymentGateway::NATIONAL_TRANSFER) {
+        /*} elseif ($type === PaymentGateway::NATIONAL_TRANSFER) {
             //Pago por transferencia bancaria nacional
             $paymenGateway = new BanckTransferPaymentGateway();
-        */} elseif ($type==PaymentGateway::STRIPE_TDC) {
+        */} elseif ($type === PaymentGateway::STRIPE_TDC) {
             //Pago por TDC en moneda extranjera
             $paymenGateway = new StripeTDCPaymentGateway();
-        /*} elseif ($type==PaymentGateway::INTERNATIONAL_TRANSFER) {
+        /*} elseif ($type === PaymentGateway::INTERNATIONAL_TRANSFER) {
             //Pago por Transferencia en moneda extranjera
             $paymenGateway = new InternationalBanckTransferPaymentGateway();
         } else if ($type == PaymentGateway::AAVV) {
             //Pago por agencia de viaje
             $paymenGateway = new AAVVPaymentGateway();
-        */} else if($type == PaymentGateway::PAYEEZY){
+        */} else if($type === PaymentGateway::PAYEEZY){
             $paymenGateway = new PayeezyPaymentGateway();
-        /*} else if($type == PaymentGateway::PANDCO_TRANSFER){
+        /*} else if($type === PaymentGateway::PANDCO_TRANSFER){
             //Pago por pandco
             $paymenGateway = new PandcoTransferPaymentGateway();
           } else if($type == PaymentGateway::Paypal ){
