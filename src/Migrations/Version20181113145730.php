@@ -434,6 +434,8 @@ final class Version20181113145730 extends AbstractMigration
 				        ON UPDATE NO ACTION
 				        ON DELETE NO ACTION");	
 
+				$this->addSql("alter table flight add segment integer");
+				$this->addSql("update flight set segment = 1");
 
 				$this->addSql("alter table flight drop increment_expenses");
 				$this->addSql("alter table flight drop   increment_guarantee");

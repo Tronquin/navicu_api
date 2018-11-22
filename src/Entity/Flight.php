@@ -79,6 +79,13 @@ class Flight
     private $cabin;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="segment", type="integer", nullable=true)
+     */
+    private $segment;
+
+    /**
      * @var \CurrencyType
      *
      * @ORM\ManyToOne(targetEntity="CurrencyType")
@@ -211,7 +218,7 @@ class Flight
         $this->price = $price;
 
         return $this;
-    }
+    }    
 
     public function getArrivalTime(): ?\DateTimeInterface
     {
@@ -245,6 +252,18 @@ class Flight
     public function setCabin(?string $cabin): self
     {
         $this->cabin = $cabin;
+
+        return $this;
+    }
+
+    public function getSegment(): ?integer
+    {
+        return $this->price;
+    }
+
+    public function setSegment(integer $segment): self
+    {
+        $this->segment = $segment;
 
         return $this;
     }
