@@ -50,11 +50,13 @@ class ListHandler extends BaseHandler
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
         }     
+
+
          
         $segments = [];
         foreach ($response[$resp] as $key => $segment) {
 
-            if (!$consolidator || ($segment['price'] > $consolidator->getCreditAvailable())) {  
+            if (!$consolidator || ($segment['price'] < $consolidator->getCreditAvailable())) {  
 
                 $segment['amounts'] = [];
                 $segment['amounts']['original_price'] = $segment['price'];
@@ -103,7 +105,7 @@ class ListHandler extends BaseHandler
         }    
 
         $response = [];
-        $response['segments'] = $segments; 
+        $response['itinerary'] = $segments; 
 
         $response = $this->logoAirlineExists($response);
 
@@ -190,6 +192,9 @@ class ListHandler extends BaseHandler
             'dest' => 'required|regex:/^[A-Z]{3}$/',
             'cabin' => 'required|string',
             'scale' => 'required|numeric',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+            'baggage' => 'required|numeric',
         ];
     }
 

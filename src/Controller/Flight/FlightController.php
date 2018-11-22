@@ -77,11 +77,29 @@ class FlightController extends AbstractController
      */
     public function calendar(Request $request)
     {
-        $handler = new FlightCalendarHandler($request);
+        $handler = new CalendarHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
     }
+
+
+    /**
+     * Obtiene calendario de vuelos
+     *
+     * @Route("/create_reservation", name="flight_reservation", methods="GET")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createReservation(Request $request)
+    {
+        $handler = new CreateReservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
 
 
     /**

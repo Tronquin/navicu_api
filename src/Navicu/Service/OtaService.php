@@ -50,7 +50,7 @@ class OtaService
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
-            'date' => 'required|date_format:Y-m-d',
+            'startDate' => 'required|date_format:Y-m-d',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
             'cabin' => 'required|in:C,F,N,W,Y,ALL',
             'scale' => 'required|numeric|between:0,3',
