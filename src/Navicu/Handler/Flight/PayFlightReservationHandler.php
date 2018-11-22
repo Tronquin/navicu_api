@@ -4,6 +4,7 @@ namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
+use App\Entity\PaymentType;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
@@ -91,6 +92,15 @@ class PayFlightReservationHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
+
+        $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
+
+        foreach ($payments as $i => $payment) {
+            $payments[$i]['description'] = 'Pago de reserva ' . $reservation->getPublicId();
+            $payments[$i]['expirationDate'] = $payment['expirationMonth'] . '/' . $payment['expirationYear'];
+            $payments[$i]['ip'] = $ip;
+        }
+
         $responsePayments = $paymentGateway->processPayments($payments);
 
         foreach ($responsePayments as $payment) {
@@ -109,29 +119,36 @@ class PayFlightReservationHandler extends BaseHandler
                 $request = null;
             }
 
+            /** @var PaymentType $paymentTypeInstance */
+            $paymentTypeInstance = $manager->getRepository(PaymentType::class)->find($paymentGateway->getTypePayment());
+
             $flightPayment
                 ->setCode($v_code)
                 ->setDate(new \DateTime())
                 ->setReference($payment['reference'])
                 ->setAmount($v_amount)
                 ->setFlightReservation($reservation)
-                ->setIpAddress($this->container->get('request_stack')->getCurrentRequest()->getClientIp())
+                ->setIpAddress($ip)
                 ->setHolder($payment['holder'])
                 ->setHolderId($holderId)
                 ->setState($status)
                 ->setType($paymentType)
-                ->setPaymentType($paymentGateway->getTypePayment())
-                ->setPaymentCommision($paymentGateway->getTypePayment()->getCommision())
+                ->setPaymentType($paymentTypeInstance)
+                ->setPaymentCommision($paymentTypeInstance->getCommision())
                 ->setResponse($payment['response']);
 
             if ($request) {
-                $flightPayment->setRequest($this->container->get('nzo_url_encryptor')->encrypt(json_encode($request)));
+                $flightPayment->setRequest(json_encode($request)); // TODO encrypt
             }
 
-            $reservation->addPayment($payment);
+            $reservation->addPayment($flightPayment);
 
             $manager->persist($flightPayment);
             $manager->flush();
+        }
+
+        if (! $paymentGateway->isSuccess()) {
+            throw new NavicuException('Payment fail');
         }
 
         return true;

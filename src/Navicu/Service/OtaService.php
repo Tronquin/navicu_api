@@ -174,7 +174,7 @@ class OtaService
         $validator->validate($params, [
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
-            'passengersData' => 'required',
+            'passengers' => 'required',
             'fareFamily' => 'required',
             'flights'=> 'required',
             'payment'=> 'required',
@@ -355,7 +355,6 @@ class OtaService
 
         $url = $url . '?' . http_build_query($params);
 
-
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -364,7 +363,6 @@ class OtaService
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
-
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');

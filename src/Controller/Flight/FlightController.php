@@ -5,6 +5,7 @@ namespace App\Controller\Flight;
 use App\Navicu\Handler\Flight\AutocompleteHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
+use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -100,4 +101,20 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
+    /**
+     * Genera el book, procesa el pago, genera el ticket
+     * y envia correo de confirmacion de la reserva
+     *
+     * @Route("/process_reservation", name="flight_process_reservation", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function processReservation(Request $request)
+    {
+        $handler = new ProcessFlightReservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
 }

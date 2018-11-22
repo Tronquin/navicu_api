@@ -225,7 +225,7 @@ class InstapagoPaymentGateway implements PaymentGateway
             $response = curl_exec($ch);
             curl_close($ch);
 
-            $response = $this->formaterResponseData(['request'=>$logRequest,'response'=>$response]);
+            $response = $this->formaterResponseData(['request'=>$request,'response'=>$response]);
             $this->success = $this->success && $response['success'];
 
             return $response;
@@ -438,8 +438,7 @@ class InstapagoPaymentGateway implements PaymentGateway
             'CardHolderId' => (string)$request['holderId'],
             'CardNumber' => $request['number'],
             'CVC' => $request['cvc'],
-            'StatusId' => $this->statusId,
-            'ExpirationDate' => $request['ExpirationDate'],
+            'ExpirationDate' => $request['expirationDate'],
             'IP' => $request['ip']
         ];
     }
@@ -549,7 +548,7 @@ class InstapagoPaymentGateway implements PaymentGateway
 
     public function getTypePayment()
     {
-        return PaymentGateway::BANESCO_TDC;
+        return PaymentGateway::INSTAPAGO_TDC;
     }
 
     private function checkLuhn($input)

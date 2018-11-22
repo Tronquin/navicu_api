@@ -256,9 +256,9 @@ class Flight
         return $this;
     }
 
-    public function getSegment(): ?integer
+    public function getSegment(): ?int
     {
-        return $this->price;
+        return $this->segment;
     }
 
     public function setSegment(integer $segment): self

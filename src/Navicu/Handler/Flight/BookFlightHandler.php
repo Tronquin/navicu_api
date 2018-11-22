@@ -62,17 +62,18 @@ class BookFlightHandler extends BaseHandler
                 // Guarda la tasa de conversion con respecto a la moneda de la reserva
 
                 $exchangeRp = $manager->getRepository(ExchangeRateHistory::class);
+                $today = (new \DateTime())->format('Y-m-d');
 
                 if ($gdsCurrency->getAlfa3() === 'USD') {
-                    $rate = $exchangeRp->getLastRateNavicuSell(new \DateTime(), $gdsCurrency->getId());
+                    $rate = $exchangeRp->getLastRateNavicuSell($today, $gdsCurrency->getId());
                 } else {
-                    $rate = $exchangeRp->getLastRateNavicuInBs(new \DateTime(), $gdsCurrency->getId());
+                    $rate = $exchangeRp->getLastRateNavicuInBs($today, $gdsCurrency->getId());
                 }
 
                 if ($gdsReservation->getCurrencyReservation()->getAlfa3() === 'USD') {
-                    $gdsReservation->setDollarRateConvertion($rate);
+                    $gdsReservation->setDollarRateConvertion($rate[0]['new_rate_navicu']);
                 } else {
-                    $gdsReservation->setCurrencyRateConvertion($rate);
+                    $gdsReservation->setCurrencyRateConvertion($rate[0]['new_rate_navicu']);
                 }
             }
         }
@@ -117,7 +118,8 @@ class BookFlightHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'passengers' => 'required'
+            'passengers' => 'required',
+            'payments' => 'required'
         ];
     }
 
@@ -129,22 +131,37 @@ class BookFlightHandler extends BaseHandler
      */
     private function getBook(FlightReservationGds $reservationGds) : string
     {
+        $params = $this->getParams();
         $country = ($alpha3 = $reservationGds->getCurrencyGds()->getAlfa3()) === 'USD' ? 'US' : 'VE';
 
-        $ff = '';
+        $ff = 'false';
         foreach ($reservationGds->getFlightFareFamily() as $fareFamily) {
             if ($fareFamily->getSelected()) {
                 $ff = $fareFamily->getName();
             }
         }
 
+        $flights = [];
+        foreach ($reservationGds->getFlights() as $flight) {
+            $flights[] = [
+                'departureAirport' => $flight->getAirportFrom()->getIata(),
+                'arrivalAirport' => $flight->getAirportTo()->getIata(),
+                'departureDateTime' => $flight->getDepartureTime()->format('Y-m-d H:i:s'),
+                'arrivalDateTime' => $flight->getArrivalTime()->format('Y-m-d H:i:s'),
+                'airline' => $flight->getAirline()->getIso(),
+                'flightNumber' => $flight->getNumber(),
+                'rate' => $flight->getTypeRate(),
+                'segment' => $flight->getSegment()
+            ];
+        }
+
         $response = OtaService::book([
             'country' => $country,
             'currency' => $alpha3,
-            'passengersData' => $reservationGds->getFlightReservation()->getPassengers(),
+            'passengers' => $params['passengers'],
             'fareFamily' => $ff,
-            'flights'=> $reservationGds->getFlights(),
-            'payment'=> [],
+            'flights'=> $flights,
+            'payment'=> $params['payments'][0],
             'provider' => $reservationGds->getGds()->getName()
         ]);
 
@@ -160,17 +177,14 @@ class BookFlightHandler extends BaseHandler
     private function createPassengerFromData($passengerData) : Passenger
     {
         $passenger = new Passenger();
-        $passengerNames = explode(' ', $passengerData['fullName']);
 
         $passenger
-            ->setName($passengerNames[0])
+            ->setName($passengerData['firstName'])
+            ->setLastname($passengerData['lastName'])
             ->setDocumentType($passengerData['docType'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])
             ->setPhone($passengerData['phone']);
-
-        if (isset($passengerNames[1]))
-            $passenger->setLastname($passengerNames[1]);
 
         return $passenger;
     }
