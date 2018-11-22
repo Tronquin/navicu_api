@@ -80,11 +80,11 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
     /**
      * Obtiene la tasa navicu venta
      *
-     * @param $dateToLookUp
+     * @param string $dateToLookUp
      * @param int $coinId
      * @return array
      */
-    public function getLastRateNavicuSell($dateToLookUp, $coinId)
+    public function getLastRateNavicuSell(string $dateToLookUp, int $coinId)
     {
         $today = (new \DateTime())->format('Y-m-d');
 

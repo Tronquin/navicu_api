@@ -37,10 +37,12 @@ class ProcessFlightReservationHandler extends BaseHandler
          */
         $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
+        $handler->setParam('passengers', $params['passengers']);
+        $handler->setParam('payments', $params['payments']);
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
-            $this->addErrorToHandler( $handler->getErrors() );
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
             throw new NavicuException('BookFlightHandler fail', $handler->getCode());
         }
@@ -61,7 +63,7 @@ class ProcessFlightReservationHandler extends BaseHandler
 
         if (! $handler->isSuccess()) {
 
-            $this->addErrorToHandler( $handler->getErrors() );
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
             // En caso de error envia correo de notificacion a navicu
             $this->sendPaymentDeniedEmail($params['publicId']);
@@ -80,7 +82,7 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
-            $this->addErrorToHandler( $handler->getErrors() );
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
             throw new NavicuException('IssueTicketHandler fail', $handler->getCode());
         }
@@ -116,7 +118,8 @@ class ProcessFlightReservationHandler extends BaseHandler
         return [
             'publicId' => 'required',
             'paymentType' => 'required|numeric|between:1,3',
-            'payments' => 'required'
+            'payments' => 'required',
+            'passengers' => 'required'
         ];
     }
 

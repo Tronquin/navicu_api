@@ -198,4 +198,9 @@ class AirlineFinancialTransaction
 
         return $this;
     }
+
+    public function getSignNumber()
+    {
+        return $this->sign === '-' ? -1 : 1;
+    }
 }

@@ -14,7 +14,7 @@ interface PaymentGateway
      /**
      * las constantes registran los posibles tipos de pagos que admite navicu
      */
-    const BANESCO_TDC = 1;
+    const INSTAPAGO_TDC = 1;
     const STRIPE_TDC = 2;
     const PAYEEZY = 3;
     const INTERNATIONAL_TRANSFER = 4;
