@@ -34,14 +34,22 @@ class ListHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
 
-        if ($params['roundTrip'] == 0) {
+
+        if ($params['searchType'] == 'oneWay') {
             $resp = 'oneWay';
             $response = OtaService::oneWay($this->getParams());
         }    
-        else {
+        else if ($params['searchType'] == 'roundTrip') {
             $resp = 'roundTrip';
             $response = OtaService::roundTrip($this->getParams());
-        }   
+        }  else {
+            $resp = 'calendar';
+            $response = OtaService::calendar($this->getParams());
+        } 
+
+
+        dump($response);
+        die;
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
@@ -57,10 +65,17 @@ class ListHandler extends BaseHandler
 
                 $negotiatedRate = false;
                 foreach ($segment['flights'] as $key => $flight) {
-                    $negotiatedRate = $flight['negotiated_rate'];
-                    if ($negotiatedRate) {
-                        break;
+
+                    if ($flight['negotiated_rate']) {
+                        $negotiatedRate = $flight['negotiated_rate'];                    
+                    }  
+
+                    $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
+
+                    if(is_null($airline)) {
+                        $airline = $this->createAirline($flight);
                     }
+
                 }
 
                 $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
@@ -88,13 +103,13 @@ class ListHandler extends BaseHandler
                 $segment['amounts']['discount'] = $convertedAmounts['discount'];
                 $segment['amounts']['tax'] = $convertedAmounts['tax'];
                 $segments[] = $segment;
-
             }
-
         }    
 
         $response = [];
         $response['segments'] = $segments; 
+
+        $response = $this->logoAirlineExists($response);
 
         return $response;
     }
@@ -167,6 +182,7 @@ class ListHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
+            'searchType' => 'required|string',
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
             'adt' => 'required|numeric|min:1',
@@ -174,6 +190,10 @@ class ListHandler extends BaseHandler
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'source' => 'required|regex:/^[A-Z]{3}$/',
+            'dest' => 'required|regex:/^[A-Z]{3}$/',
+            'cabin' => 'required|string',
+            'scale' => 'required|numeric',
         ];
     }
 

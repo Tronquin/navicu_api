@@ -3,9 +3,14 @@
 namespace App\Controller;
 
 use App\Navicu\Handler\TestHandler;
+use App\Navicu\Handler\Main\ListCurrencyHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/navicu")
+ */ 
 class IndexController extends AbstractController
 {
     /**
@@ -19,4 +24,14 @@ class IndexController extends AbstractController
         return $handler->getJsonResponseData();
     }
    
+   /**
+     * @Route("/list_currency", name="listcurrency")
+     */ 
+   public function listCurrency()
+   {
+   		$handler = new ListCurrencyHandler();
+   		$handler->processHandler();
+
+        return $handler->getJsonResponseData();
+   }
 }

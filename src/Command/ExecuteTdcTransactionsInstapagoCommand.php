@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use App\Navicu\Handler\ExecuteTdcTransactionInstapagoHandler;
+use App\Navicu\Handler\Main\ExecuteTdcTransactionInstapagoHandler;
 
 class ExecuteTdcTransactionsInstapagoCommand extends Command
 {
