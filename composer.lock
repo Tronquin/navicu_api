@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2df6e3e1747bebc83b3319802546ea8",
+    "content-hash": "63e4d98fc4503916938eac035006b6cb",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1408,6 +1408,62 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
+        },
+        {
+            "name": "nzo/url-encryptor-bundle",
+            "version": "4.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NAYZO/NzoUrlEncryptorBundle.git",
+                "reference": "6ffab92dc94efffaad334ce1a01d95b72db86b8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NAYZO/NzoUrlEncryptorBundle/zipball/6ffab92dc94efffaad334ce1a01d95b72db86b8d",
+                "reference": "6ffab92dc94efffaad334ce1a01d95b72db86b8d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "^2.3|^3.0|^4.0"
+            },
+            "conflict": {
+                "twig/twig": "<1.12"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8|^5.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Nzo\\UrlEncryptorBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ala Eddine Khefifi",
+                    "email": "alakhefifi@gmail.com"
+                }
+            ],
+            "description": "The NzoUrlEncryptorBundle is a Symfony Bundle used to Encrypt and Decrypt data and variables in the Web application or passed through URL",
+            "keywords": [
+                "data",
+                "decrypt",
+                "decryption",
+                "encrypt",
+                "encryption",
+                "id",
+                "link",
+                "security",
+                "url",
+                "variable"
+            ],
+            "time": "2018-09-26T09:14:50+00:00"
         },
         {
             "name": "ocramius/package-versions",

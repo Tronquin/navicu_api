@@ -55,6 +55,8 @@ class ProcessFlightReservationHandler extends BaseHandler
          */
         $handler = new PayFlightReservationHandler();
         $handler->setParam('publicId', $params['publicId']);
+        $handler->setParam('paymentType', $params['paymentType']);
+        $handler->setParam('payments', $params['payments']);
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
@@ -112,7 +114,9 @@ class ProcessFlightReservationHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
-            'publicId' => 'required'
+            'publicId' => 'required',
+            'paymentType' => 'required|numeric|between:1,3',
+            'payments' => 'required'
         ];
     }
 

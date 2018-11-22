@@ -8,6 +8,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\PaymentGatewayService;
 
 class PayFlightReservationHandler extends BaseHandler
 {
@@ -46,7 +47,7 @@ class PayFlightReservationHandler extends BaseHandler
             return compact('reservation');
         }
 
-        if (! $this->processPayment($reservationTotal)) {
+        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'])) {
             throw new NavicuException('Payment fail');
         }
 
@@ -71,40 +72,67 @@ class PayFlightReservationHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
-            'publicId' => 'required'
+            'publicId' => 'required',
+            'paymentType' => 'required|numeric|between:1,3',
+            'payments' => 'required'
         ];
     }
 
     /**
      * Procesa el pago por el monto indicado
      *
-     * @param float $amount
+     * @param FlightReservation $reservation
+     * @param array $payments
+     * @param int $paymentType
      * @return bool
+     * @throws NavicuException
      */
-    private function processPayment(float $amount) : bool
+    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
     {
-        // TODO Servicio de pago y guardar FlightPayment
-        /*$paymentType = $rfPaymentType->findById($pgw->getTypePayment());
-        $payment = new FlightPayment();
+        $manager = $this->container->get('doctrine')->getManager();
+        $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
+        $responsePayments = $paymentGateway->processPayments($payments);
 
-        $payment
-            ->setCode($v_code)
-            ->setDate(new \DateTime())
-            ->setReference($payment['reference'])
-            ->setAmount($v_amount)
-            ->setReservation($reservation)
-            ->setIpAddress($this->command->get('ip'))
-            ->setHolder($payment['holder'])
-            ->setHolderId((isset($payment['holderId']) ? $payment['holderId'] : null))
-            ->setState($status)
-            ->setType($pgw->getTypePayment())
-            ->setPaymentType($paymentType)
-            ->setPaymentCommision($paymentType->getCommision())
-            ->setRequest($kernel->getContainer()->get('SecurityService')->my_encrypt_key(json_encode($request)))
-            ->setResponse($payment['response']);
+        foreach ($responsePayments as $payment) {
 
-        $reservation->addPayment($payment);
-        $data[] = $payment;*/
+            $flightPayment = new FlightPayment();
+
+            $v_code = $payment['id'] ?? $payment['code'];
+            $v_amount = $payment['amount'] ?? 0;
+            $holderId = $payment['holderId'] ?? null;
+
+            if (isset($payment['fase'])) {
+                $request = $payment['request'];
+                $status = $payment['fase'] === 2 ? $payment['status'] : 3;
+            } else {
+                $status = $payment['status'];
+                $request = null;
+            }
+
+            $flightPayment
+                ->setCode($v_code)
+                ->setDate(new \DateTime())
+                ->setReference($payment['reference'])
+                ->setAmount($v_amount)
+                ->setFlightReservation($reservation)
+                ->setIpAddress($this->container->get('request_stack')->getCurrentRequest()->getClientIp())
+                ->setHolder($payment['holder'])
+                ->setHolderId($holderId)
+                ->setState($status)
+                ->setType($paymentType)
+                ->setPaymentType($paymentGateway->getTypePayment())
+                ->setPaymentCommision($paymentGateway->getTypePayment()->getCommision())
+                ->setResponse($payment['response']);
+
+            if ($request) {
+                $flightPayment->setRequest($this->container->get('nzo_url_encryptor')->encrypt(json_encode($request)));
+            }
+
+            $reservation->addPayment($payment);
+
+            $manager->persist($flightPayment);
+            $manager->flush();
+        }
 
         return true;
     }
