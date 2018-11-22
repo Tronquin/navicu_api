@@ -58,11 +58,14 @@ class ExecuteTdcTransactionInstapagoHandler extends BaseHandler
         global $kernel;
         //$params = $this->getParams();
 
-        $paymentGateway = $kernel->getContainer()->get('PaymentGatewayService')->getPaymentGateway(1);
+        $paymentGateway = PaymentGatewayService::getPaymentGateway(1);
         $response['success'] = false;
        
-        $response = PaymentGateway::executePayment(array('amount'=>10, 'id' => '123456')); 
+        $response = $paymentGateway->executePayment(array('amount'=>10, 'id' => '123456')); 
         
+        dump($response);
+        die;
+
         return $response;
     }
 

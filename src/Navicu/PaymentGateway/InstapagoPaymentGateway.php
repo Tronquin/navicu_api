@@ -6,6 +6,17 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 
+/**
+ * Clase para la comunicación con la pasarela de pago: Instapago.
+ *
+ * @author Javier Vasquez <jvasquez@jacidi.com>
+ * @version 22-11-2018
+ * @param $request
+ * @param $url
+ * @param $method
+ * @throws EntityValidationException
+ * @return  Object | \Navicu\Core\Application\Contract\json | array
+ */
 
 class InstapagoPaymentGateway implements PaymentGateway
 {
@@ -17,7 +28,7 @@ class InstapagoPaymentGateway implements PaymentGateway
     /**
      * contante de intentos de anulación
      */
-    const MaxVoidPayment = 3;
+    const MAXVOID = 3;
 
     /**
      * indica el estado de la transacción tras un evento de pago
@@ -79,7 +90,7 @@ class InstapagoPaymentGateway implements PaymentGateway
     private $success;
 
     /**
-     * variables de configuración necesarias para establecer la comunicacionm con la entidad bancaria
+     * variables de configuración necesarias para establecer la comunicacion con la entidad bancaria
      *
      * @var Array;
      */
@@ -181,28 +192,18 @@ class InstapagoPaymentGateway implements PaymentGateway
 
     /**
      * este metodo debe establecer la comunicacion con el banco y solicitar procesar el pago
-     *
-     * @author Gabriel Camacho <kbo025@gmail.com>
-     * @version 07-10-2015
+     *    
      * @param $request
      * @param $url
      * @param $method
-     * @throws EntityValidationException
+     * @throws NavicuException
      * @return  Object | \Navicu\Core\Application\Contract\json | array
      */
     public function processPayment($request,$url,$method)
     {
         if ($this->validateRequestData($request)) {
             //global $kernel;
-            //$logger = $kernel->getContainer()->get('Logger');
-
-            $request['PublicKeyId'] = $this->config['public_id'];
-            $request['KeyId'] = $this->config['private_id'];
-            $request['StatusId'] = $this->statusId;
-
-            /** Se almacena la estructura original del cardholder y cardholder-id para el front-end */
-            //$logRequest = $request;
-            /** solo se envían los parametros necesarios para la completitud del pago */
+            //$logger = $kernel->getContainer()->get('Logger');           
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL,$this->config[$url]);
@@ -244,7 +245,6 @@ class InstapagoPaymentGateway implements PaymentGateway
         else {
 
             $this->success = true;
-
             /** Fase 1: Autorizar Pagos 
             if (count($request) === 1)
                // $logfligth->writeLog('BanescoTDCPayment Proceso: Pago unico');
@@ -254,9 +254,8 @@ class InstapagoPaymentGateway implements PaymentGateway
                 $logger->warning('InstapagoPayment Proceso: Pago Multiple');
             //$logfligth->writeLog('.......................................................................................');
             $logger->warning('.......................................................................................');
-
             */
-
+            
             while ($this->success && count($request) > $i) {
 
                 $formatedRequest = $this->formaterRequestData($request[$i]);
@@ -297,7 +296,7 @@ class InstapagoPaymentGateway implements PaymentGateway
                                 /** @var $succesWhile controla los intentos de anulación */
                                 $succesVoid = false;
                                 $iVoid = 0;
-                                while (! $succesVoid && $iVoid< self::MaxVoidPayment) {
+                                while (! $succesVoid && $iVoid< self::MAXVOID) {
                                     /** disminuye el riesgo de bloqueo de terminales de instapago */
                                     sleep(5);
                                     $responseAux = $this->processPayment($this->formaterRequestDataTotal($current),
@@ -351,7 +350,6 @@ class InstapagoPaymentGateway implements PaymentGateway
         //$url = 'https://api.instapago.com/payment' . '?' . http_build_query($request);
         $url = 'https://api.instapago.com/payment';
         curl_setopt($ch, CURLOPT_URL, $url);
-
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         //curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($request));
@@ -366,41 +364,38 @@ class InstapagoPaymentGateway implements PaymentGateway
     /**
      * debe validar que todos los campos requeridos para hacer la solicitud esten completos y sean correctos
      *
-     * @author Gabriel Camacho <kbo025@gmail.com>
-     * @version 07-10-2015
+     * @author 
+     * @version 23-11-2018
      * @param $request
-     * @throws EntityValidationException
+     * @throws NavicuException
      * @return  boolean
      **/
     public function validateRequestData($request)
     {
-      /*  if(empty($request['CardNumber']) || !$this->checkLuhn($request['CardNumber']) || !$this->checkVenezuelanCard($request['CardNumber']))
-            throw new EntityValidationException('payments',\get_class($this),'invalid_card_number');
+        if(empty($request['CardNumber']) || !$this->checkLuhn($request['CardNumber']) || !$this->checkVenezuelanCard($request['CardNumber']))
+            throw new NavicuException(\get_class($this) . ': invalid_card_number');
         if(empty($request['ExpirationDate']) || !$this->checkExpiredDate($request['ExpirationDate']))
-            throw new EntityValidationException('payments',\get_class($this),'invalid_expiration_date');
+            throw new NavicuException(\get_class($this) . ': invalid_expiration_date');
         if(empty($request['Amount']) || !is_numeric($request['Amount']) )
-            throw new EntityValidationException('payments',\get_class($this),'invalid_amount');
+            throw new NavicuException(\get_class($this) . ': invalid_amount');
         if(empty($request['Description']))
-            throw new EntityValidationException('payments',\get_class($this),'invalid_description');
+            throw new NavicuException(\get_class($this) . ': invalid_description');
         if(empty($request['CardHolder']))
-            throw new EntityValidationException('payments',\get_class($this),'invalid_card_holder');
+            throw new NavicuException(\get_class($this) . ': invalid_card_holder');
         if(empty($request['CardHolderId']))
-            throw new EntityValidationException('payments',\get_class($this),'invalid_card_holder_id');
+            throw new NavicuException(\get_class($this) . ': invalid_card_holder_id');
         if(empty($request['CVC']) || !is_numeric($request['CVC']) || strlen($request['CVC'])!=3)
-            throw new EntityValidationException('payments',\get_class($this),'invalid_cvc');
+            throw new NavicuException(\get_class($this) . ': invalid_cvc');
         if(empty($request['StatusId']))
-            throw new EntityValidationException('payments',\get_class($this),'empty_status_id');
+            throw new NavicuException(\get_class($this) . ': empty_status_id');
         if(empty($request['IP']))
-            throw new EntityValidationException('payments',\get_class($this),'empty_ip');
-        */
+            throw new NavicuException(\get_class($this) . ': empty_ip');
+        
         return true;
     }
 
     /**
      * debe devolver la data requerida para hacer la solicitud formateada segun los requerimientos de la entidad
-     *
-     * @author Gabriel Camacho <kbo025@gmail.com>
-     * @version 07-10-2015
      */
     public function formaterRequestData($request)
     {
@@ -422,6 +417,9 @@ class InstapagoPaymentGateway implements PaymentGateway
         ));*/
 
         return [
+            'PublicKeyId' => $this->config['public_id'],
+            'KeyId' => $this->config['private_id'],
+            'StatusId' => $this->statusId,
             'Amount' => (string)$amount,
             'Description' => $request['description'],
             'CardHolder' => $request['holder'],
@@ -483,7 +481,6 @@ class InstapagoPaymentGateway implements PaymentGateway
         $jsonResponse = $response['response'];
         $response = json_decode($jsonResponse,true);
 
-        // Elimina las comas del monto a cobrar, en caso de un error se
         $amount = (! isset($response['amount']) ?  0 : str_replace(",","",(string)$response['amount']));
 
         if (isset($response['success'])) {
@@ -498,7 +495,7 @@ class InstapagoPaymentGateway implements PaymentGateway
                 'amount' => $amount,
                 'response' => $jsonResponse,
             ]);
-        }else{
+        } else {
             $return = array_merge($response,[
                 'id' =>  (isset($request['id']) ? $request['id'] : 0) ,
                 'success' => false,
@@ -531,17 +528,12 @@ class InstapagoPaymentGateway implements PaymentGateway
 
     /**
      * devuelve un array clave valor con el formato 'Codigo de estado' => 'estado de la transaccion'
-     *
-     * @author Gabriel Camacho <kbo025@gmail.com>
-     * @version 07-10-2015
-     *
-     * @return Array
+     *  
      */
     public function getStates()
     {
         return $this->states;
     }
-
 
     public function getTypePayment()
     {
@@ -586,7 +578,7 @@ class InstapagoPaymentGateway implements PaymentGateway
     }
 
     /**
-     * devueleve un entero que representa el estado de la reserva segun la condicion de los pagos
+     * devuelve un entero que representa el estado de la reserva segun la condicion de los pagos
      * 
      *
     public function getStatusReservation(Reservation $reservation)

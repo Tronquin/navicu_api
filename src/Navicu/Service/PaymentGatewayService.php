@@ -1,21 +1,17 @@
 <?php
 namespace App\Navicu\Service;
 
-use App\Navicu\PaymentGateway\BanescoTDCPaymentGateway;
+use App\Navicu\PaymentGateway\InstapagoPaymentGateway;
 use App\Navicu\PaymentGateway\PayeezyPaymentGateway;
 use App\Navicu\Resources\PaymentGateway\StripeTDCPaymentGateway;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
+use Symfony\Component\Dotenv\Dotenv;
 
 class PaymentGatewayService
 {
 
     private $container;
-
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
 
     public function getPaymentGateway($type)
     {
@@ -24,9 +20,9 @@ class PaymentGatewayService
 
         if ($type==PaymentGateway::BANESCO_TDC) {
             //pago con TDC            
-            $config['public_id'] = getenv('instapago_public_id');
-            $config['private_id'] = getenv('instapago_private_id');
-            $config['url_payment_petition'] = getenv('instapago_url_payment_petition');
+            $config['public_id'] = getenv('INSTAPAGO_PUBLIC_ID');
+            $config['private_id'] = getenv('INSTAPAGO_PRIVATE_ID');
+            $config['url_payment_petition'] = getenv('INSTAPAGO_URL_PAYMENT');
             $paymenGateway = new InstapagoPaymentGateway($config);
         /*} elseif ($type==PaymentGateway::NATIONAL_TRANSFER) {
             //Pago por transferencia bancaria nacional
