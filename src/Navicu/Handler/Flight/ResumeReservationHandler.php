@@ -104,6 +104,8 @@ class ResumeReservationHandler extends BaseHandler
                 }
             }  
 
+            $passengers = [];
+
             foreach( $reservationGds->getFlightReservationPassengers() as $key=>$passengerReservation) {
 
                 $passenger = $passengerReservation->getPassenger();               
@@ -115,7 +117,7 @@ class ResumeReservationHandler extends BaseHandler
                 }
                 */
 
-                $structure['passengers'][] = [
+                $passengers[] = [
                     'firstName' => $passenger->getName(),
                     'lastName' => $passenger->getLastName(),
                     'docType' => $passenger->getDocumentType(),
@@ -149,7 +151,7 @@ class ResumeReservationHandler extends BaseHandler
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
             'fligths' => [],
-            'passengers' => []
+            'passengers' => $passengers
         ];          
 
 
