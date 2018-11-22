@@ -47,10 +47,6 @@ class ListHandler extends BaseHandler
             $response = OtaService::calendar($this->getParams());
         } 
 
-
-        dump($response);
-        die;
-
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
         }     

@@ -211,7 +211,7 @@ final class Version20181113145730 extends AbstractMigration
                 status 
                 )
                 select nextval('flight_reservation_gds_id_seq'),
-                fr.currency,                max(f.currency),                fr.id,
+                fr.currency,                max(f.original_currency),                fr.id,
                 case
 					WHEN max(f.provider) = 'AMA' then 2
 					else 1
