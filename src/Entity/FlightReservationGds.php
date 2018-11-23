@@ -159,7 +159,7 @@ class FlightReservationGds
      *
      * @ORM\Column(name="airline_commision", type="float", precision=10, scale=0, nullable=true)
      */
-    private $airlineCommision;
+    private $airlineCommission;
 
     /**
      * @var float|null
@@ -247,7 +247,7 @@ class FlightReservationGds
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="FlightFareFamily", mappedBy="flightReservationGds")
+     * @ORM\OneToMany(targetEntity="FlightFareFamily", mappedBy="flightReservationGds", cascade={"persist"})
      */
     private $flightFareFamily;
 
@@ -485,14 +485,14 @@ class FlightReservationGds
         return $this;
     }
 
-    public function getAirlineCommision(): ?float
+    public function getAirlineCommission(): ?float
     {
-        return $this->airlineCommision;
+        return $this->airlineCommission;
     }
 
-    public function setAirlineCommision(?float $airlineCommision): self
+    public function setAirlineCommission(?float $airlineCommission): self
     {
-        $this->airlineCommision = $airlineCommision;
+        $this->airlineCommission = $airlineCommission;
 
         return $this;
     }
@@ -615,13 +615,13 @@ class FlightReservationGds
 
     public function addFlight(Flight $flight): self
     {
-        if (!$this->flights->contains($flight)) {
-            $this->flights[] = $flight;
-            $flight->setFlight($this);
-        }
+        $this->flights[] = $flight;
+
+        $flight->setFlightReservationGds($this);
 
         return $this;
     }
+ 
 
     public function removeFlight(Flight $flight): self
     {

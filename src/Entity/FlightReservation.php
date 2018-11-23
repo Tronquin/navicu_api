@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\PublicId;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -143,7 +144,7 @@ class FlightReservation
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation")
+     * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation",cascade={"persist"})
      */
     private $payments;
 
@@ -172,13 +173,14 @@ class FlightReservation
     }
 
     public function getPublicId(): ?string
-    {
+    {        
         return $this->publicId;
     }
 
-    public function setPublicId(string $publicId): self
+    public function setPublicId(): self
     {
-        $this->publicId = $publicId;
+        $id = new PublicId('date'); 
+        $this->publicId = $id->toString();
 
         return $this;
     }

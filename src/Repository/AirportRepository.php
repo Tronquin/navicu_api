@@ -49,7 +49,7 @@ class AirportRepository extends BaseRepository
 
     public function findAllByAirport(string $airport) : array
     {
-        $additionalCriteria = (($airport === null) ? 'visible = true' : 'iata= '.$airport);
+        $additionalCriteria = (($airport === null) ? 'visible = true' : 'iata= '."'".$airport."'");
         
         return $this->getEntityManager()
             ->getConnection()
@@ -65,7 +65,7 @@ class AirportRepository extends BaseRepository
                     country_code,
                     vector
                 from web_fligths_autocompleted_view 
-                where" . $additionalCriteria . " order by location_name asc")
+                where " . $additionalCriteria . " order by location_name asc")
             
             ->fetchAll();
     }

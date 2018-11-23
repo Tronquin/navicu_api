@@ -457,6 +457,7 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("alter table flight drop increment_consolidator");
 				$this->addSql("alter table flight drop  subtotal_no_extra_increment");
 				$this->addSql("alter table flight drop  tax_total");
+				$this->addSql("alter table flight drop price");
 
 				$this->addSql("alter table flight_reservation_gds rename dollar_rate_covertion to dollar_rate_convertion");
 				$this->addSql("alter table flight_reservation_gds rename currency_rate_covertion to currency_rate_convertion");

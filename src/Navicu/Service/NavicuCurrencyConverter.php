@@ -211,7 +211,7 @@ class NavicuCurrencyConverter
      * @param \DateTime $date
      * @return array
      */
-    private static function getLastRate(string $currency, \DateTime $date) : array
+    public static function getLastRate(string $currency, \DateTime $date) : array
     {
         if (isset(self::$lastRate[$currency][$date->format('Y-m-d')])) {
 
