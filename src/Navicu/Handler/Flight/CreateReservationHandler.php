@@ -6,6 +6,7 @@ use App\Entity\CurrencyType;
 use App\Entity\ExchangeRateHistory;
 use App\Entity\FlightReservation;
 use App\Entity\Flight;
+use App\Entity\Consolidator;
 use App\Entity\FlightReservationGds;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
@@ -34,6 +35,10 @@ class CreateReservationHandler extends BaseHandler
 
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+
+        dump($params);
+        die;
+
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();        
      
         $reservation = new FlightReservation();
@@ -200,11 +205,11 @@ class CreateReservationHandler extends BaseHandler
         ->setIncrementExpenses($convertedAmounts['incrementExpenses'])
 	        ->setIncrementGuarantee($convertedAmounts['incrementGuarantee'])
 	        ->setDiscount($convertedAmounts['discount'])
-	        ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy('iso' => $itinerary['flights'][0]['airline']]));
+	        ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]))
 	        ->setAirlineCommission($airlineCommission)
 	        ->setIsRefundable($itinerary['flights'][0]['isRefundable'])
 	        ->setStatus(0)
-	        ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]);)
+	        ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
 
 	        $dollarRates = NavicuCurrencyConverter::getLastRate($itineray['currency'], new \DateTime('now'));

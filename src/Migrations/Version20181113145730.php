@@ -11,8 +11,7 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20181113145730 extends AbstractMigration
 {
     public function up(Schema $schema) : void
-    {
-       
+    {       
     	// this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
@@ -122,7 +121,7 @@ final class Version20181113145730 extends AbstractMigration
 			)');
 
 			$this->addSql("insert into gds values (1, 'KIU', 'KIU')");
-			$this->addSql("insert into gds values (2, 'AMADEUS', 'AMADEUS')");
+			$this->addSql("insert into gds values (2, 'AMA', 'AMADEUS')");
 
 			$this->addSql("
 			CREATE TABLE public.flight_reservation_gds
