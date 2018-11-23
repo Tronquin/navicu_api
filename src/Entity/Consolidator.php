@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -109,6 +111,17 @@ class Consolidator
      * @ORM\Column(name="email_contact", type="string", length=255, nullable=false)
      */
     private $emailContact;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="ConsolidatorTransaction", mappedBy="consolidator")
+     */
+    private $consolidatorTransactions;
+
+    public function __construct()
+    {
+        $this->consolidatorTransactions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -255,6 +268,37 @@ class Consolidator
     public function setEmailContact(string $emailContact): self
     {
         $this->emailContact = $emailContact;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ConsolidatorTransaction[]
+     */
+    public function getConsolidatorTransactions(): Collection
+    {
+        return $this->consolidatorTransactions;
+    }
+
+    public function addConsolidatorTransaction(ConsolidatorTransaction $consolidatorTransaction): self
+    {
+        if (!$this->consolidatorTransactions->contains($consolidatorTransaction)) {
+            $this->consolidatorTransactions[] = $consolidatorTransaction;
+            $consolidatorTransaction->setConsolidator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsolidatorTransaction(ConsolidatorTransaction $consolidatorTransaction): self
+    {
+        if ($this->consolidatorTransactions->contains($consolidatorTransaction)) {
+            $this->consolidatorTransactions->removeElement($consolidatorTransaction);
+            // set the owning side to null (unless already changed)
+            if ($consolidatorTransaction->getConsolidator() === $this) {
+                $consolidatorTransaction->setConsolidator(null);
+            }
+        }
 
         return $this;
     }

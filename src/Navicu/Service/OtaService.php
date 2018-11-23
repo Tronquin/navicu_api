@@ -185,7 +185,7 @@ class OtaService
             throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
-        return self::send(self::URL_BOOK, $params);
+        return self::send(self::URL_BOOK, $params, self::METHOD_POST);
     }
 
     /**
@@ -366,6 +366,10 @@ class OtaService
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');
+        }
+
+        if ($response['code'] !== self::CODE_SUCCESS) {
+            throw new OtaException($response['errors']);
         }
 
         return $response;
