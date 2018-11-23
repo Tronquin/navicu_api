@@ -7,6 +7,7 @@ use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
 use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
+use App\Navicu\Handler\Flight\CreateReservationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,14 +89,21 @@ class FlightController extends AbstractController
     /**
      * Obtiene calendario de vuelos
      *
-     * @Route("/create_reservation", name="flight_reservation", methods="GET")
+     * @Route("/create_reservation", name="flight_reservation", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function createReservation(Request $request)
     {
-        $handler = new CreateReservationHandler($request);
+        $handler = new CreateReservationHandler();
+
+        foreach ($request->request->all() as $key => $value) {
+
+            $handler->setParam($key, $value);
+        }
+    
+
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
