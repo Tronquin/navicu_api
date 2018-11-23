@@ -60,9 +60,7 @@ class CreateReservationHandler extends BaseHandler
 		foreach ($params['itinerary'] as $key => $itinerary) {
 
 			$reservationGds = new FlightReservationGds();
-
-	    	$negotiatedRate = false;
-	   
+	    	$negotiatedRate = false;	   
 
 	    	foreach ($itinerary['flights'] as $key => $flight) {
 
@@ -149,7 +147,7 @@ class CreateReservationHandler extends BaseHandler
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'])
         	->setPublicId()
-	        //->setIpAddress($command->get('ipAddress'))
+	        ->setIpAddress($pararms['ipAddress'])
 	        ->setOrigin('navicu web');		 
 
 	 	$manager->persist($reservation);
