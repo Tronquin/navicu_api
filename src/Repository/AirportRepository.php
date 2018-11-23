@@ -7,10 +7,6 @@ use App\Entity\OAuthUser;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method OAuthUser|null find($id, $lockMode = null, $lockVersion = null)
- * @method OAuthUser|null findOneBy(array $criteria, array $orderBy = null)
- * @method OAuthUser[]    findAll()
- * @method OAuthUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AirportRepository extends BaseRepository
 {
@@ -49,4 +45,31 @@ class AirportRepository extends BaseRepository
             ->fetchAll()
         ;
     }
+
+
+    public function findAllByAirport(string $airport) : array
+    {
+        $additionalCriteria = (($airport === null) ? 'visible = true' : 'iata= '.$airport);
+        
+        return $this->getEntityManager()
+            ->getConnection()
+            ->query(" 
+                SELECT
+                    id,
+                    iata,
+                    name,
+                    visible,
+                    location_name,
+                    location_code,
+                    country_name,
+                    country_code,
+                    vector
+                from web_fligths_autocompleted_view 
+                where" . $additionalCriteria . " order by location_name asc")
+            
+            ->fetchAll();
+    }
+
+
+
 }

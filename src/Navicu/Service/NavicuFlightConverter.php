@@ -22,7 +22,7 @@ class NavicuFlightConverter
 
 	CONST TAX = 0.16;
 
-    public static function calculateFlightAmount($otaAmount, $otaCurrency, array $lockData, $currency ,array $consolidator = [])
+    public static function calculateFlightAmount($otaAmount, $otaCurrency, array $lockData, $currency ,array $consolidator = []) : array
     {
     	if (! $currency || ! $otaCurrency) {
             throw new NavicuException('Currency not found');
@@ -41,7 +41,7 @@ class NavicuFlightConverter
         $otaAmount = NavicuCurrencyConverter::convert($otaAmount, $otaCurrency ,$currency, $today, $isRateSell); 
 
         // Calcula el incremento por bloqueo
-        $incrementLock = self::calculateIncrementLock($otaAmount, $otaCurrency, $currency, $lockData);
+        $incrementLock = self::calculateIncrementLock($otaAmount, $otaCurrency, $currency, $lockData , $isRateSell);
 
         // Calcula el incremento por bloqueo
         $incrementConsolidator = self::calculateIncrementConsolidator($otaAmount, $otaCurrency, $currency, $today, $consolidator);
@@ -50,22 +50,23 @@ class NavicuFlightConverter
         $incrementMarkup = self::calculateIncrementMarkup($manager, $otaAmount, $otaCurrency, $currency);
        
         // Subtotal
-        $subTotal = $otaAmount + $incrementLock + $incrementMarkup + $incrementConsolidator;
+        $subTotal = $otaAmount + $incrementLock + $incrementMarkup + $incrementConsolidator['amount'];
 
         // Calcula los gastos de gestion
-        $managementExpenses = self::calculateManagementExpenses($otaAmount, $currency, $currency);
+        $managementExpenses = self::calculateManagementExpenses($otaAmount, $currency, $currency, $isRateSell);
 
         // Calcula tax
         $tax =  ($incrementLock + $incrementMarkup + $managementExpenses['incrementExpenses']
-                      + $managementExpenses['incrementGuarantee'] - $managementExpenses['discount'] + $incrementConsolidator) * self::TAX;        
-
+                      + $managementExpenses['incrementGuarantee'] - $managementExpenses['discount'] + $incrementConsolidator['amount']) * self::TAX;        
         return [
             'otaCurrency' => $otaCurrency, // Moneda que envio la ota
             'userCurrency' => $currency, // Moneda que maneja el usuario
             'originalAmount' => $originalAmount, // Monto en la moneda de la ota
             'convertedAmount' => $otaAmount, // Monto convertido a la moneda del usuario
             'incrementLock' => $incrementLock, // Incremento por bloqueo en moneda del usuario
-            'incrementConsolidator' => $incrementConsolidator, // Incremento por comnsolidador para ciertos proveedores
+            'incrementConsolidator' => $incrementConsolidator['amount'], // Incremento por comnsolidador para ciertos proveedores
+            'incrementConsolidatorType' => $incrementConsolidator['type'], 
+            'incrementConsolidatorInc' => $incrementConsolidator['increment'], 
             'incrementMarkup' => $incrementMarkup, // Incremento por markup en moneda del usuario           
             'subTotal' => $subTotal, // Subtotal en moneda del usuario
             'incrementExpenses' => $managementExpenses['incrementExpenses'], // Gastos de gestion en moneda del usuario
@@ -83,7 +84,7 @@ class NavicuFlightConverter
      * @param $lockData array
      * @return float
     */
-    public static function calculateIncrementLock($amount, $otaCurrency, $currency, array $lockData)
+    public static function calculateIncrementLock($amount, $otaCurrency, $currency, array $lockData, bool $isRateSell) : float
     {
     	
     	global $kernel;
@@ -101,7 +102,7 @@ class NavicuFlightConverter
             $incrementLock = $amount * ($lock->getIncrementValue() / 100);
         } else {
             $lockCurrency = $lock->getAirlineFlightTypeRate()->getCurrency()->getAlfa3();
-            $incrementLock = NavicuCurrencyConverter::convert($lock->getIncrementValue(),$lockCurrency ,$currency, $today, self::isRateSell($otaCurrency));
+            $incrementLock = NavicuCurrencyConverter::convert($lock->getIncrementValue(),$lockCurrency ,$currency, $today, $isRateSell);
         }
 
         return $incrementLock;
@@ -113,9 +114,10 @@ class NavicuFlightConverter
      * @param RepositoryFactoryInterface $rf
      * @param $amount
      * @param $lockData array
-     * @return float
+     * @return array
      */
-    public static function calculateIncrementConsolidator($amount, $otaCurrency, $currency, $date, array $consolidator_array) {
+    public static function calculateIncrementConsolidator($amount, $otaCurrency, $currency, $date, array $consolidator_array) : array
+    {
 
         if (count($consolidator_array) > 0 && $consolidator_array['provider'] === FlightReservationGds::PROVIDER_AMADEUS) {
    
@@ -143,10 +145,10 @@ class NavicuFlightConverter
                 $valor = NavicuCurrencyConverter::convert($increment,'USD',$currency, $date, self::isRateSell($otaCurrency));
             }
 
-            return $valor;
+            return ['amount' => $valor, 'type' => $type, 'increment' => $increment ];
         }
 
-        return 0;
+        return [];
     }
 
     /**
@@ -158,15 +160,13 @@ class NavicuFlightConverter
      * @param $iso
      * @return float
      */
-    public static function calculateIncrementMarkup($manager, $amount, $otaCurrency, $currency)
+    public static function calculateIncrementMarkup($manager, $amount, $otaCurrency, $currency) : float
     {
         if (! self::isRateSell($otaCurrency)) {
             return 0;
         }
-
         
-        $generalConditions = $manager->getRepository(FlightGeneralConditions::class)->findOneById(1);        
-
+        $generalConditions = $manager->getRepository(FlightGeneralConditions::class)->findOneById(1); 
         $markup = (CurrencyType::getLocalActiveCurrency()->getAlfa3() === $otaCurrency ? $generalConditions->getMarkupLocal() :
     				$generalConditions->getMarkupDivisa());
 
@@ -220,7 +220,7 @@ class NavicuFlightConverter
      * @param $toCurrency
      * @return array
      */
-    public static function calculateManagementExpenses($amount, $currency ,$toCurrency)
+    public static function calculateManagementExpenses($amount, $currency ,$toCurrency, $isRateSell) : array
     {
         
     	global $kernel;
@@ -229,7 +229,7 @@ class NavicuFlightConverter
         $manager = $container->get('doctrine')->getManager();
         $generalConditions= $manager->getRepository(FlightGeneralConditions::class)->findOneById(1);        
         $today = (new \DateTime())->format('Y-m-d');
-        $isRateSell = self::isRateSell($currency);
+        //$isRateSell = self::isRateSell($currency);
 
         if (! $generalConditions) {
             return ['incrementExpenses' => 0, 'incrementGuarantee' => 0, 'discount' => 0];
@@ -285,7 +285,7 @@ class NavicuFlightConverter
      * @param $iso
      * @return bool
      */
-    public static function isRateSell($currency)
+    public static function isRateSell($currency) : bool
     {
         if (! CurrencyType::isLocalCurrency($currency)) {
             return true;

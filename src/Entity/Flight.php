@@ -51,13 +51,6 @@ class Flight
     private $returnFlight = false;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="float", precision=10, scale=0, nullable=false)
-     */
-    private $price;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="arrival_time", type="datetime", nullable=false)
@@ -84,16 +77,6 @@ class Flight
      * @ORM\Column(name="segment", type="integer", nullable=true)
      */
     private $segment;
-
-    /**
-     * @var \CurrencyType
-     *
-     * @ORM\ManyToOne(targetEntity="CurrencyType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="currency", referencedColumnName="id")
-     * })
-     */
-    private $currency;
 
     /**
      * @var \Airport
@@ -206,19 +189,7 @@ class Flight
         $this->returnFlight = $returnFlight;
 
         return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }    
+    }   
 
     public function getArrivalTime(): ?\DateTimeInterface
     {
@@ -264,18 +235,6 @@ class Flight
     public function setSegment(integer $segment): self
     {
         $this->segment = $segment;
-
-        return $this;
-    }
-
-    public function getCurrency(): ?CurrencyType
-    {
-        return $this->currency;
-    }
-
-    public function setCurrency(?CurrencyType $currency): self
-    {
-        $this->currency = $currency;
 
         return $this;
     }

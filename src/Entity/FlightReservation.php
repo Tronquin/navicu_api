@@ -316,14 +316,14 @@ class FlightReservation
         return $this;
     }
 
-    public function getFlightCabin(): ?FlightClass
+    public function getFlightCabin(): ?FlightCabin
     {
-        return $this->flightClass;
+        return $this->flightCabin;
     }
 
-    public function setFlightCabin(?FlightClass $flightClass): self
+    public function setFlightCabin(?FlightCabin $flightCabin): self
     {
-        $this->flightClass = $flightClass;
+        $this->flightCabin= $flightCabin;
 
         return $this;
     }
