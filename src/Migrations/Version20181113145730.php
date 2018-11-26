@@ -416,12 +416,10 @@ final class Version20181113145730 extends AbstractMigration
 					flight_reservation_gds_id integer,
 					name character varying(255),
 					description text,
-					itinerary text,-- (DC2Type:json_array)
 					services text,-- (DC2Type:json_array)
 					search_options text, -- (DC2Type:json_array)
 					prices text, -- (DC2Type:json_array)
 					selected boolean,
-					status integer,
 					
 					CONSTRAINT pk_flight_fare_family PRIMARY KEY (id)
 				)");
@@ -435,6 +433,8 @@ final class Version20181113145730 extends AbstractMigration
 
 				$this->addSql("alter table flight add segment integer");
 				$this->addSql("update flight set segment = 1");
+
+				$this->addSql("drop view admin_flight_reservation_list_view");
 
 				$this->addSql("alter table flight drop increment_expenses");
 				$this->addSql("alter table flight drop   increment_guarantee");
@@ -489,9 +489,7 @@ final class Version20181113145730 extends AbstractMigration
 				        REFERENCES public.flight_type (id) MATCH SIMPLE
 				        ON UPDATE NO ACTION
 				        ON DELETE NO ACTION");
-
-
-				$this->addSql("drop view admin_flight_reservation_list_view");					 
+			 
 	
 				$this->addSql("drop table flight_ticket");	
 

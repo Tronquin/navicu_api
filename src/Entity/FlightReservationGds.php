@@ -14,6 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FlightReservationGds
 {
+    /** Flight reservation states */
+    const STATE_IN_PROCESS = 1;
+    const STATE_ACCEPTED = 2;
+    const STATE_CANCEL = 3;
 
     /** Proveedores */
     const PROVIDER_AMADEUS = 'AMA';
@@ -247,7 +251,7 @@ class FlightReservationGds
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="FlightFareFamily", mappedBy="flightReservationGds", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FlightFareFamily", mappedBy="flightReservationGds")
      */
     private $flightFareFamily;
 

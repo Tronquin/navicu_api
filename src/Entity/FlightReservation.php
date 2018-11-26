@@ -20,6 +20,11 @@ class FlightReservation
     const STATE_ACCEPTED = 2;
     const STATE_CANCEL = 3;
 
+    /** Flight shedule */
+    const ONE_WAY = 1;
+    const ROUND_TRIP = 2;
+    const MULTIPLE = 3;
+
     /**
      * @var int
      *

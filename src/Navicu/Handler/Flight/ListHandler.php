@@ -52,14 +52,14 @@ class ListHandler extends BaseHandler
         }     
 
 
-         
-        $segments = [];
+        $response = [];
         foreach ($response[$resp] as $key => $segment) {
 
             if (!$consolidator || ($segment['price'] < $consolidator->getCreditAvailable())) {  
 
-                $segment['amounts'] = [];
-                $segment['amounts']['original_price'] = $segment['price'];
+                //$segment['amounts'] = [];
+                //$segment['amounts']['original_price'] = $segment['price'];
+                $segment['original_price'] = $segment['price'];
 
                 $negotiatedRate = false;
                 foreach ($segment['flights'] as $key => $flight) {
@@ -91,6 +91,7 @@ class ListHandler extends BaseHandler
                         ]
                     );
                 
+                /*
                 $segment['amounts']['price'] = $convertedAmounts['subTotal'];
                 $segment['amounts']['original_price_no_tax'] = $segment['priceNoTax'];
                 $segment['amounts']['incrementLock'] = $convertedAmounts['subTotal'];
@@ -100,12 +101,15 @@ class ListHandler extends BaseHandler
                 $segment['amounts']['incrementGuarantee'] = $convertedAmounts['incrementGuarantee'];
                 $segment['amounts']['discount'] = $convertedAmounts['discount'];
                 $segment['amounts']['tax'] = $convertedAmounts['tax'];
-                $segments[] = $segment;
+                */
+                
+                $segment['price'] = $convertedAmounts['subTotal'];
+                $response['itinerary'][] = $segment;
             }
         }    
 
-        $response = [];
-        $response['itinerary'] = $segments; 
+        //$response = [];
+        //$response['itinerary'] = $segments; 
 
         $response = $this->logoAirlineExists($response);
 
@@ -190,10 +194,10 @@ class ListHandler extends BaseHandler
             'provider' => 'required|regex:/^[A-Z]{3}$/',
             'source' => 'required|regex:/^[A-Z]{3}$/',
             'dest' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|string',
+            'cabin' => 'required|regex:/^[A-Z][a-z]$/',
             'scale' => 'required|numeric',
-            'startDate' => 'required|date',
-            'endDate' => 'required|date',
+            'startDate' => 'required',
+            'endDate' => 'required',
             'baggage' => 'required|numeric',
         ];
     }

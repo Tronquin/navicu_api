@@ -13,6 +13,9 @@ use App\Navicu\Exception\NavicuException;
  */
 class NavicuCurrencyConverter
 {
+    /** Impuesto General Local **/
+    CONST TAX = 0.16;
+
     /** Moneda actual de Venezuela */
     const CURRENT_CURRENCY_VE = 'VES';
 
@@ -278,4 +281,17 @@ class NavicuCurrencyConverter
 
         return $currency;
     }
+
+
+    /**
+     * Retorna el impuesto general del país
+     * 
+     * @return Float
+     */
+    public static function getTax() : Float
+    {
+       return self::TAX;     
+    }
+
 }
+
