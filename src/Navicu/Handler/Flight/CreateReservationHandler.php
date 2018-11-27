@@ -16,6 +16,7 @@ use App\Entity\FlightReservationGds;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\NavicuValidator;
 use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Service\NavicuFlightConverter;
 
@@ -34,9 +35,9 @@ class CreateReservationHandler extends BaseHandler
      */
     protected function handler(): array
     {
-    	$manager = $this->container->get('doctrine')->getManager();
-        $params = $this->getParams();
-  
+    	$manager = $this->container->get('doctrine')->getManager(); 		
+
+        $params = $this->getParams();  
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();    
         $reservation = new FlightReservation();
 
@@ -53,10 +54,14 @@ class CreateReservationHandler extends BaseHandler
 	
 		foreach ($params['itinerary'] as $key => $itinerary) {
 
+			$this->validateItinerary($itinerary);
+
 			$reservationGds = new FlightReservationGds();
 	    	$negotiatedRate = false;	   
 
 	    	foreach ($itinerary['flights'] as $key => $flight) {
+
+	    		$this->validateFlight($flight);
 
 	    		 if ($flight['negotiated_rate']) {
 	                    $negotiatedRate = $flight['negotiated_rate'];                    
@@ -123,8 +128,6 @@ class CreateReservationHandler extends BaseHandler
 
 		}
 
-		// $total = $subTotal + $tax + $totalIncrementExpenses + $totalIncrementGuarantee - $totalDiscount;
-
 		$reservation
 	        ->setReservationDate(new \DateTime('now'))
 	       	->setChildNumber($itinerary['cnn'])
@@ -148,7 +151,7 @@ class CreateReservationHandler extends BaseHandler
 		$response['incrementExpenses'] = $totalIncrementExpenses;
 		$response['incrementGuarantee'] = $totalIncrementGuarantee;
 		$response['discount'] = $totalDiscount;
-		
+ 	
 
 		return $response;
 
@@ -282,30 +285,57 @@ class CreateReservationHandler extends BaseHandler
 	}
 
 
-	protected function validateItineray($itinerary): array
+    /**
+     * Todas las reglas de validacion para los parametros de los vuelos
+     * 
+	**/
+	protected function validateFlight($flight):bool
     {
-		$validator = new NavicuValidator();
-        $validator->validate($itineray, [
-            'country' => 'required|in:VE,US',
+		$validator = new NavicuValidator();	
+        $validator->validate($flight, [
+        	'segment' => 'required|numeric',
+            'from' => 'required|regex:/^[A-Z]{3}$/',
+            'to'  => 'required|regex:/^[A-Z]{3}$/',
+            'airline' => 'required|regex:/^[A-Z]{2}$/', 
+            'number_flight' => 'required',
+            'departure' => 'required',
+            'arrival' => 'required',
+            'provider' => 'required',
+            'rate' => 'required|regex:/^[A-Z]{1}$/',
+        ]); 
+
+         if ($validator->hasError()) {
+         	throw new NavicuException('Error in Flight Elements: ' . implode(';', $validator->getErrors()));
+        }
+        return true;
+    }
+
+    /**
+     * Todas las reglas de validacion para los parametros de lla busqueda
+     * 
+	**/
+    protected function validateItinerary($itinerary):bool
+    {
+		$validator = new NavicuValidator();	
+        $validator->validate($itinerary, [
             'currency' => 'required|in:VES,USD',
-            'source' => 'required|regex:/^[A-Z]{3}$/',
-            'dest' => 'required|regex:/^[A-Z]{3}$/',
+            'from' => 'required|regex:/^[A-Z]{3}$/',
+            'to' => 'required|regex:/^[A-Z]{3}$/',
             'adt' => 'required|numeric|min:1',
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
-            'startDate' => 'required|date_format:Y-m-d',
-            'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|in:C,F,N,W,Y,ALL',
-            'scale' => 'required|numeric|between:0,3',
-            'baggage' => 'required|numeric|between:0,2',
-        ]);
+            'original_price'=> 'required|numeric',
+	        'original_price_no_tax'=> 'required|numeric',
+	        'taxes'=> 'required',
+	        'schedule'=> 'required',
+	        'flights' => 'required'
+        ]); 
 
          if ($validator->hasError()) {
-            throw new OtaException(sprintf('Error in Itinerary Elements: %s', json_encode($validator->getErrors())));
+         	throw new NavicuException('Error in Itinerary Elements: ' . implode(';', $validator->getErrors()));
         }
-
-        return self::send(self::URL_ONE_WAY, $params);
+        return true;
     }
 
     /**

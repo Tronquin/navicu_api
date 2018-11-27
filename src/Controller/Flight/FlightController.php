@@ -96,6 +96,9 @@ class FlightController extends AbstractController
      */
     public function createReservation(Request $request)    {
 
+
+        // $manager->getConnection()->beginTransaction();
+        // $manager->getConnection()->commit(); 
         $handler = new CreateReservationHandler($request);       
         $handler->processHandler();
 
