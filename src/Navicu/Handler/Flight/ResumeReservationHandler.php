@@ -54,6 +54,8 @@ class ResumeReservationHandler extends BaseHandler
         $total = 0;
         $round = 2;
 
+        $passengers = [];
+
         foreach ($reservation->getGdsReservations() as $reservationGds) {  
 
             if (CurrencyType::isLocalPreviousCurrency($reservationGds->getCurrencyReservation()->getAlfa3())) {
@@ -102,32 +104,44 @@ class ResumeReservationHandler extends BaseHandler
                     $itineraryIda[$l] = $flightsArray[$key];
                     $l++;
                 }
-            }  
+            }              
 
-            $passengers = [];
-
-            foreach( $reservationGds->getFlightReservationPassengers() as $key=>$passengerReservation) {
+            foreach( $reservationGds->getFlightReservationPassengers() as $key => $passengerReservation) {
 
                 $passenger = $passengerReservation->getPassenger();               
-                
-                /*
-                $tickets = [];                
-                foreach ($passenger->getTickets() as $ticket) {
-                    $tickets[]['number'] = $ticket->getNumber();
-                }
-                */
 
-                $passengers[] = [
-                    'firstName' => $passenger->getName(),
-                    'lastName' => $passenger->getLastName(),
-                    'docType' => $passenger->getDocumentType(),
-                    'docNumber' => $passenger->getDocumentNumber(),
-                    'email' => $passenger->getEmail(),
-                    'phone' => $passenger->getPhone(),
-                    'ticket' => $passengerReservation->getTicket(),
-                ];
-            }
-        }       
+                $finded = false;
+
+                foreach ($passengers as $k => $p) {
+
+                    if ($passenger->getId() === $p['id']){
+                        $finded = true;
+                        $passengers[$k]['tickets'][]['number'] = $passengerReservation->getTicket();
+                    }
+                }
+
+                if (! $finded) {
+
+                    $tickets = [];
+                    $tickets[0]['number'] = $passengerReservation->getTicket();
+
+                    $passengers[] = [
+                        'id' => $passenger->getId(),
+                        'firstName' => $passenger->getName(),
+                        'lastName' => $passenger->getLastName(),
+                        'docType' => $passenger->getDocumentType(),
+                        'docNumber' => $passenger->getDocumentNumber(),
+                        'email' => $passenger->getEmail(),
+                        'phone' => $passenger->getPhone(),
+                        'tickets' => $tickets,
+                    ];
+                } 
+            }           
+        }     
+
+        foreach ($passengers as $key => $passenger) {
+              unset($passengers[$key]['id']);
+        }  
 
         $subTotal = round($subTotal, $round) ;
         $tax = round($tax, $round);
@@ -186,7 +200,6 @@ class ResumeReservationHandler extends BaseHandler
         }
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
         $structure['fligths'] = $flightsArray;
-
 
         return $structure;          
        
