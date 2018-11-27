@@ -2,17 +2,10 @@
 
 namespace App\Navicu\Handler\Flight;
 
-use App\Entity\Flight;
-use App\Entity\Airline;
-use App\Entity\Airport;
 use App\Entity\CurrencyType;
-use App\Entity\AirlineFlightTypeRate;
 use App\Entity\FlightReservation;
-use App\Entity\FlightReservationGDS;
 use App\Navicu\Exception\NavicuException;
-use App\Navicu\Exception\OtaException;
 use App\Navicu\Handler\BaseHandler;
-use App\Navicu\Service\OtaService;
 use App\Navicu\Service\NavicuCurrencyConverter;
 
 /**
@@ -42,16 +35,11 @@ class ResumeReservationHandler extends BaseHandler
             throw new NavicuException(\get_class($this) . ': reservation no exist');
         }
 
-        $countPassengers = $reservation->getChildNumber() + $reservation->getAdultNumber() + $reservation->getInfNumber() + $reservation->getInsNumber();
-        $price = 0;
         $incrementExpenses = 0;
         $incrementGuarantee = 0;
         $discount = 0;
-        $round = 0;
         $subTotal = 0;
-        $subTotalPdf = 0;
         $tax = 0;
-        $total = 0;
         $round = 2;
 
         $passengers = [];
@@ -62,9 +50,7 @@ class ResumeReservationHandler extends BaseHandler
                 $round = 0;
             }             
             
-            $isRateSell = ($reservationGds->getCurrencyReservation()->getAlfa3() === 'USD');
-
-            $subTotal += NavicuCurrencyConverter::convertToRate($reservationGds->getSubtotal(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());         
+             $subTotal += NavicuCurrencyConverter::convertToRate($reservationGds->getSubtotal(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
               
             $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());         
 
@@ -164,7 +150,7 @@ class ResumeReservationHandler extends BaseHandler
             'numberAdults' => $reservation->getAdultNumber(),
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
-            'fligths' => [],
+            'flights' => [],
             'passengers' => $passengers
         ];          
 
@@ -199,12 +185,11 @@ class ResumeReservationHandler extends BaseHandler
             $orderArray[$clave] = $fila['time'];
         }
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
-        $structure['fligths'] = $flightsArray;
+        $structure['flights'] = $flightsArray;
 
         return $structure;          
        
     }
-
    
 
     /**

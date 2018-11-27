@@ -35,22 +35,17 @@ class CreateReservationHandler extends BaseHandler
      */
     protected function handler(): array
     {
-    	$manager = $this->container->get('doctrine')->getManager(); 		
-
-        $params = $this->getParams();  
-        $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();    
+    	$manager = $this->container->get('doctrine')->getManager(); 	
+        $params = $this->getParams();
         $reservation = new FlightReservation();
 
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
 		$totalIncrementGuarantee = $totalIncrementGuaranteeLocal = 0;
 		$totalDiscount = $totalDiscountLocal = 0;
-        $totalIncrementAmountLocal = $totalIncrementAmount = 0;
-        $totalIncrementLockLocal = $totalIncrementLock = 0;
-        $totalIncrementMarkupLocal = $totalIncrementMarkup = 0;
+        $totalIncrementAmount = 0;
+        $totalIncrementLock = 0;
+        $totalIncrementMarkup = 0;
 		$subTotal = $tax = 0;
-		$subTotalLocal = $taxLocal  = 0;
-		$round = 2;		
-		
 	
 		foreach ($params['itinerary'] as $key => $itinerary) {
 
@@ -169,7 +164,6 @@ class CreateReservationHandler extends BaseHandler
      */
     private function updateReservationGds(FlightReservationGds $reservationGds, $itinerary, $userCurrency, $convertedAmounts) : ?FlightReservationGds
 	{
-
 		$manager = $this->container->get('doctrine')->getManager();
 
 		$repAirFrom = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['from']);
