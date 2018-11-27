@@ -13,6 +13,9 @@ use App\Navicu\Exception\NavicuException;
  */
 class NavicuCurrencyConverter
 {
+    /** Impuesto General Local **/
+    CONST TAX = 0.16;
+
     /** Moneda actual de Venezuela */
     const CURRENT_CURRENCY_VE = 'VES';
 
@@ -211,7 +214,7 @@ class NavicuCurrencyConverter
      * @param \DateTime $date
      * @return array
      */
-    private static function getLastRate(string $currency, \DateTime $date) : array
+    public static function getLastRate(string $currency, \DateTime $date) : array
     {
         if (isset(self::$lastRate[$currency][$date->format('Y-m-d')])) {
 
@@ -278,4 +281,17 @@ class NavicuCurrencyConverter
 
         return $currency;
     }
+
+
+    /**
+     * Retorna el impuesto general del país
+     * 
+     * @return Float
+     */
+    public static function getTax() : Float
+    {
+       return self::TAX;     
+    }
+
 }
+

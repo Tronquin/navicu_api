@@ -24,7 +24,7 @@ class TokenSubscriber implements EventSubscriberInterface
 
        
       
-        if (! $request->headers->has('navicu_token')) {
+       if (! $request->headers->has('navicu_token')) {
 
             return $event->setController(function () {
                 return new JsonResponse(['code' => 400, 'errors' => ['token is required']]);

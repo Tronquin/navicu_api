@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Navicu\Service\PaymentGatewayService;
+use App\Navicu\Handler\BaseHandler;
 
 
 class ExecuteTdcTransactionInstapagoHandler extends BaseHandler

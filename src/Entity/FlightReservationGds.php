@@ -14,6 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FlightReservationGds
 {
+    /** Flight reservation states */
+    const STATE_IN_PROCESS = 1;
+    const STATE_ACCEPTED = 2;
+    const STATE_CANCEL = 3;
 
     /** Proveedores */
     const PROVIDER_AMADEUS = 'AMA';
@@ -159,7 +163,7 @@ class FlightReservationGds
      *
      * @ORM\Column(name="airline_commision", type="float", precision=10, scale=0, nullable=true)
      */
-    private $airlineCommision;
+    private $airlineCommission;
 
     /**
      * @var float|null
@@ -485,14 +489,14 @@ class FlightReservationGds
         return $this;
     }
 
-    public function getAirlineCommision(): ?float
+    public function getAirlineCommission(): ?float
     {
-        return $this->airlineCommision;
+        return $this->airlineCommission;
     }
 
-    public function setAirlineCommision(?float $airlineCommision): self
+    public function setAirlineCommission(?float $airlineCommission): self
     {
-        $this->airlineCommision = $airlineCommision;
+        $this->airlineCommission = $airlineCommission;
 
         return $this;
     }
@@ -615,13 +619,13 @@ class FlightReservationGds
 
     public function addFlight(Flight $flight): self
     {
-        if (!$this->flights->contains($flight)) {
-            $this->flights[] = $flight;
-            $flight->setFlight($this);
-        }
+        $this->flights[] = $flight;
+
+        $flight->setFlightReservationGds($this);
 
         return $this;
     }
+ 
 
     public function removeFlight(Flight $flight): self
     {

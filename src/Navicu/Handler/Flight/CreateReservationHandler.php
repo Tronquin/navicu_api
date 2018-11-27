@@ -5,42 +5,39 @@ namespace App\Navicu\Handler\Flight;
 use App\Entity\CurrencyType;
 use App\Entity\ExchangeRateHistory;
 use App\Entity\FlightReservation;
+use App\Entity\FlightGeneralConditions;
+use App\Entity\FlightFareFamily;
 use App\Entity\Flight;
+use App\Entity\Airline;
+use App\Entity\Airport;
+use App\Entity\Gds;
 use App\Entity\Consolidator;
 use App\Entity\FlightReservationGds;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\NavicuCurrencyConverter;
-
+use App\Navicu\Service\NavicuFlightConverter;
 
 /**
  * Handler que resume las funcionalidades necesarias para crear 
- * la reservacion Navicu, reservaciones gds y vuelos
+ * FlightReservation, FlighReservationGds,FlightFareFamily y Flight
  *
  * @author Javier Vasquez <jvasquez@jacidi.com>
  */
 
 class CreateReservationHandler extends BaseHandler
 { 
-
- 	/**
-     * Aqui va la logica
-     *
+ 	/** 
      * @return array
      * @throws NavicuException
      */
     protected function handler(): array
     {
-
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
-
-        dump($params);
-        die;
-
-        $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();        
-     
+  
+        $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();    
         $reservation = new FlightReservation();
 
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
@@ -51,31 +48,38 @@ class CreateReservationHandler extends BaseHandler
         $totalIncrementMarkupLocal = $totalIncrementMarkup = 0;
 		$subTotal = $tax = 0;
 		$subTotalLocal = $taxLocal  = 0;
-		$round = 2;	
-
+		$round = 2;		
+		
+	
 		foreach ($params['itinerary'] as $key => $itinerary) {
 
 			$reservationGds = new FlightReservationGds();
+	    	$negotiatedRate = false;	   
 
-	    	$negotiatedRate = false;
 	    	foreach ($itinerary['flights'] as $key => $flight) {
 
 	    		 if ($flight['negotiated_rate']) {
 	                    $negotiatedRate = $flight['negotiated_rate'];                    
 	             } 
 
-
-	            $flightEntity = $this->createFlightFromData($flight);
+	            $isReturn = ($itinerary['schedule'] == FlightReservation::ROUND_TRIP) && ((int)$flight['segment'] > 1);
+	            $flightEntity = $this->createFlightFromData($flight, $isReturn);
 				$reservationGds->addFlight($flightEntity); 
 	    	}
 
+	    	foreach ($itinerary['fareFamily'] as $key => $fareFamily) {
 
-	    	$flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
+				$reservationGds->addFlightFareFamily($farefamilyEntity); 
+	    	}
+
+
+	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
-	                        'from' => $itinerary['flights'][0]['origin'],
-	                        'to' => $itinerary['flights'][0]['destination'],
+	                        'from' => $itinerary['flights'][0]['from'],
+	                        'to' => $itinerary['flights'][0]['to'],
 	                        'departureDate' => $flightLockDate
 	                    ],$params['userCurrency'], 
 	                    [
@@ -93,8 +97,8 @@ class CreateReservationHandler extends BaseHandler
 	        	$localAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
-	                        'from' => $itinerary['flights'][0]['origin'],
-	                        'to' => $itinerary['flights'][0]['destination'],
+	                        'from' => $itinerary['flights'][0]['from'],
+	                        'to' => $itinerary['flights'][0]['to'],
 	                        'departureDate' => $flightLockDate
 	                    ],CurrencyType::getLocalActiveCurrency()->getAlfa3(), 
 	                    [
@@ -102,135 +106,131 @@ class CreateReservationHandler extends BaseHandler
 	                        'negotiatedRate' =>  $negotiatedRate,                    
 	                    ]
 	                );
-	        }
+	        }	        
 
-	        $reservationGds = $this->updateReservationGds($reservationGds, $itinerary, $params, $convertedAmounts);
+	        $reservationGds = $this->updateReservationGds($reservationGds, $itinerary, $params['userCurrency'], $localAmounts);
 
-	        $reservation->addReservationGds($reseravtionGds); 	     	
-	        
-	        // Incrementos en Local
-			$totalIncrementExpensesLocal += $generalConditionsLocal['incrementExpenses'];
-			$totalIncrementGuaranteeLocal += $generalConditionsLocal['incrementGuarantee'];
-			$totalDiscountLocal += $generalConditionsLocal['discount'];
-			$subTotalLocal += $generalConditionsLocal['subTotal'];
-			$taxLocal  += $generalConditionsLocal['tax'];
+	        $reservation->addGdsReservation($reservationGds); 	     	
 
 	        // Incrementos en moneda del usuario
-			$totalIncrementExpenses += $generalConditions['incrementExpenses'];
-			$totalIncrementGuarantee += $generalConditions['incrementGuarantee'];
-			$totalDiscount += $generalConditions['discount'];
-			$totalIncrementAmount += $generalConditions['incrementTypeRate'];
-			$totalIncrementLock += $generalConditions['incrementLock'];
-			$totalIncrementMarkup += $generalConditions['incrementMarkup'];
-			$subTotal += $generalConditions['subTotal'];
-			$tax  += $generalConditions['tax'];  
+			$totalIncrementExpenses += $convertedAmounts['incrementExpenses'];
+			$totalIncrementGuarantee += $convertedAmounts['incrementGuarantee'];
+			$totalDiscount += $convertedAmounts['discount'];
+			$totalIncrementLock += $convertedAmounts['incrementLock'];
+			$totalIncrementMarkup += $convertedAmounts['incrementMarkup'];
+			$subTotal += $convertedAmounts['subTotal'];
+			$tax  += $convertedAmounts['tax'];  
 
 		}
 
-		$totalLocal = $subTotalLocal + $taxLocal + $totalIncrementExpensesLocal + $totalIncrementGuaranteeLocal
-			- $totalDiscountLocal;
-		$taxLocal  = round($taxLocal);
-		$subTotal = round($subTotal, $round);
-		$tax  = round($tax, $round);
-		$totalIncrementExpenses = round($totalIncrementExpenses, $round);
-		$totalIncrementGuarantee = round($totalIncrementGuarantee, $round);
-		$totalDiscount = round($totalDiscount, $round);
-		$total = round($subTotal + $tax + $totalIncrementExpenses + $totalIncrementGuarantee - $totalDiscount, $round);
+		// $total = $subTotal + $tax + $totalIncrementExpenses + $totalIncrementGuarantee - $totalDiscount;
 
 		$reservation
 	        ->setReservationDate(new \DateTime('now'))
-	        ->setChildNumber($passengers['cnn'])
-	        ->setAdultNumber($passengers['adt'])
-	        ->setInfNumber($passengers['inf'])
-	        ->setInsNumber($passengers['ins'])
-	        ->setIpAddress($command->get('ipAddress'))
+	       	->setChildNumber($itinerary['cnn'])
+        	->setAdultNumber($itinerary['adt'])
+        	->setInfNumber($itinerary['inf'])
+        	->setInsNumber($itinerary['ins'])
+        	->setPublicId()
+	        ->setIpAddress($params['ipAddress'])
 	        ->setOrigin('navicu web');		 
 
 	 	$manager->persist($reservation);
     	$manager->flush();
 
     	$response['public_id'] = $reservation->getPublicId();
-        $response['incrementAmount'] = round($totalIncrementAmount, $round);
-        $response['incrementLock'] = round($totalIncrementLock, $round);
-        $response['incrementMarkup'] = round($totalIncrementMarkup, $round);
-		$response['currencySymbol'] = $currency->getSimbol();
+        $response['incrementAmount'] = $totalIncrementAmount;
+        $response['incrementLock'] = $totalIncrementLock;
+        $response['incrementMarkup'] = $totalIncrementMarkup;
+		$response['currencySymbol'] = $params['userCurrency'];
 		$response['subtotal'] = $subTotal;
 		$response['tax'] = $tax;
 		$response['incrementExpenses'] = $totalIncrementExpenses;
 		$response['incrementGuarantee'] = $totalIncrementGuarantee;
 		$response['discount'] = $totalDiscount;
-		$response['total'] = $total;
+		
 
 		return $response;
 
     }
 
-
-    private function updateRerservationGds(ReservationGds $reservationGds, $itinerary, $params, $convertedAmounts) : ?FlightReservationGds
+    /**     
+     *
+     * @return FlightReservationGds
+     * @throws NavicuException
+     * @param FlightReservationGds $reservationGds
+     * @param array $itinerary, itinerario de la reserva
+     * @param string $userCurrency, moneda del usuario
+     * @param array $convertedAmounts, array de montos convertidos a la moneda LOCAL
+     *
+     */
+    private function updateReservationGds(FlightReservationGds $reservationGds, $itinerary, $userCurrency, $convertedAmounts) : ?FlightReservationGds
 	{
 
 		$manager = $this->container->get('doctrine')->getManager();
 
 		$repAirFrom = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['from']);
 		$repAirTo = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['to']);
+		$airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]);
 
-		if (($repAirFrom['data'][0]['country_code'] !== 'VE') || ($repAirTo['data'][0]['country_code'] !== 'VE')){
+		if (($repAirFrom[0]['country_code'] !== 'VE') || ($repAirTo[0]['country_code'] !== 'VE')){
 			$airlineCommission = $airline->getInternationalCommission();
-		}else{
+		} else {
 			$airlineCommission = $airline->getNationalCommission();
 		}	
-        //$today = new \DateTime("now 00:00:00");
 
-        $currency_reservation = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $params['userCurrency']]);
-        $currency_gds = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $itineray['currency']]);
-
+        $currency_reservation = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $userCurrency]);
+        $currency_gds = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $itinerary['currency']]);
 
         $reservationGds
         ->setCurrencyGds($currency_gds)
         ->setCurrencyReservation($currency_reservation)	        
         ->setReservationDate(new \DateTime('now'))			
-        ->setChildNumber($passengers['cnn'])
-        ->setAdultNumber($passengers['adt'])
-        ->setInfNumber($passengers['inf'])
-        ->setInsNumber($passengers['ins'])
-        ->setSubtotalOriginal($convertedAmounts['original_price'])
-        ->setSubtotalOriginal($convertedAmounts['original_price'] - $convertedAmounts['original_price_no_tax'])
+        ->setChildNumber($itinerary['cnn'])
+        ->setAdultNumber($itinerary['adt'])
+        ->setInfNumber($itinerary['inf'])
+        ->setInsNumber($itinerary['ins'])
+        ->setSubtotalOriginal($itinerary['original_price'])
+        ->setTaxOriginal($itinerary['original_price'] - $itinerary['original_price_no_tax'])
         ->setTaxes($itinerary['taxes'])
-        ->setSubtotal($convertedAmounts['subtotal'])
+        ->setSubtotal($convertedAmounts['subTotal'])
         ->setTax($convertedAmounts['tax'])
         ->setIncrementConsolidator($convertedAmounts['incrementConsolidator'])
         ->setMarkupIncrementAmount($convertedAmounts['incrementMarkup'])
-        ->setMarkupIncrementType(1) 
-        ->setMarkupCurrency($params['userCurrency'])
+        ->setMarkupIncrementType(FlightGeneralConditions::INCREMENT_TYPE_PERCENTAGE) 
+        ->setMarkupCurrency($userCurrency)
         ->setIncrementExpenses($convertedAmounts['incrementExpenses'])
 	        ->setIncrementGuarantee($convertedAmounts['incrementGuarantee'])
 	        ->setDiscount($convertedAmounts['discount'])
 	        ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]))
 	        ->setAirlineCommission($airlineCommission)
 	        ->setIsRefundable($itinerary['flights'][0]['isRefundable'])
-	        ->setStatus(0)
+	        ->setStatus(FlightReservation::STATE_IN_PROCESS)
 	        ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
-
-	        $dollarRates = NavicuCurrencyConverter::getLastRate($itineray['currency'], new \DateTime('now'));
-	        $currencyRates = NavicuCurrencyConverter::getLastRate($params['userCurrency'], new \DateTime('now'));
+	        $dollarRates = NavicuCurrencyConverter::getLastRate($itinerary['currency'], new \DateTime('now'));
+	        $currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));
 
    
       	$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
-      	$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($params['userCurrency'])) ? $currencyRates['buy'] : $currencyRates['sell']);
+      	$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($userCurrency)) ? $currencyRates['buy'] : $currencyRates['sell']);
+
+      	$manager->persist($reservationGds);
+    	$manager->flush();
 
       	return $reservationGds;
-
 	}
 
 
-
-
-    private function createFlightFromData($flightData) : ?Flight
+	/**
+     * Crear Entidad Flight
+     * @param  array $flightData
+     * @param  bool $isReturn 
+     * @return Flight
+     */
+    private function createFlightFromData(array $flightData, $isReturn) : ?Flight
 	{
-        /** @var \Navicu\Core\Domain\Model\Entity\AirlineFlightTypeRate $airlineFlightTypeRatePercentage */
-		$flight = new Flight();		
-
+		$flight = new Flight();	
 		$manager = $this->container->get('doctrine')->getManager();        
 
 		$airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flightData['airline']]);
@@ -245,21 +245,68 @@ class CreateReservationHandler extends BaseHandler
 				->setAirportFrom($from)
 				->setAirportTo($to)
 				->setDuration($flightData['duration'])
-                ->setReturnFlight($returnFlight)			
-				->setIsRoundtrip($flightData['petitionRoundtrip'])          
+                ->setReturnFlight($isReturn)			      
 				->setSegment($flightData['segment'])
 				->setCabin($flightData['cabin'])			
-		;	
+		;
 
-		/* falta flight Type*/
-
-		/*if ($flightData['lock']) {
-			$flight->setFlightLock($flightData['lock']);
-		}*/
+		$manager->persist($flight);
+    	$manager->flush();
 
 		return $flight;
 	}
 
+
+	/**
+     * Crear Entidad FlightFareFamily
+     * @param  array fareFamilyData
+     * @return FlightFareFamily
+     */
+	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
+	{      
+
+		$fareFamily = new FlightFareFamily();
+		$manager = $this->container->get('doctrine')->getManager(); 
+
+		$fareFamily
+				->setName($fareFamilyData['name'])
+				->setDescription($fareFamilyData['description'])
+				->setServices(json_encode($fareFamilyData['services']))
+				->setPrices(json_encode($fareFamilyData['prices']))
+				->setSelected($fareFamilyData['selected'])				
+		;
+
+		$manager->persist($fareFamily);
+
+		return $fareFamily;
+	}
+
+
+	protected function validateItineray($itinerary): array
+    {
+		$validator = new NavicuValidator();
+        $validator->validate($itineray, [
+            'country' => 'required|in:VE,US',
+            'currency' => 'required|in:VES,USD',
+            'source' => 'required|regex:/^[A-Z]{3}$/',
+            'dest' => 'required|regex:/^[A-Z]{3}$/',
+            'adt' => 'required|numeric|min:1',
+            'cnn' => 'required|numeric',
+            'inf' => 'required|numeric',
+            'ins' => 'required|numeric',
+            'startDate' => 'required|date_format:Y-m-d',
+            'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'scale' => 'required|numeric|between:0,3',
+            'baggage' => 'required|numeric|between:0,2',
+        ]);
+
+         if ($validator->hasError()) {
+            throw new OtaException(sprintf('Error in Itinerary Elements: %s', json_encode($validator->getErrors())));
+        }
+
+        return self::send(self::URL_ONE_WAY, $params);
+    }
 
     /**
      * Todas las reglas de validacion para los parametros que recibe
@@ -273,6 +320,9 @@ class CreateReservationHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
+        'userCurrency' => 'required|regex:/^[A-Z]{3}$/',
+        'ipAddress' => 'required|/^(?:(?:[1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^localhost$/',
+        'itinerary' => 'required'
         ];
     }
 

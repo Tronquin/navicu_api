@@ -36,12 +36,6 @@ class FlightFareFamily
      */
     private $description;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="itinerary", type="text", nullable=true)
-     */
-    private $itinerary;
 
     /**
      * @var string|null
@@ -70,13 +64,7 @@ class FlightFareFamily
      * @ORM\Column(name="selected", type="boolean", nullable=true)
      */
     private $selected;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="status", type="integer", nullable=true)
-     */
-    private $status;
+  
 
     /**
      * @var \FlightReservationGds
@@ -113,18 +101,6 @@ class FlightFareFamily
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getItinerary(): ?string
-    {
-        return $this->itinerary;
-    }
-
-    public function setItinerary(?string $itinerary): self
-    {
-        $this->itinerary = $itinerary;
 
         return $this;
     }
@@ -173,18 +149,6 @@ class FlightFareFamily
     public function setSelected(?bool $selected): self
     {
         $this->selected = $selected;
-
-        return $this;
-    }
-
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?int $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }

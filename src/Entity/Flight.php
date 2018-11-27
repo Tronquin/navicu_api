@@ -232,7 +232,7 @@ class Flight
         return $this->segment;
     }
 
-    public function setSegment(integer $segment): self
+    public function setSegment(int $segment): self
     {
         $this->segment = $segment;
 

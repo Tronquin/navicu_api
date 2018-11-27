@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\PublicId;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,6 +19,11 @@ class FlightReservation
     const STATE_IN_PROCESS = 1;
     const STATE_ACCEPTED = 2;
     const STATE_CANCEL = 3;
+
+    /** Flight shedule */
+    const ONE_WAY = 1;
+    const ROUND_TRIP = 2;
+    const MULTIPLE = 3;
 
     /**
      * @var int
@@ -143,7 +149,7 @@ class FlightReservation
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation")
+     * @ORM\OneToMany(targetEntity="FlightPayment", mappedBy="flightReservation",cascade={"persist"})
      */
     private $payments;
 
@@ -172,13 +178,14 @@ class FlightReservation
     }
 
     public function getPublicId(): ?string
-    {
+    {        
         return $this->publicId;
     }
 
-    public function setPublicId(string $publicId): self
+    public function setPublicId(): self
     {
-        $this->publicId = $publicId;
+        $id = new PublicId('date'); 
+        $this->publicId = $id->toString();
 
         return $this;
     }

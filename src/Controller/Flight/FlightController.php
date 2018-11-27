@@ -94,16 +94,9 @@ class FlightController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function createReservation(Request $request)
-    {
-        $handler = new CreateReservationHandler();
+    public function createReservation(Request $request)    {
 
-        foreach ($request->request->all() as $key => $value) {
-
-            $handler->setParam($key, $value);
-        }
-    
-
+        $handler = new CreateReservationHandler($request);       
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
