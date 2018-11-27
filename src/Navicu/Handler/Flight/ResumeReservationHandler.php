@@ -15,7 +15,7 @@ use App\Navicu\Service\NavicuCurrencyConverter;
  */
 
 class ResumeReservationHandler extends BaseHandler
-{ 
+{
     /**
      * @return array
      * @throws NavicuException
@@ -29,58 +29,62 @@ class ResumeReservationHandler extends BaseHandler
         global $kernel;
         $dir = $kernel->getRootDir() . '/../web/images/airlines/';
 
-        $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);     
-   
+        $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);
+
         if (is_null($reservation)) {
             throw new NavicuException(\get_class($this) . ': reservation no exist');
         }
 
-        $incrementExpenses = 0;
-        $incrementGuarantee = 0;
-        $discount = 0;
-        $subTotal = 0;
-        $tax = 0;
-        $round = 2;
+        $incrementExpenses = $incrementExpensesLocal = 0;
+        $incrementGuarantee = $incrementGuaranteeLocal = 0;
+        $discount = $discountLocal = 0;
+        $subTotal = $subTotalLocal = 0;
+        $tax = $taxLocal = 0;
+        $round = $roundLocal = 2;
 
         $passengers = [];
 
-        foreach ($reservation->getGdsReservations() as $reservationGds) {  
+        foreach ($reservation->getGdsReservations() as $reservationGds) {
 
             if (CurrencyType::isLocalPreviousCurrency($reservationGds->getCurrencyReservation()->getAlfa3())) {
-                $round = 0;
-            }             
-            
-             $subTotal += NavicuCurrencyConverter::convertToRate($reservationGds->getSubtotal(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-              
-            $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());         
+                $roundLocal = 0;
+            }
 
+            /** Montos convertidos a la moneda de la reserva**/
+            $subTotal += NavicuCurrencyConverter::convertToRate($reservationGds->getSubtotal(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
+            $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
             $incrementGuarantee += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-
             $discount += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-         
-            $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());            
-        
-               
+            $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
+
+            /** Montos en moneda local**/
+            $subTotalLocal += $reservationGds->getSubtotal();
+            $incrementExpensesLocal += $reservationGds->getIncrementExpenses();
+            $incrementGuaranteeLocal += $reservationGds->getIncrementGuarantee();
+            $discountLocal += $reservationGds->getDiscount();
+            $taxLocal +=$reservationGds->getTax();
+
+
             $j = 0;
             $l = 0;
             foreach( $reservationGds->getFlights() as $key=>$flight) {
                 $flightsArray[] = [
-                'time' => $flight->getDepartureTime()->getTimestamp(),
-                'departure' => $flight->getDepartureTime()->format('d-m-Y H:i:s'),
-                'arrival' => $flight->getArrivalTime()->format('d-m-Y H:i:s'),   
-                'originCode' => $flight->getAirportFrom()->getIata(),
-                'originCity' => $flight->getAirportFrom()->getLocation()->getTitle(),
-                'originName' => $flight->getAirportFrom()->getName(),
-                'destinationCode' => $flight->getAirportTo()->getIata(),
-                'destinationCity' => $flight->getAirportTo()->getLocation()->getTitle(),
-                'destinationCityId' => $flight->getAirportTo()->getLocation()->getId(),
-                'destinationCountryCode' => $flight->getAirportTo()->getLocation()->getParent(),
-                'destinationName' => $flight->getAirportTo()->getName(),
-                'number' => $flight->getNumber(),
-                'airlineCode' => $flight->getAirline()->getIso(),
-                'airlineName' => $flight->getAirline()->getName(),
-                'return' => $flight->getReturnFlight(),
-                'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png')
+                    'time' => $flight->getDepartureTime()->getTimestamp(),
+                    'departure' => $flight->getDepartureTime()->format('d-m-Y H:i:s'),
+                    'arrival' => $flight->getArrivalTime()->format('d-m-Y H:i:s'),
+                    'originCode' => $flight->getAirportFrom()->getIata(),
+                    'originCity' => $flight->getAirportFrom()->getLocation()->getTitle(),
+                    'originName' => $flight->getAirportFrom()->getName(),
+                    'destinationCode' => $flight->getAirportTo()->getIata(),
+                    'destinationCity' => $flight->getAirportTo()->getLocation()->getTitle(),
+                    'destinationCityId' => $flight->getAirportTo()->getLocation()->getId(),
+                    'destinationCountryCode' => $flight->getAirportTo()->getLocation()->getParent(),
+                    'destinationName' => $flight->getAirportTo()->getName(),
+                    'number' => $flight->getNumber(),
+                    'airlineCode' => $flight->getAirline()->getIso(),
+                    'airlineName' => $flight->getAirline()->getName(),
+                    'return' => $flight->getReturnFlight(),
+                    'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png')
                 ];
 
                 if ($flight->getReturnFlight()) {
@@ -90,23 +94,23 @@ class ResumeReservationHandler extends BaseHandler
                     $itineraryIda[$l] = $flightsArray[$key];
                     $l++;
                 }
-            }              
+            }
 
             foreach( $reservationGds->getFlightReservationPassengers() as $key => $passengerReservation) {
 
-                $passenger = $passengerReservation->getPassenger();               
+                $passenger = $passengerReservation->getPassenger();
 
-                $finded = false;
+                $found = false;
 
                 foreach ($passengers as $k => $p) {
 
                     if ($passenger->getId() === $p['id']){
-                        $finded = true;
+                        $found = true;
                         $passengers[$k]['tickets'][]['number'] = $passengerReservation->getTicket();
                     }
                 }
 
-                if (! $finded) {
+                if (! $found) {
 
                     $tickets = [];
                     $tickets[0]['number'] = $passengerReservation->getTicket();
@@ -121,21 +125,28 @@ class ResumeReservationHandler extends BaseHandler
                         'phone' => $passenger->getPhone(),
                         'tickets' => $tickets,
                     ];
-                } 
-            }           
-        }     
+                }
+            }
+        }
 
         foreach ($passengers as $key => $passenger) {
-              unset($passengers[$key]['id']);
-        }  
+            unset($passengers[$key]['id']);
+        }
 
-        $subTotal = round($subTotal, $round) ;
+        $subTotal = round($subTotal,$round) ;
         $tax = round($tax, $round);
         $incrementExpenses = round($incrementExpenses, $round);
         $incrementGuarantee = round($incrementGuarantee, $round);
         $discount = round($discount, $round);
         $total = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $round);
-        $subTotalPdf = round($subTotal + $incrementExpenses + $incrementGuarantee - $discount , $round); 
+        $subTotalPdf = round($subTotal + $incrementExpenses + $incrementGuarantee - $discount , $round);
+
+        $subTotalLocal = round($subTotal, $roundLocal) ;
+        $taxLocal = round($tax, $roundLocal);
+        $incrementExpensesLocal = round($incrementExpenses, $roundLocal);
+        $incrementGuaranteeLocal = round($incrementGuarantee, $roundLocal);
+        $discountLocal = round($discount, $roundLocal);
+        $totalLocal = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $roundLocal);
 
         $structure = [
             'cancelationPolicy' => 'No Reembolsable',
@@ -147,12 +158,18 @@ class ResumeReservationHandler extends BaseHandler
             'incrementExpenses' => $incrementExpenses,
             'incrementGuarantee' => $incrementGuarantee,
             'discount' => $discount,
+            'subTotalLocal' => $subTotalLocal,
+            'taxLocal' => $taxLocal,
+            'totalToPayLocal' => $totalLocal,
+            'incrementExpensesLocal' => $incrementExpensesLocal,
+            'incrementGuaranteeLocal' => $incrementGuaranteeLocal,
+            'discountLocal' => $discountLocal,
             'numberAdults' => $reservation->getAdultNumber(),
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
             'flights' => [],
             'passengers' => $passengers
-        ];          
+        ];
 
 
         $flightsArray = [];
@@ -187,10 +204,10 @@ class ResumeReservationHandler extends BaseHandler
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
         $structure['flights'] = $flightsArray;
 
-        return $structure;          
-       
+        return $structure;
+
     }
-   
+
 
     /**
      * Todas las reglas de validacion para los parametros que recibe
@@ -203,7 +220,7 @@ class ResumeReservationHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-       return [
+        return [
             'public_id' => 'required|min:5'
         ];
     }

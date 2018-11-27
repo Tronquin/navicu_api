@@ -35,7 +35,7 @@ class CreateReservationHandler extends BaseHandler
      */
     protected function handler(): array
     {
-    	$manager = $this->container->get('doctrine')->getManager(); 	
+    	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
         $reservation = new FlightReservation();
 
