@@ -204,9 +204,7 @@ class ResumeReservationHandler extends BaseHandler
         $structure['flights'] = $flightsArray;
 
         return $structure;
-
     }
-
 
     /**
      * Todas las reglas de validacion para los parametros que recibe

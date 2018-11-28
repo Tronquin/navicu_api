@@ -3,6 +3,7 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\Flight;
+use App\Entity\FlightLock;
 use App\Entity\Airline;
 use App\Entity\Airport;
 use App\Entity\Consolidator;
@@ -29,11 +30,9 @@ class ListHandler extends BaseHandler
 
     protected function handler() : array
     {
-
         $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
-
 
         if ($params['searchType'] == 'oneWay') {
             $resp = 'oneWay';
@@ -49,18 +48,14 @@ class ListHandler extends BaseHandler
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
-        }     
-
-
-        $response = [];
+        } 
+           
+        $pricesLock = 0;
         foreach ($response[$resp] as $key => $segment) {
 
             if (!$consolidator || ($segment['price'] < $consolidator->getCreditAvailable())) {  
 
-                //$segment['amounts'] = [];
-                //$segment['amounts']['original_price'] = $segment['price'];
                 $segment['original_price'] = $segment['price'];
-
                 $negotiatedRate = false;
                 foreach ($segment['flights'] as $key => $flight) {
 
@@ -69,15 +64,30 @@ class ListHandler extends BaseHandler
                     }  
 
                     $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
-
-                    if(is_null($airline)) {
+                    if (is_null($airline)) {
                         $airline = $this->createAirline($flight);
                     }
 
+                    /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
+                     * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
+                     **/
+                    $flightLock = $manager->getRepository(FlightLock::class)->findLock(
+                        $flight['airline'],
+                        $flight['rate'],                        
+                        $flight['origin'],
+                        $flight['destination'],
+                        new \DateTime($flight['departure']),
+                        $flight['money_type']
+                    );
+
+                    if ($flightLock) {
+                        $pricesLock += $flightLock->getAmount();
+                    }
                 }
 
-                $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+                $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
 
+                $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
                 $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
                         [   'iso' => $segment['flights'][0]['airline'],
                             'rate' => $segment['flights'][0]['rate'],
@@ -91,25 +101,10 @@ class ListHandler extends BaseHandler
                         ]
                     );
                 
-                /*
-                $segment['amounts']['price'] = $convertedAmounts['subTotal'];
-                $segment['amounts']['original_price_no_tax'] = $segment['priceNoTax'];
-                $segment['amounts']['incrementLock'] = $convertedAmounts['subTotal'];
-                $segment['amounts']['incrementConsolidator'] = $convertedAmounts['incrementConsolidator'];
-                $segment['amounts']['incrementMarkup'] = $convertedAmounts['incrementMarkup'];
-                $segment['amounts']['incrementExpenses'] = $convertedAmounts['incrementExpenses'];
-                $segment['amounts']['incrementGuarantee'] = $convertedAmounts['incrementGuarantee'];
-                $segment['amounts']['discount'] = $convertedAmounts['discount'];
-                $segment['amounts']['tax'] = $convertedAmounts['tax'];
-                */
-                
                 $segment['price'] = $convertedAmounts['subTotal'];
                 $response['itinerary'][] = $segment;
             }
         }    
-
-        //$response = [];
-        //$response['itinerary'] = $segments; 
 
         $response = $this->logoAirlineExists($response);
 
@@ -194,7 +189,7 @@ class ListHandler extends BaseHandler
             'provider' => 'required|regex:/^[A-Z]{3}$/',
             'source' => 'required|regex:/^[A-Z]{3}$/',
             'dest' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|regex:/^[A-Z][a-z]$/',
+            'cabin' => 'required',
             'scale' => 'required|numeric',
             'startDate' => 'required',
             'endDate' => 'required',

@@ -29,7 +29,6 @@ class FlightLockRepository extends BaseRepository
         parent::__construct($registry, FlightLock::class);
     }
 
-
  	/**
      * Busca un bloqueo para los siguientes parametros
      *
@@ -37,6 +36,7 @@ class FlightLockRepository extends BaseRepository
      * @param $rate, Tarifa (Y,X,S, etc)
      * @param $from, iata del aeropuerto de origen
      * @param $to, iata del aeropuerto de destino
+     * @param $curr, alfa3 de la moneda 
      * @param \DateTime $departureDate, Fecha de partida del vuelo den DateTime
      * @return mixed
      */
