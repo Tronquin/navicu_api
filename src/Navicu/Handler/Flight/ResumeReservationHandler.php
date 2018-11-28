@@ -28,7 +28,7 @@ class ResumeReservationHandler extends BaseHandler
         $flightsArray = [];
         global $kernel;
         $dir = $kernel->getRootDir() . '/../web/images/airlines/';
-        
+
         $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);
 
         if (is_null($reservation)) {
@@ -65,7 +65,7 @@ class ResumeReservationHandler extends BaseHandler
             $discountLocal += $reservationGds->getDiscount();
             $taxLocal +=$reservationGds->getTax();
 
-            $j = $j =0;
+            $j = $l =0;
             foreach( $reservationGds->getFlights() as $key=>$flight) {
                 $flightsArray[] = [
                     'time' => $flight->getDepartureTime()->getTimestamp(),
