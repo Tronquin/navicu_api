@@ -180,111 +180,51 @@
                                             </th>
                                         </tr>
 
-                                            {% for ticket in passengers %}
-                                                {% if loop.index is divisible by(2) %}
-                                                    <tr style="padding:0px 0px!important;margin:10px 10px;background-color:#FDFBFE">
+                                            {% for passenger in passengers %}
 
-                                                        <td style="padding: 10px 0px 10px 30px">
-                                                            {% if ticket.firstName is defined and ticket.lastName is defined %}
-                                                                <p style="display:inline;font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">Nombres <span style="font-weight:700">{{ ticket.firstName ~ " " ~ ticket.lastName }}</span></p>
-                                                            {% else %}
-                                                                <p style="display:inline;font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">Nombres <span style="font-weight:700"></span></p>
-                                                            {% endif %}
+                                                <tr style="padding:0px 0px!important;margin:10px 10px;background-color:{{ loop.index is divisible by(2) ? '#FDFBFE' : '#F0F0F0' }}">
+
+                                                    <td style="padding: 10px 0px 10px 30px">
+                                                        <p style="display:inline;font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">Nombres <span style="font-weight:700">{{ passenger['firstName'] ~ " " ~ passenger['lastName'] }}</span></p>
+                                                    </td>
+
+                                                    <td>
+                                                        <!-- Equipaje -->
+                                                    </td>
+
+                                                    {% if passenger.tickets|length < 2 %}
+                                                        <td style="padding: 0px 0px 0px 20px" colspan="3">
+                                                            <p style="float:left!important;padding:0px 10px;
+                                                                  font-family:Lato,sans-serif;
+                                                                  color:#54284E;
+                                                                  font-weight:300;
+                                                                  font-size:16px">
+                                                                N° TKT - IDA/VUELTA
+                                                                <span style="font-size:14px;font-weight:900">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
+                                                            </p>
                                                         </td>
-
-                                                        <td>
-                                                            <!-- Equipaje -->
-                                                        </td>
-
-                                                        {% if flights[0].roundTrip %}
-                                                            <td style="padding: 0px 0px 0px 20px" colspan="3">
-                                                                <p style="float:left!important;padding:0px 10px;
+                                                    {% else %}
+                                                        <td style="padding: 0px 0px 0px 20px" colspan="3">
+                                                            <p style="float:left!important;padding:0px 10px;
                                                                       font-family:Lato,sans-serif;
                                                                       color:#54284E;
                                                                       font-weight:300;
                                                                       font-size:16px">
-                                                                    N° TKT - IDA/VUELTA
-                                                                    <span style="font-size:14px;font-weight:900">&nbsp;{{"  " ~ ticket.oneWay }}</span>
-                                                                </p>
-                                                            </td>
-                                                        {% else %}
-                                                            <td style="padding: 0px 0px 0px 20px" colspan="3">
-                                                                <p style="float:left!important;padding:0px 10px;
-                                                                          font-family:Lato,sans-serif;
-                                                                          color:#54284E;
-                                                                          font-weight:300;
-                                                                          font-size:16px">
-                                                                    N° TKT - IDA
-                                                                    <span style="font-size:14px;font-weight:900">&nbsp;{{"  " ~ ticket.oneWay }}</span>
-                                                                </p>
+                                                                N° TKT - IDA
+                                                                <span style="font-size:14px;font-weight:900">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
+                                                            </p>
 
-                                                                {% if ticket.return is defined and ticket.return != null and (flights[0].roundTrip == false) %}
-
-                                                                    <p style="float:left!important;padding:0px 10px;
-                                                                              font-family:Lato,sans-serif;
-                                                                              color:#54284E;
-                                                                              font-weight:300;
-                                                                              font-size:16px">
-                                                                        N° TKT - VUELTA
-                                                                        <span style="font-size:14px;font-weight:900">&nbsp;{{ "  " ~ ticket.return }}</span>
-                                                                    </p>
-                                                                {% endif %}
-                                                            </td>
-                                                        {% endif %}
-                                                    </tr>
-
-                                                {% else %}
-
-                                                    <tr style="padding:10px 0px!important;margin:10px 10px;background-color:#F0F0F0">
-
-                                                        <td style="padding: 10px 0px 10px 30px">
-                                                            {% if ticket.firstName is defined and ticket.lastName is defined %}
-                                                                <p style="display:inline;font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">Nombres <span style="font-weight:700">{{ ticket.firstName ~ " " ~ ticket.lastName }}</span></p>
-                                                            {% else %}
-                                                                <p style="display:inline;font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">Nombres <span style="font-weight:700"></span></p>
-                                                            {% endif %}
+                                                            <p style="float:left!important;padding:0px 10px;
+                                                                      font-family:Lato,sans-serif;
+                                                                      color:#54284E;
+                                                                      font-weight:300;
+                                                                      font-size:16px">
+                                                                N° TKT - VUELTA
+                                                                <span style="font-size:14px;font-weight:900">&nbsp;{{ "  " ~ passenger.tickets[1].number }}</span>
+                                                            </p>
                                                         </td>
-
-                                                        <td>
-                                                            <!-- Equipaje -->
-                                                        </td>
-
-                                                        {% if flights[0].roundTrip %}
-                                                            <td style="padding: 0px 0px 0px 20px"  colspan="3">
-                                                                <p style="float:left!important;padding:0px 10px;
-                                                                          font-family:Lato,sans-serif;
-                                                                          color:#54284E;
-                                                                          font-weight:300;
-                                                                          font-size:16px">
-                                                                    N° TKT - IDA/VUELTA
-                                                                    <span style="font-size:14px;font-weight:900">&nbsp;{{ "  " ~ ticket.oneWay }}</span>
-                                                                </p>
-                                                            </td>
-                                                        {% else %}
-                                                            <td style="padding: 0px 0px 0px 20px"  colspan="3">
-                                                                <p style="float:left!important;padding:0px 10px;
-                                                                          font-family:Lato,sans-serif;
-                                                                          color:#54284E;
-                                                                          font-weight:300;
-                                                                          font-size:16px">
-                                                                    N° TKT - IDA
-                                                                    <span style="font-size:14px;font-weight:900">&nbsp;{{ "  " ~ ticket.oneWay }}</span>
-                                                                </p>
-                                                                {% if ticket.return is defined and ticket.return != null and (flights[0].roundTrip == false) %}
-
-                                                                    <p style="float:left!important;padding:0px 10px;
-                                                                              font-family:Lato,sans-serif;
-                                                                              color:#54284E;
-                                                                              font-weight:300;
-                                                                              font-size:16px">
-                                                                        N° TKT - VUELTA
-                                                                        <span style="font-size:14px;font-weight:900">&nbsp;{{ "  " ~ ticket.return }}</span>
-                                                                    </p>
-                                                                {% endif %}
-                                                            </td>
-                                                        {% endif %}
-                                                    </tr>
-                                                {% endif %}
+                                                    {% endif %}
+                                                </tr>
 
                                             {% endfor %}
                                     </table>
@@ -333,159 +273,68 @@
 
                                             {% for flight in flights %}
 
-                                                {% if loop.index is divisible by(2) %}
-                                                    <tr style="background-color:#F0F0F0">
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                          <span style="text-align:right;
-                                                                      font-family:Lato,sans-serif;
-                                                                      color:#54284E;font-weight:300;
-                                                                      font-size:16px">Vuelta
-                                                              {% if flight.departureDate is defined and flight.departureDate != null %}
-                                                                  <span class="maxi" style="font-size:14px;font-weight:900"> {{ flight.departureDate }}</span>
-                                                                  <br>
-                                                                  <span class="mini" style="font-size:14px;font-weight:900"> {{ flight.departureDate }}</span>
-                                                                      {% else %}
-                                                                  <span class="maxi" style="font-size:14px;font-weight:900"> </span>
-                                                                  <br>
-                                                                  <span class="mini" style="font-size:14px;font-weight:900"> </span>
-                                                              {% endif %}
-                                                          </span>
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="background-color:#FFF">
-                                                        <td style="padding-left:10px;">
-                                                            {% if flight.departureTime is defined and flight.departureTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.departureTime }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
+                                                <tr style="background-color:#F0F0F0">
+                                                    <td style="padding:10px 30px 10px 10px;">
+                                                      <span style="text-align:right;
+                                                                  font-family:Lato,sans-serif;
+                                                                  color:#54284E;font-weight:300;
+                                                                  font-size:16px">Ida
+                                                          <span class="maxi" style="font-size:14px;font-weight:900"> {{ flight['departure']|date('d-m-Y H:i') }}</span>
+                                                              <br>
+                                                              <span class="mini" style="font-size:14px;font-weight:900"> {{ flight['departure']|date('d-m-Y H:i') }}</span>
+                                                      </span>
+                                                    </td>
+                                                    <td style="padding:10px 30px 10px 10px;">
+                                                    </td>
+                                                    <td style="padding:10px 30px 10px 5px;">
+                                                    </td>
+                                                </tr>
+                                                <tr style="background-color:#FFF">
+                                                    <td style="padding-left:10px;">
+                                                        <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['departure']|date('d-m-Y H:i') }}</p>
 
-                                                            {% if flight.originCode is defined and flight.originName is defined and flight.originCode != null and flight.originName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.originCode ~ " " ~ flight.originName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if flight.arrivalTime is defined and flight.arrivalTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.arrivalTime }} {{ flight.extraArrival }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
+                                                        <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['originCode'] ~ " " ~ flight['originName'] }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['arrival']|date('d-m-Y H:i') }}</p>
 
-                                                            {% if flight.destinationCode is defined and flight.destinationName is defined and flight.destinationCode != null and flight.destinationName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.destinationCode ~ " " ~ flight.destinationName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if flight.airlineCode is defined and flight.airlineCode != null and flight.logo_exists %}
-                                                                <img src="http://navicu.com/images/airlines/{{ flight.airlineCode }}.png">
-                                                            {% endif %}
+                                                        <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['destinationCode'] ~ " " ~ flight['destinationName'] }}</p>
+                                                    </td>
+                                                    <td>
+                                                        {% if flight['logo_exists'] %}
+                                                            <img src="http://navicu.com/images/airlines/{{ flight['airlineCode'] }}.png">
+                                                        {% endif %}
 
-                                                            {% if flight.airlineName is defined and flight.airlineName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ flight.airlineName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
-                                                {% else %}
-                                                    <tr style="background-color:#F0F0F0;">
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                          <span style="text-align:right;
-                                                                        font-family:Lato,sans-serif;
-                                                                        color:#54284E;font-weight:300;
-                                                                        font-size:16px">Ida
-                                                              {% if flight.departureDate is defined and flight.departureDate != null %}
-                                                                  <span class="maxi" style="font-size:14px;font-weight:900"> {{ flight.departureDate }}</span>
-                                                                  <br>
-                                                                  <span class="mini" style="font-size:14px;font-weight:900"> {{ flight.departureDate }}</span>
-                                                              {% else %}
-                                                                  <span class="maxi" style="font-size:14px;font-weight:900"></span>
-                                                                  <br>
-                                                                  <span class="mini" style="font-size:14px;font-weight:900"> </span>
-                                                              {% endif %}
-
-                                                          </span>
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="background-color:#FFF;">
-                                                        <td style="padding-left:10px;">
-                                                            {% if flight.departureTime is defined and flight.departureTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.departureTime }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-
-                                                            {% if flight.originCode is defined and flight.originName is defined and flight.originCode != null and flight.originName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.originCode ~ " " ~ flight.originName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if flight.arrivalTime is defined and flight.arrivalTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.arrivalTime }} {{ flight.extraArrival }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-
-                                                            {% if flight.destinationCode is defined and flight.destinationName is defined and flight.destinationCode != null and flight.destinationName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight.destinationCode ~ " " ~ flight.destinationName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if flight.airlineCode is defined and flight.airlineCode != null and flight.logo_exists %}
-                                                                <img src="http://navicu.com/images/airlines/{{ flight.airlineCode }}.png">
-                                                            {% endif %}
-
-                                                            {% if flight.airlineName is defined and flight.airlineName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ flight.airlineName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
+                                                        <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ flight['airlineName'] }}</p>
+                                                    </td>
+                                                </tr>
 
                                             {% endfor %}
 
 
-                                        {% if currencySymbol == 'Bs.' %}
+                                        {% if amountsInLocalCurrency %}
                                             <tr style="border-top: solid 2px #F0F0F0;">
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;padding-left: 10px;">
                                                     <p style="
                                                 margin-bottom: 0;
                                                 font-family: Lato, sans-serif;">
-                                                        Subtotal: {{ currencySymbol ~ " " ~ subTotal |number_format(0, ',', '.') }}
+                                                        Subtotal: {{ currencyLocalSimbol ~ " " ~ subTotalLocal |number_format(0, ',', '.') }}
                                                     </p>
                                                 </td>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;">
-                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra: {{ currencySymbol ~ " " ~ incrementGuarantee |number_format(0, ',', '.') }}</p>
+                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra: {{ currencyLocalSimbol ~ " " ~ incrementGuaranteeLocal |number_format(0, ',', '.') }}</p>
                                                 </td>
                                                 <td style="background-color: #ffffff"></td>
                                             </tr>
                                             <tr>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;padding-left: 10px;">
-                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión: {{ currencySymbol ~ " " ~ incrementExpenses |number_format(0, ',', '.') }}</p>
+                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión: {{ currencyLocalSimbol ~ " " ~ incrementExpensesLocal |number_format(0, ',', '.') }}</p>
                                                 </td>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;">
                                                     {% if discount > 0 %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencySymbol ~ " -" ~ discount |number_format(0, ',', '.') }}</p>
+                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(0, ',', '.') }}</p>
                                                     {% else %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencySymbol ~ " " ~ discount |number_format(0, ',', '.') }}</p>
+                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencyLocalSimbol ~ " " ~ discountLocal |number_format(0, ',', '.') }}</p>
                                                     {% endif %}
                                                 </td>
                                                 <td style="background-color: #ffffff"></td>
@@ -496,23 +345,23 @@
                                                     <p style="
                                                 margin-bottom: 0;
                                                 font-family: Lato, sans-serif;">
-                                                        Subtotal {{ currencySymbol ~ " " ~ subTotal |number_format(2, ',', '.') }}
+                                                        Subtotal {{ CurrencyReservationSimbol ~ " " ~ subTotal |number_format(2, ',', '.') }}
                                                     </p>
                                                 </td>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;">
-                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra {{ currencySymbol ~ " " ~ incrementGuarantee |number_format(2, ',', '.') }}</p>
+                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra {{ CurrencyReservationSimbol ~ " " ~ incrementGuarantee |number_format(2, ',', '.') }}</p>
                                                 </td>
                                                 <td style="background-color: #ffffff"></td>
                                             </tr>
                                             <tr>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;padding-left: 10px;">
-                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión {{ currencySymbol ~ " " ~ incrementExpenses |number_format(2, ',', '.') }}</p>
+                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión {{ CurrencyReservationSimbol ~ " " ~ incrementExpenses |number_format(2, ',', '.') }}</p>
                                                 </td>
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;">
                                                     {% if discount > 0 %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ currencySymbol ~ " -" ~ discount |number_format(2, ',', '.') }}</p>
+                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ CurrencyReservationSimbol ~ " -" ~ discount |number_format(2, ',', '.') }}</p>
                                                     {% else %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ currencySymbol ~ " " ~ discount |number_format(2, ',', '.') }}</p>
+                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ CurrencyReservationSimbol ~ " " ~ discount |number_format(2, ',', '.') }}</p>
                                                     {% endif %}
                                                 </td>
                                                 <td style="background-color: #ffffff"></td>
@@ -531,63 +380,68 @@
                             width:40%;
                             background-color:#FFF;
                             line-height:15px">
-                                                {% if currencySymbol is defined and currencySymbol != null and subTotal is defined and tax is defined and totalToPay is defined %}
-                                                    {% if currencySymbol == 'Bs.' %}
-                                                        <p style="
-                            padding-bottom:0px;
-                            margin:3px;
-                            font-family:Lato,sans-serif;
-                            font-weight:400;
-                            color:#808080;
-                            font-size:14px">
-                                                            IVA {{ currencySymbol ~ " " ~ tax |number_format(0, ',', '.') }}</p>
-                                                        <p style="
-                            padding-bottom:0px;
-                            margin:3px;
-                            font-family:Lato,sans-serif;
-                            font-weight:700;
-                            color:#391860;
-                            font-size:14px">
-                                                            TOTAL {{ currencySymbol ~ " " ~ totalToPay |number_format(0, ',', '.') }}
-                                                        </p>
-                                                        {% if currencySymbol == 'Bs.' %}
-                                                            <span style="
-                            color: #62269E;
-                            font-size: 10px;
-                            float: right;
-                            margin-right: 33px;
-                            font-weight:400;
-                            font-family:'Lato';">
-                                     {{ getLocalPreviousCurrency().simbol }}
-                                                                {{ (totalToPay * getRateReconversion() ) |number_format(2, ',', '.') }}
-                                    </span>
-                                                        {% endif %}
-                                                    {% else %}
-                                                        <p style="
-                            padding-bottom:0px;
-                            margin:3px;
-                            font-family:Lato,sans-serif;
-                            font-weight:400;
-                            color:#808080;
-                            font-size:14px">
-                                                            IVA {{ currencySymbol ~ " " ~ tax |number_format(2, ',', '.') }}</p>
-                                                        <p style="
-                            padding-bottom:0px;
-                            margin:3px;
-                            font-family:Lato,sans-serif;
-                            font-weight:700;
-                            color:#391860;
-                            font-size:14px">
-                                                            TOTAL {{ currencySymbol ~ " " ~ totalToPay |number_format(2, ',', '.') }}
-                                                        </p>
+                                                {% if amountsInLocalCurrency %}
+                                                    <p style="
+                        padding-bottom:0px;
+                        margin:3px;
+                        font-family:Lato,sans-serif;
+                        font-weight:400;
+                        color:#808080;
+                        font-size:14px">
+                                                        IVA {{ currencyLocalSimbol ~ " " ~ tax |number_format(0, ',', '.') }}</p>
+                                                    <p style="
+                        padding-bottom:0px;
+                        margin:3px;
+                        font-family:Lato,sans-serif;
+                        font-weight:700;
+                        color:#391860;
+                        font-size:14px">
+                                                        TOTAL {{ currencyLocalSimbol ~ " " ~ totalToPay |number_format(0, ',', '.') }}
+                                                    </p>
+
+                                                    {% if isLocalActiveCurrency(currencyLocalAlfa3) %}
+                                                        <span style="
+                    color: #62269E;
+                    font-size: 10px;
+                    float: right;
+                    margin-right: 33px;
+                    font-weight:400;
+                    font-family:'Lato';">
+                                                            {{ getLocalPreviousCurrency().simbol }}
+                                                            {{ (totalToPayLocal * getRateReconversion() ) |number_format(2, ',', '.') }}
+                                                        </span>
                                                     {% endif %}
                                                 {% else %}
-                                                    <p style="padding-bottom:0px;margin:3px;font-family:Lato,sans-serif
-                            ;font-weight:400;color:#808080;
-                            font-size:14px">IVA ?</p>
-                                                    <p style="padding-bottom:0px;margin:3px;font-family:Lato,sans-serif
-                            ;font-weight:700;color:#391860;
-                            font-size:14px">TOTAL ?</p>
+                                                    <p style="
+                        padding-bottom:0px;
+                        margin:3px;
+                        font-family:Lato,sans-serif;
+                        font-weight:400;
+                        color:#808080;
+                        font-size:14px">
+                                                        IVA {{ CurrencyReservationSimbol ~ " " ~ tax |number_format(2, ',', '.') }}</p>
+                                                    <p style="
+                        padding-bottom:0px;
+                        margin:3px;
+                        font-family:Lato,sans-serif;
+                        font-weight:700;
+                        color:#391860;
+                        font-size:14px">
+                                                        TOTAL {{ CurrencyReservationSimbol ~ " " ~ totalToPay |number_format(2, ',', '.') }}
+                                                    </p>
+
+                                                    {% if isLocalActiveCurrency(currencyReservationAlfa3) %}
+                                                        <span style="
+                    color: #62269E;
+                    font-size: 10px;
+                    float: right;
+                    margin-right: 33px;
+                    font-weight:400;
+                    font-family:'Lato';">
+                                                            {{ getLocalPreviousCurrency().simbol }}
+                                                            {{ (totalToPay * getRateReconversion() ) |number_format(2, ',', '.') }}
+                                                        </span>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
 

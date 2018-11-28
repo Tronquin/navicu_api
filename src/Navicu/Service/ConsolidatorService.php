@@ -85,7 +85,7 @@ class ConsolidatorService
                 $amount = $amount + $increment;
 
                 if ($amount > 0) {
-                    self::setMovement($amount * -1, 'Reservacion ' . $gdsReservation->getPublicId(), $consolidator->getId());
+                    self::setMovement($amount * -1, 'Reservacion ' . $reservation->getPublicId(), $consolidator->getId());
                 }
             }
         }
@@ -104,9 +104,7 @@ class ConsolidatorService
         global $kernel;
         $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        $consolidatorTransactionRp = $manager->getRepository(ConsolidatorTransaction::class);
-
-        $consolidatorTransactions = $consolidatorTransactionRp->findBy(['consolidatorId' => $consolidator->getId()]);
+        $consolidatorTransactions = $consolidator->getConsolidatorTransactions();
 
         if (! $consolidator || ! $consolidatorTransactions)
             return false;

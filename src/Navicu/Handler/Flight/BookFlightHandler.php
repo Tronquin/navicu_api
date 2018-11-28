@@ -165,7 +165,7 @@ class BookFlightHandler extends BaseHandler
             'provider' => $reservationGds->getGds()->getName()
         ]);
 
-        return $response['book'];
+        return $response['bookCode'];
     }
 
     /**
