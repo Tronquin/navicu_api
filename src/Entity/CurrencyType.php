@@ -224,15 +224,6 @@ class CurrencyType
         return $this;
     }
 
-
-
-
-
-
-
-
-
-
      /**
      * Consulta la moneda local activa de venezuela
      * @return CurrencyType
