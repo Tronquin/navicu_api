@@ -87,6 +87,8 @@ class ProcessFlightReservationHandler extends BaseHandler
             throw new NavicuException('IssueTicketHandler fail', $handler->getCode());
         }
 
+        $responseData = $handler->getData()['data'];
+
         /*| **********************************************************************
          *| Paso 4:
          *| - Envia correo de confirmacion a los pasajeros y a navicu
@@ -101,7 +103,7 @@ class ProcessFlightReservationHandler extends BaseHandler
             $this->sendEmailAlternative($params['publicId']);
         }
 
-        return $handler->getData()['data'];
+        return $responseData;
     }
 
     /**
