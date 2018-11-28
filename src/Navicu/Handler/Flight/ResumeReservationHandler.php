@@ -67,10 +67,12 @@ class ResumeReservationHandler extends BaseHandler
 
             $j = $l =0;
             foreach( $reservationGds->getFlights() as $key=>$flight) {
-                $flightsArray[] = [
-                    'time' => $flight->getDepartureTime()->getTimestamp(),
+                $flightsArray[] = [   
+                    'time' => $flight->getDepartureTime()->getTimestamp(),                 
                     'departure' => $flight->getDepartureTime()->format('d-m-Y H:i:s'),
+                    'departureTime' => $flight->getDepartureTime()->format('h:i a'),
                     'arrival' => $flight->getArrivalTime()->format('d-m-Y H:i:s'),
+                    'arrivalTime' => $flight->getArrivalTime()->format('h:i a'),
                     'originCode' => $flight->getAirportFrom()->getIata(),
                     'originCity' => $flight->getAirportFrom()->getLocation()->getTitle(),
                     'originName' => $flight->getAirportFrom()->getName(),
