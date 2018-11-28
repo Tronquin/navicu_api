@@ -27,7 +27,6 @@ class ListHandler extends BaseHandler
      * @return array
      * @throws NavicuException
      */
-
     protected function handler() : array
     {
         $params = $this->getParams();
@@ -144,7 +143,6 @@ class ListHandler extends BaseHandler
      */
     private function createAirline(array $data)
     {
-
         $manager = $this->container->get('doctrine')->getManager(); 
 
         $airline = new Airline();

@@ -114,6 +114,13 @@ class FlightReservation
     private $origin;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="expire_date", type="datetime", nullable=false)
+     */
+    private $expire_date;
+
+    /**
      * @var int|null
      *
      * @ORM\Column(name="status", type="integer", nullable=true)
@@ -274,6 +281,30 @@ class FlightReservation
 
         return $this;
     }
+
+    /**
+     * Set expire_date
+     *
+     * @param \DateTime $expireDate
+     * @return FlightReservation
+     */
+    public function setExpireDate($expireDate)
+    {
+        $this->expire_date = $expireDate;
+
+        return $this;
+    }
+
+    /**
+     * Get expire_date
+     *
+     * @return \DateTime 
+     */
+    public function getExpireDate()
+    {
+        return $this->expire_date;
+    }
+    
 
     public function getIpAddress(): ?string
     {

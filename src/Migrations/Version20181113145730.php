@@ -436,6 +436,41 @@ final class Version20181113145730 extends AbstractMigration
 
 				$this->addSql("drop view admin_flight_reservation_list_view");
 
+				$this->addSql("ALTER TABLE flight_reservation ADD expire_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+				$this->addSql('CREATE SEQUENCE holiday_calendar_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+       			$this->addSql('CREATE TABLE holiday_calendar (id INT NOT NULL, Fecha TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+
+       			$this->addSql("INSERT INTO holiday_calendar(id, fecha)VALUES 
+						        (nextval('holiday_calendar_id_seq'),'2018-11-05'),
+						        (nextval('holiday_calendar_id_seq'),'2018-12-08'),
+						        (nextval('holiday_calendar_id_seq'),'2018-12-24'),
+						        (nextval('holiday_calendar_id_seq'),'2018-12-31'),
+						        (nextval('holiday_calendar_id_seq'),'2019-01-01'),
+						        (nextval('holiday_calendar_id_seq'),'2019-01-06'),
+						        (nextval('holiday_calendar_id_seq'),'2019-03-04'),
+						        (nextval('holiday_calendar_id_seq'),'2019-03-05'),
+						        (nextval('holiday_calendar_id_seq'),'2019-04-18'),
+						        (nextval('holiday_calendar_id_seq'),'2019-04-19'),
+						        (nextval('holiday_calendar_id_seq'),'2019-05-01'),
+						        (nextval('holiday_calendar_id_seq'),'2019-06-03'),
+						        (nextval('holiday_calendar_id_seq'),'2019-06-17'),
+						        (nextval('holiday_calendar_id_seq'),'2019-06-24'),
+						        (nextval('holiday_calendar_id_seq'),'2019-06-24'),
+						        (nextval('holiday_calendar_id_seq'),'2019-06-29'),
+						        (nextval('holiday_calendar_id_seq'),'2019-07-05'),
+						        (nextval('holiday_calendar_id_seq'),'2019-07-24'),
+						        (nextval('holiday_calendar_id_seq'),'2019-08-19'),
+						        (nextval('holiday_calendar_id_seq'),'2019-09-16'),
+						        (nextval('holiday_calendar_id_seq'),'2019-10-12'),
+						        (nextval('holiday_calendar_id_seq'),'2019-11-04'),
+						        (nextval('holiday_calendar_id_seq'),'2019-12-08'),
+						        (nextval('holiday_calendar_id_seq'),'2019-12-24'),
+						        (nextval('holiday_calendar_id_seq'),'2019-12-25'),
+						        (nextval('holiday_calendar_id_seq'),'2019-12-31');
+						        (nextval('holiday_calendar_id_seq'),'2019-03-19'),
+       							(nextval('holiday_calendar_id_seq'),'2018-12-25');
+						        ");
+
 				$this->addSql("alter table flight drop increment_expenses");
 				$this->addSql("alter table flight drop   increment_guarantee");
 				$this->addSql("alter table flight drop   discount");

@@ -146,10 +146,8 @@ class CreateReservationHandler extends BaseHandler
 		$response['incrementExpenses'] = $totalIncrementExpenses;
 		$response['incrementGuarantee'] = $totalIncrementGuarantee;
 		$response['discount'] = $totalDiscount;
- 	
 
 		return $response;
-
     }
 
     /**     

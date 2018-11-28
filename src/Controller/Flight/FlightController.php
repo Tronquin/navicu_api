@@ -3,6 +3,7 @@
 namespace App\Controller\Flight;
 
 use App\Navicu\Handler\Flight\AutocompleteHandler;
+use App\Navicu\Handler\Flight\ConfirmPrereservationHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
 use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
@@ -139,4 +140,23 @@ class FlightController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
+
+
+    /**
+     * Muestra la información necesara para la confirmación de la rerserva NO TDC
+     *
+     * @Route("/confirm_prereservation", name="flight_confirm_prereservation", methods="GET")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function confirmPrereservation(Request $request)
+    {
+        $handler = new ConfirmPrereservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+
 }
