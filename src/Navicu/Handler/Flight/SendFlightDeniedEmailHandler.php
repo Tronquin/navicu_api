@@ -33,23 +33,19 @@ class SendFlightDeniedEmailHandler extends BaseHandler
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
 
-        $payments = [];
-        foreach ($reservation->getPayments() as $currentPayment) {
-            $payments[] = [
-                'amount' => $currentPayment->getAmount(),
-                'status' => $currentPayment->getStatus(),
-                'holder' => $currentPayment->getHolder(),
-                'holderId' => $currentPayment->getHolderId(),
-                'type' => $currentPayment->getType(),
-                'response' => json_encode($currentPayment->getResponse(), true),
-            ];
+        $handler = new ResumeReservationHandler();
+        $handler->setParam('public_id', $params['publicId']);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+            throw new NavicuException('Email data not found');
         }
 
         EmailService::sendFromEmailRecipients(
             'reservationDenied',
             'Reserva Denegada - navicu.com',
             'Email/Flight/flightDeniedReservation.html.twig',
-            compact('payments')
+            $handler->getData()['data']
         );
 
         return compact('reservation');

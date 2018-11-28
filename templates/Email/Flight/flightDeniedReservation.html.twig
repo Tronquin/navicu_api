@@ -133,7 +133,7 @@
                                 <td style="word-wrap:break-word;font-size:0px;padding:10px 25px;" align="left">
                                     <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">
                                         <div style="text-align:justify">
-                                            <img style="vertical-align:sub"
+                                            <img style="vertical-align:sub; max-width: 20px;"
                                                  src="https://www.navicu.com/images/newsletter/cancel-icon.svg">
                                             <p class="maxi" style="margin-left:5px;font-family:Lato,sans-serif;font-size:14px;
                                                             color:#fff;font-weight:700">
@@ -172,7 +172,7 @@
                                             </th>
                                             <th style="text-align:right;padding:10px 30px 10px 30px;font-family:Lato,sans-serif;color:#54284E;font-weight:400;font-size:14px">
                                                 <span style="font-family:Lato;font-weight:700;display:visibility">ID</span>
-                                                {{public_id}}
+                                                {{ public_id }}
                                             </th>
                                         </tr>
                                         {% if passengers is defined and passengers|length  %}
@@ -255,200 +255,73 @@
                             <tr>
                                 <td style="word-wrap:break-word;font-size:0px;padding:5px 15px;" align="left">
                                     <table cellpadding="0" cellspacing="0" style="cellspacing:0px;color:#000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
-                                        {% if fligths is defined and fligths|length %}
 
-                                            {% for fligth in fligths %}
 
-                                                {% if loop.index is divisible by(2) %}
-                                                    <tr style="background-color:#E73E51">
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                            <span style="text-align:right;
-                                                            font-family:Lato,sans-serif;
-                                                            color:#fff;font-weight:300;
-                                                            font-size:16px">Vuelta
-                                                                {% if fligth.departureDate is defined and fligth.departureDate != null %}
-                                                                    <span class="maxi" style="font-size:14px;font-weight:900"> {{ fligth.departureDate }}</span>
-                                                                    <br>
-                                                                    <span class="mini" style="font-size:14px;font-weight:900"> {{ fligth.departureDate }}</span>
-                                                            {% else %}
-                                                                    <span class="maxi" style="font-size:14px;font-weight:900"> </span>
-                                                                    <br>
-                                                                    <span class="mini" style="font-size:14px;font-weight:900"> </span>
-                                                                {% endif %}
-                                                            </span>
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="background-color:#FCECEF">
-                                                        <td style="padding-left:10px;">
-                                                            {% if fligth.departureTime is defined and fligth.departureTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.departureTime }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
+                                        {% for flight in flights %}
 
-                                                            {% if fligth.originCode is defined and fligth.originName is defined and fligth.originCode != null and fligth.originName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.originCode ~ " " ~ fligth.originName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if fligth.arrivalTime is defined and fligth.arrivalTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.arrivalTime }} {{ fligth.extraArrival }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
+                                            <tr style="background-color:#E73E51">
+                                                <td style="padding:10px 30px 10px 10px;">
+                                                    <span style="text-align:right;
+                                                    font-family:Lato,sans-serif;
+                                                    color:#fff;font-weight:300;
+                                                    font-size:16px">
+                                                        <span class="maxi" style="font-size:14px;font-weight:900"> {{ flight['departure'] }}</span>
+                                                        <br>
+                                                        <span class="mini" style="font-size:14px;font-weight:900"> {{ flight['departure'] }}</span>
+                                                    </span>
+                                                </td>
+                                                <td style="padding:10px 30px 10px 10px;">
+                                                </td>
+                                                <td style="padding:10px 30px 10px 5px;">
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#FCECEF">
+                                                <td style="padding-left:10px;">
 
-                                                            {% if fligth.destinationCode is defined and fligth.destinationName is defined and fligth.destinationCode != null and fligth.destinationName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.destinationCode ~ " " ~ fligth.destinationName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if fligth.airlineCode is defined and fligth.airlineCode != null and fligth.logo_exists %}
-                                                                <img src="http://navicu.com/images/airlines/{{ fligth.airlineCode }}.png">
-                                                            {% endif %}
+                                                    <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['departureTime'] }}</p>
+                                                    <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['originCode'] ~ " " ~ flight['originName'] }}</p>
+                                                </td>
+                                                <td>
+                                                    <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['arrivalTime'] }}</p>
+                                                    <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['destinationCode'] ~ " " ~ flight['destinationName'] }}</p>
+                                                </td>
+                                                <td>
+                                                    {% if flight['logo_exists'] %}
+                                                        <img src="http://navicu.com/images/airlines/{{ flight['airlineCode'] }}.png">
+                                                    {% endif %}
 
-                                                            {% if fligth.airlineName is defined and fligth.airlineName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ fligth.airlineName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
+                                                    <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ flight['airlineName'] }}</p>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+
+                                        <tr style="border-top: solid 2px #F0F0F0;">
+                                            <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
+                                                <p style="
+                                                        margin-bottom: 0;
+                                                        font-family: Lato, sans-serif;">
+                                                    Subtotal: {{ currencyLocalSimbol ~ " " ~ subTotalLocal |number_format(0, ',', '.') }}
+                                                </p>
+                                            </td>
+                                            <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
+                                                <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra: {{ currencyLocalSimbol ~ " " ~ incrementGuaranteeLocal |number_format(0, ',', '.') }}</p>
+                                            </td>
+                                            <td style="background-color: #FCECEF"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
+                                                <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión: {{ currencyLocalSimbol ~ " " ~ incrementExpensesLocal |number_format(0, ',', '.') }}</p>
+                                            </td>
+                                            <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
+                                                {% if discount > 0 %}
+                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(0, ',', '.') }}</p>
                                                 {% else %}
-                                                    <tr style="background-color:#E73E51;">
-                                                        <td style="padding:10px 30px 10px 10px;">
-                                                                    <span style="text-align:right;
-                                                                    font-family:Lato,sans-serif;
-                                                                    color:#fff;font-weight:300;
-                                                                    font-size:16px">Ida
-                                                                        {% if fligth.departureDate is defined and fligth.departureDate != null %}
-                                                                            <span class="maxi" style="font-size:14px;font-weight:900">
-                                                                            {{ fligth.departureDate }}
-                                                                        </span>
-                                                                            <br>
-                                                                            <span class="mini" style="font-size:14px;font-weight:900">
-                                                                            {{ fligth.departureDate }}
-                                                                        </span>
-                                                                    {% else %}
-                                                                            <span class="maxi" style="font-size:14px;font-weight:900">
-                                                                    </span>
-                                                                            <br>
-                                                                            <span class="mini" style="font-size:14px;font-weight:900">
-                                                                    </span>
-                                                                        {% endif %}
-
-                                                                    </span>
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                        <td style="padding:10px 30px 10px 5px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="background-color:#FCECEF;">
-                                                        <td style="padding-left:10px;">
-                                                            {% if fligth.departureTime is defined and fligth.departureTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.departureTime }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-
-                                                            {% if fligth.originCode is defined and fligth.originName is defined and fligth.originCode != null and fligth.originName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.originCode ~ " " ~ fligth.originName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if fligth.arrivalTime is defined and fligth.arrivalTime != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.arrivalTime }} {{ fligth.extraArrival }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-
-                                                            {% if fligth.destinationCode is defined and fligth.destinationName is defined and fligth.destinationCode != null and fligth.destinationName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ fligth.destinationCode ~ " " ~ fligth.destinationName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if fligth.airlineCode is defined and fligth.airlineCode != null and fligth.logo_exists %}
-                                                                <img src="http://navicu.com/images/airlines/{{ fligth.airlineCode }}.png">
-                                                            {% endif %}
-
-                                                            {% if fligth.airlineName is defined and fligth.airlineName != null %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ fligth.airlineName }}</p>
-                                                            {% else %}
-                                                                <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px"></p>
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
+                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencyLocalSimbol ~ " " ~ discountLocal |number_format(0, ',', '.') }}</p>
                                                 {% endif %}
-                                            {% endfor %}
+                                            </td>
+                                            <td style="background-color: #FCECEF"></td>
+                                        </tr>
 
-                                        {% endif %}
-                                        {% if currencySymbol == 'Bs.' %}
-                                            <tr style="border-top: solid 2px #F0F0F0;">
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
-                                                    <p style="
-                                                            margin-bottom: 0;
-                                                            font-family: Lato, sans-serif;">
-                                                        Subtotal: {{ currencySymbol ~ " " ~ subTotal |number_format(0, ',', '.') }}
-                                                    </p>
-                                                </td>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
-                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra: {{ currencySymbol ~ " " ~ incrementGuarantee |number_format(0, ',', '.') }}</p>
-                                                </td>
-                                                <td style="background-color: #FCECEF"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
-                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión: {{ currencySymbol ~ " " ~ incrementExpenses |number_format(0, ',', '.') }}</p>
-                                                </td>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
-                                                    {% if discount > 0 %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencySymbol ~ " -" ~ discount |number_format(0, ',', '.') }}</p>
-                                                    {% else %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com: {{ currencySymbol ~ " " ~ discount |number_format(0, ',', '.') }}</p>
-                                                    {% endif %}
-                                                </td>
-                                                <td style="background-color: #FCECEF"></td>
-                                            </tr>
-                                        {% else %}
-                                            <tr style="border-top: solid 2px #F0F0F0;">
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
-                                                    <p style="
-                                                            margin-bottom: 0;
-                                                            font-family: Lato, sans-serif;">
-                                                        Subtotal {{ currencySymbol ~ " " ~ subTotal |number_format(2, ',', '.') }}
-                                                    </p>
-                                                </td>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
-                                                    <p style="margin-bottom: 0;font-family: Lato, sans-serif;">Garantia de compra {{ currencySymbol ~ " " ~ incrementGuarantee |number_format(2, ',', '.') }}</p>
-                                                </td>
-                                                <td style="background-color: #FCECEF"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;padding-left: 10px;">
-                                                    <p style="margin-top: 0;font-family: Lato, sans-serif;">Gasto de emisión {{ currencySymbol ~ " " ~ incrementExpenses |number_format(2, ',', '.') }}</p>
-                                                </td>
-                                                <td style="color: #b1b1b1;background-color: #FCECEF;font-size: 14px;">
-                                                    {% if discount > 0 %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ currencySymbol ~ " -" ~ discount |number_format(2, ',', '.') }}</p>
-                                                    {% else %}
-                                                        <p style="margin-top: 0;font-family: Lato, sans-serif;">Desc. navicu.com {{ currencySymbol ~ " " ~ discount |number_format(2, ',', '.') }}</p>
-                                                    {% endif %}
-                                                </td>
-                                                <td style="background-color: #FCECEF"></td>
-                                            </tr>
-                                        {% endif %}
                                         <tr style="background-color:#FCECEF;">
                                             <td style="padding-left:10px;width:40%">
                                                 <p style="font-family:Lato,sans-serif
@@ -462,63 +335,35 @@
                                         width:40%;
                                         background-color:#FCECEF;
                                         line-height:15px">
-                                                {% if currencySymbol is defined and currencySymbol != null and subTotal is defined and tax is defined and totalToPay is defined %}
-                                                    {% if currencySymbol == 'Bs.' %}
-                                                        <p style="
-                                        padding-bottom:0px;
-                                        margin:3px;
-                                        font-family:Lato,sans-serif;
-                                        font-weight:400;
-                                        color:#808080;
-                                        font-size:14px">
-                                                            IVA {{ currencySymbol ~ " " ~ tax |number_format(0, ',', '.') }}</p>
-                                                        <p style="
-                                        padding-bottom:0px;
-                                        margin:3px;
-                                        font-family:Lato,sans-serif;
-                                        font-weight:700;
-                                        color:#391860;
-                                        font-size:14px">
-                                                            TOTAL {{ currencySymbol ~ " " ~ totalToPay |number_format(0, ',', '.') }}
-                                                        </p>
-                                                        {% if currencySymbol == 'Bs.' %}
-                                                            <span style="
-                                        color: #62269E;
-                                        font-size: 10px;
-                                        float: right;
-                                        margin-right: 33px;
-                                        font-weight:400;
-                                        font-family:'Lato';">
-                                                 {{ getLocalPreviousCurrency().simbol }}
-                                                                {{ (totalToPay * getRateReconversion() ) |number_format(2, ',', '.') }}
-                                                </span>
-                                                        {% endif %}
-                                                    {% else %}
-                                                        <p style="
-                                        padding-bottom:0px;
-                                        margin:3px;
-                                        font-family:Lato,sans-serif;
-                                        font-weight:400;
-                                        color:#808080;
-                                        font-size:14px">
-                                                            IVA {{ currencySymbol ~ " " ~ tax |number_format(2, ',', '.') }}</p>
-                                                        <p style="
-                                        padding-bottom:0px;
-                                        margin:3px;
-                                        font-family:Lato,sans-serif;
-                                        font-weight:700;
-                                        color:#391860;
-                                        font-size:14px">
-                                                            TOTAL {{ currencySymbol ~ " " ~ totalToPay |number_format(2, ',', '.') }}
-                                                        </p>
-                                                    {% endif %}
-                                                {% else %}
-                                                    <p style="padding-bottom:0px;margin:3px;font-family:Lato,sans-serif
-                                        ;font-weight:400;color:#808080;
-                                        font-size:14px">IVA ?</p>
-                                                    <p style="padding-bottom:0px;margin:3px;font-family:Lato,sans-serif
-                                        ;font-weight:700;color:#391860;
-                                        font-size:14px">TOTAL ?</p>
+
+                                                <p style="
+                                padding-bottom:0px;
+                                margin:3px;
+                                font-family:Lato,sans-serif;
+                                font-weight:400;
+                                color:#808080;
+                                font-size:14px">
+                                                    IVA {{ currencyLocalSimbol ~ " " ~ taxLocal |number_format(0, ',', '.') }}</p>
+                                                <p style="
+                                padding-bottom:0px;
+                                margin:3px;
+                                font-family:Lato,sans-serif;
+                                font-weight:700;
+                                color:#391860;
+                                font-size:14px">
+                                                    TOTAL {{ currencyLocalSimbol ~ " " ~ totalToPayLocal |number_format(0, ',', '.') }}
+                                                </p>
+                                                {% if isLocalActiveCurrency(currencyLocalAlfa3) %}
+                                                    <span style="
+                                color: #62269E;
+                                font-size: 10px;
+                                float: right;
+                                margin-right: 33px;
+                                font-weight:400;
+                                font-family:'Lato';">
+                                                        {{ getLocalPreviousCurrency().simbol }}
+                                                        {{ (totalToPayLocal * getRateReconversion() ) |number_format(2, ',', '.') }}
+                                                    </span>
                                                 {% endif %}
                                             </td>
                                         </tr>
