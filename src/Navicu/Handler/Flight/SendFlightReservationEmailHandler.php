@@ -36,25 +36,37 @@ class SendFlightReservationEmailHandler extends BaseHandler
         $recipients = [];
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
             foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
-                $recipients = $flightReservationPassenger->getPassenger()->getEmail();
+                $recipients[] = $flightReservationPassenger->getPassenger()->getEmail();
             }
             break;
         }
 
+        $handler = new ResumeReservationHandler();
+        $handler->setParam('public_id', $params['publicId']);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+            throw new NavicuException('Email data not found');
+        }
+
+        $data = $handler->getData()['data'];
+
         // Envia correo a los pasajeros
+        $data['amountsInLocalCurrency'] = false;
         EmailService::send(
             $recipients,
             'Confirmación de la Reserva - navicu.com',
             'Email/Flight/flightReservationConfirmation.html.twig',
-            []
+            $data
         );
 
         // Envia correo a navicu
+        $data['amountsInLocalCurrency'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
             'Confirmación de la Reserva - navicu.com',
             'Email/Flight/flightReservationConfirmation.html.twig',
-            []
+            $data
         );
 
         return compact('reservation');

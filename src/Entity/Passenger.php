@@ -175,18 +175,6 @@ class Passenger
         return $this;
     }
 
-    public function getFlightReservation(): ?FlightReservation
-    {
-        return $this->flightReservation;
-    }
-
-    public function setFlightReservation(?FlightReservation $flightReservation): self
-    {
-        $this->flightReservation = $flightReservation;
-
-        return $this;
-    }
-
      /**
      * @return Collection|FlightTicket[]
      */
