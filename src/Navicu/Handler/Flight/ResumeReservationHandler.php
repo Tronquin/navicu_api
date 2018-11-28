@@ -28,7 +28,7 @@ class ResumeReservationHandler extends BaseHandler
         $flightsArray = [];
         global $kernel;
         $dir = $kernel->getRootDir() . '/../web/images/airlines/';
-
+        
         $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);
 
         if (is_null($reservation)) {
@@ -41,10 +41,11 @@ class ResumeReservationHandler extends BaseHandler
         $subTotal = $subTotalLocal = 0;
         $tax = $taxLocal = 0;
         $round = $roundLocal = 2;
-
         $passengers = [];
 
         foreach ($reservation->getGdsReservations() as $reservationGds) {
+
+            $currencyReservation = $reservationGds->getCurrencyReservation();
 
             if (CurrencyType::isLocalPreviousCurrency($reservationGds->getCurrencyReservation()->getAlfa3())) {
                 $roundLocal = 0;
@@ -64,9 +65,7 @@ class ResumeReservationHandler extends BaseHandler
             $discountLocal += $reservationGds->getDiscount();
             $taxLocal +=$reservationGds->getTax();
 
-
-            $j = 0;
-            $l = 0;
+            $j = $j =0;
             foreach( $reservationGds->getFlights() as $key=>$flight) {
                 $flightsArray[] = [
                     'time' => $flight->getDepartureTime()->getTimestamp(),
@@ -78,7 +77,6 @@ class ResumeReservationHandler extends BaseHandler
                     'destinationCode' => $flight->getAirportTo()->getIata(),
                     'destinationCity' => $flight->getAirportTo()->getLocation()->getTitle(),
                     'destinationCityId' => $flight->getAirportTo()->getLocation()->getId(),
-                    'destinationCountryCode' => $flight->getAirportTo()->getLocation()->getParent(),
                     'destinationName' => $flight->getAirportTo()->getName(),
                     'number' => $flight->getNumber(),
                     'airlineCode' => $flight->getAirline()->getIso(),
@@ -99,11 +97,9 @@ class ResumeReservationHandler extends BaseHandler
             foreach( $reservationGds->getFlightReservationPassengers() as $key => $passengerReservation) {
 
                 $passenger = $passengerReservation->getPassenger();
-
                 $found = false;
 
                 foreach ($passengers as $k => $p) {
-
                     if ($passenger->getId() === $p['id']){
                         $found = true;
                         $passengers[$k]['tickets'][]['number'] = $passengerReservation->getTicket();
@@ -149,6 +145,10 @@ class ResumeReservationHandler extends BaseHandler
         $totalLocal = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $roundLocal);
 
         $structure = [
+            'currencyLocalAlfa3' => CurrencyType::getLocalActiveCurrency()->getAlfa3(),
+            'currencyLocalSimbol' => CurrencyType::getLocalActiveCurrency()->getSimbol(),
+            'currencyReservationAlfa3' => $currencyReservation->getAlfa3(),
+            'CurrencyReservationSimbol' => $currencyReservation->getSimbol(),
             'cancelationPolicy' => 'No Reembolsable',
             'public_id' => $reservation->getPublicId(),
             'subTotal' => $subTotal,
@@ -170,7 +170,6 @@ class ResumeReservationHandler extends BaseHandler
             'flights' => [],
             'passengers' => $passengers
         ];
-
 
         $flightsArray = [];
         $flightsArray[0] = $itineraryIda[0];
