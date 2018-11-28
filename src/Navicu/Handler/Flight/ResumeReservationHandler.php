@@ -168,6 +168,7 @@ class ResumeReservationHandler extends BaseHandler
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
             'flights' => [],
+            'payments' => [],
             'passengers' => $passengers
         ];
 
@@ -202,6 +203,20 @@ class ResumeReservationHandler extends BaseHandler
         }
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
         $structure['flights'] = $flightsArray;
+
+        $payments = [];
+        foreach ($reservation->getPayments() as $key => $currentPayment) {
+            $payments[$key]['amount'] = $currentPayment->getAmount();
+            $payments[$key]['status'] = $currentPayment->getStatus();
+            $payments[$key]['holder'] = $currentPayment->getHolder();
+            $payments[$key]['holderId'] = $currentPayment->getHolderId();
+            $payments[$key]['type'] = $currentPayment->getType();
+            $payments[$key]['status'] = $currentPayment->getStatus();
+            $payments[$key]['response'] = $currentPayment->getResponse();
+        }       
+
+        $structure['payments'] = $payments;
+
 
         return $structure;
     }
