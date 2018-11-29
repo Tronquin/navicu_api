@@ -142,9 +142,7 @@ class CreateReservationHandler extends BaseHandler
 	 	$manager->persist($reservation);
     	$manager->flush();
 
-
     	$options = $this->getTranstOptions($provider);
-
 
     	$amounts['public_id'] = $reservation->getPublicId();
         $amounts['incrementAmount'] = $totalIncrementAmount;
@@ -156,11 +154,13 @@ class CreateReservationHandler extends BaseHandler
 		$amounts['incrementExpenses'] = $totalIncrementExpenses;
 		$amounts['incrementGuarantee'] = $totalIncrementGuarantee;
 		$amounts['discount'] = $totalDiscount;
+		$now = new \DateTime('now');
 
     	$response = [
     		'Amounts' => $amounts,
     		'options_transf_visible' => $options['option_transf_visible'],
-    		'time_transf_limit' =>$options['time_transf_limit']
+    		'time_transf_limit' =>$options['time_transf_limit'],
+    		'date_servidor' => $now->format('Y-m-d H:i:s')
     	];
     	
 
