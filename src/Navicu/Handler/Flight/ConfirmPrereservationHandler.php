@@ -19,35 +19,41 @@ class ConfirmPrereservationHandler extends BaseHandler
      *
      * Handler que retorna un listado de bancos deacuerdo a la moneda de la reserva 
      * @return array
+     *
      */
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
-        $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['publicId']);
-
+        $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['publicId']);          
         $listReservationGds = $reservation->getGdsReservations();
         $currency = $listReservationGds[0]->getCurrencyReservation();
+        $date = new \DateTime('now'); 
+        
+        //$banks = $manager->getRepository(BankType::class)->getListBanksArray(1, true);
+        $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);             
 
-        $banks = $manager->getRepository(BankType::class)->getListBanksArray(1, true);
-        $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);
 
-        /** @var \Navicu\Core\Domain\Model\Entity\NvcBank $nvcBank */
         foreach ($nvcBankList as $nvcBank) {
-            $nvcBankArray[] = [
-                'name' => $nvcBank->getName(),
-                'account_number' => $nvcBank->getAccountNumber(),
-                'billing_name' => $nvcBank->getBillingName(),
-                'billing_email' => $nvcBank->getBillingEmail(),
-                'cable_code' => $nvcBank->getCableCode(),
-                'swift_code' => $nvcBank->getSwiftCode(),
-                'routing_number' => $nvcBank->getRoutingNumber(),
-                'rif_code' => $nvcBank->getRifCode(),
-                'billing_address' => $nvcBank->getBillingAddress()
-            ];
+            if ($nvcBank->getId() !== 2) {
+                $receptors[] = [
+                    'name' => $nvcBank->getName(),
+                    'account_number' => $nvcBank->getAccountNumber(),
+                    'billing_name' => $nvcBank->getBillingName(),
+                    'billing_email' => $nvcBank->getBillingEmail(),
+                    'cable_code' => $nvcBank->getCableCode(),
+                    'swift_code' => $nvcBank->getSwiftCode(),
+                    'routing_number' => $nvcBank->getRoutingNumber(),
+                    'rif_code' => $nvcBank->getRifCode(),
+                    'billing_address' => $nvcBank->getBillingAddress()
+                ];
+                $emisors[] = [
+                    'name' => $nvcBank->getName(),
+                ];
+            }
         } 
 
-        $provider = 'KIU';
+       /* $provider = 'KIU';
         foreach ($listReservationGds as $key => $regds) {   
             if ($regds->getGds()->getName() == 'AMA') {
                 $provider = 'AMA';
@@ -58,9 +64,8 @@ class ConfirmPrereservationHandler extends BaseHandler
         $holiday_now = false;
         $holiday_yesterday = false;
         $date_now = new \DateTime($reservation->getExpireDate()->format('Y-m-d H:i:s'));
-        $date = new \DateTime('now');       
-        
-        /** descripcion **/
+        $date = new \DateTime('now');        
+      
         $holidays = $this->HolidayCalendar($date_now); 
 
         $date_provider['date_provider'] = $date_now; 
@@ -69,7 +74,6 @@ class ConfirmPrereservationHandler extends BaseHandler
         if (isset($provider)) {
             if ($provider == 'KIU') {
                 if ($holidays['holiday_yesterday']) {
-                   // $date_provider['date_provider'] = $date_now->format('21:00:00');
                     if ($date_now->format('H:i:s') >  $date->format('21:00:00')){
                         $date_provider['date_provider'] = $date_now->format('21:00:00');
                         $expired['expired']= $reservation->getExpireDate()->format('Y-m-d 21:00:00');
@@ -101,18 +105,20 @@ class ConfirmPrereservationHandler extends BaseHandler
         if(! $hour) {
             throw new NavicuException('Reserva caducada ');
         }
+        */
+
+
 
         $response = [];
-        $response['receptors'] = $nvcBankList;
-        $response['emisors'] = $banks;
-        $response['date_provider'] = $date_provider;
-        $response['full_year'] = $full_year;
-        $response['date_servidor'] = $date_servidor;
-        $response['expired'] = $expired;
+        $response['receptors'] = $receptors;
+        $response['emisors'] = $emisors;
+        $response['date_servidor'] = $date->format('Y-m-d H:i:s');
+        $response['expired'] = $reservation->getExpireDate()->format('Y-m-d H:i:s');
 
         return $response;
-
     }
+
+
 
 
     public function HolidayCalendar($date_now) {

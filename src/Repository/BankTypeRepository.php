@@ -33,13 +33,13 @@ class BankTypeRepository extends BaseRepository
         
         $all = $this->findBy( $params, ['title' => 'ASC']);
         
-        foreach ($all as $bank)
-        {
+        foreach ($all as $bank) {
             $response[] = [
                 'id' => $bank->getId(),
                 'title' => $bank->getTitle()
             ];
         }
+
         return $response;
     }
 
