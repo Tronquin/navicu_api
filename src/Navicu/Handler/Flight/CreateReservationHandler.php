@@ -19,6 +19,7 @@ use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\NavicuValidator;
 use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Service\NavicuFlightConverter;
+use App\Navicu\Handler\Main\HolidayCalendarHandler;
 
 /**
  * Handler que resume las funcionalidades necesarias para crear 
@@ -46,10 +47,16 @@ class CreateReservationHandler extends BaseHandler
         $totalIncrementLock = 0;
         $totalIncrementMarkup = 0;
 		$subTotal = $tax = 0;
-	
+
+		$provider = 'KIU';
 		foreach ($params['itinerary'] as $key => $itinerary) {
 
 			$this->validateItinerary($itinerary);
+
+			/** Valida si uno de los proveedores de la reserva es Amadeus**/
+			if ($itinerary['flights'][0]['provider'] == 'AMA') {
+                $provider = 'AMA';
+            }   
 
 			$reservationGds = new FlightReservationGds();
 	    	$negotiatedRate = false;	   
@@ -120,8 +127,7 @@ class CreateReservationHandler extends BaseHandler
 			$totalIncrementMarkup += $convertedAmounts['incrementMarkup'];
 			$subTotal += $convertedAmounts['subTotal'];
 			$tax  += $convertedAmounts['tax'];  
-
-		}
+		}       
 
 		$reservation
 	        ->setReservationDate(new \DateTime('now'))
@@ -136,18 +142,77 @@ class CreateReservationHandler extends BaseHandler
 	 	$manager->persist($reservation);
     	$manager->flush();
 
-    	$response['public_id'] = $reservation->getPublicId();
-        $response['incrementAmount'] = $totalIncrementAmount;
-        $response['incrementLock'] = $totalIncrementLock;
-        $response['incrementMarkup'] = $totalIncrementMarkup;
-		$response['currencySymbol'] = $params['userCurrency'];
-		$response['subtotal'] = $subTotal;
-		$response['tax'] = $tax;
-		$response['incrementExpenses'] = $totalIncrementExpenses;
-		$response['incrementGuarantee'] = $totalIncrementGuarantee;
-		$response['discount'] = $totalDiscount;
+
+    	$options = $this->getTranstOptions($provider);
+
+
+    	$amounts['public_id'] = $reservation->getPublicId();
+        $amounts['incrementAmount'] = $totalIncrementAmount;
+        $amounts['incrementLock'] = $totalIncrementLock;
+        $amounts['incrementMarkup'] = $totalIncrementMarkup;
+		$amounts['currencySymbol'] = $params['userCurrency'];
+		$amounts['subtotal'] = $subTotal;
+		$amounts['tax'] = $tax;
+		$amounts['incrementExpenses'] = $totalIncrementExpenses;
+		$amounts['incrementGuarantee'] = $totalIncrementGuarantee;
+		$amounts['discount'] = $totalDiscount;
+
+    	$response = [
+    		'Amounts' => $amounts,
+    		'options_transf_visible' => $options['option_transf_visible'],
+    		'time_transf_limit' =>$options['time_transf_limit']
+    	];
+    	
 
 		return $response;
+    }
+
+
+    private function getTranstOptions($provider) : array
+    {
+    	$date_now = new \DateTime('now');  
+        $handler = new HolidayCalendarHandler();
+        $handler->setParam('date', $date_now);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
+            throw new NavicuException('HolidayCalendarHandler fail: ', $handler->getCode());
+        } else {
+        	$responseCalendar = $handler->getData();
+    	}
+
+        $option_transf_visible = true;
+
+        if ($provider === 'KIU') {        	
+
+            if ((date("w") == 5) || ($response_calendar['holiday_yesterday'])) {               
+               $time_limit = ($date_now->format('H:i:s') < $date_now->format('21:00:00')) ? $date_now->format('Y-m-d 21:00:00') : null;      
+            } else if ($response_calendar['holiday_today']) { 
+               $option_transf_visible = false;	
+               $time_limit =  null;            
+            } else {
+               $time_limit = null;
+            }
+
+            /* Desabilitando opción de transferencia*/
+            $time_limit = null;
+            $option_transf_visible = true;
+            /****************************************/
+            
+        } else { // si el provider es amadeus
+            if (($date_now->format('H:i:s') > $date_now->format('21:00:00')) || ($date_now->format('H:i:s') < $date_now->format('02:00:00'))) {
+            	$time_limit = null;
+            	$option_transf_visible = false;
+            } else {
+            	$time_limit = $date_now->format('Y-m-d 21:00:00');
+            } 
+        }
+
+        return [
+        	'option_transf_visible' => $option_transf_visible,
+        	'time_transf_limit' => $time_limit
+        ];
     }
 
     /**     
@@ -277,6 +342,19 @@ class CreateReservationHandler extends BaseHandler
 	}
 
 
+	/**
+     * Carga todos los errores a este handler
+     *
+     * @param array $errors
+     */
+    private function addErrorToHandler(array $errors) : void
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
+    }
+
+
     /**
      * Todas las reglas de validacion para los parametros de los vuelos
      * 
@@ -324,7 +402,7 @@ class CreateReservationHandler extends BaseHandler
 	        'flights' => 'required'
         ]); 
 
-         if ($validator->hasError()) {
+        if ($validator->hasError()) {
          	throw new NavicuException('Error in Itinerary Elements: ' . implode(';', $validator->getErrors()));
         }
         return true;
