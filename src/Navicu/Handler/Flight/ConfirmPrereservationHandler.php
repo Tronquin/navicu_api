@@ -7,7 +7,7 @@ use App\Entity\HolidayCalendar;
 use App\Entity\NvcBank;
 use App\Entity\FlightReservation;
 use App\Navicu\Handler\BaseHandler;
-
+use App\Navicu\Exception\NavicuException;
 /**
  * Obtiene el listado de cabinas disponibles
  *
@@ -29,6 +29,12 @@ class ConfirmPrereservationHandler extends BaseHandler
         $listReservationGds = $reservation->getGdsReservations();
         $currency = $listReservationGds[0]->getCurrencyReservation();
         $date = new \DateTime('now'); 
+
+
+        if ($reservation->getExpireDate()->format('Y-m-d H:i:s') >= $date->format('Y-m-d H:i:s')) {           
+            throw new NavicuException('Expired Reservation: ',BaseHandler::EXPIRED_RESERVATION);       
+        }
+
 
         //$banks = $manager->getRepository(BankType::class)->getListBanksArray(1, true);
         $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);          
@@ -56,7 +62,7 @@ class ConfirmPrereservationHandler extends BaseHandler
         $response['receptors'] = $receptors;
         $response['emisors'] = $emisors;
         $response['date_servidor'] = $date->format('Y-m-d H:i:s');
-        $response['expired'] = $reservation->getExpireDate()->format('Y-m-d H:i:s');
+        $response['expire_date'] = $reservation->getExpireDate()->format('Y-m-d H:i:s');
 
         return $response;
     }    

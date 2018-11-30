@@ -20,7 +20,7 @@ class PublicId {
      * 	constructor de la clase
      *	@param string $pre
      */
-    public function __construct( $strategy, $pre=null )
+    public function __construct($strategy, $pre=null)
     {
         $respre = isset($pre) ? $pre : '';
         if ($strategy=='date')
@@ -32,6 +32,7 @@ class PublicId {
         else
             throw new \Exception('invalid_argument');
         $this->id = $respre.$generate;
+
     }
 
     /**

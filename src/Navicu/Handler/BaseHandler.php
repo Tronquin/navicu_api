@@ -25,6 +25,7 @@ abstract class BaseHandler
     const CODE_BAD_REQUEST = 400;
     const CODE_EXCEPTION = 500;
     const CODE_NOT_AVAILABILITY = 11;
+    const EXPIRED_RESERVATION = 5;
 
     /**
      * Codigo de respuesta del flujo

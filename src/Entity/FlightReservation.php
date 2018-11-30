@@ -164,6 +164,8 @@ class FlightReservation
     {
         $this->gdsReservations = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $publicId = new PublicId('dateHex');
+        $this->publicId = $publicId->toString();
     }
 
 
@@ -189,10 +191,9 @@ class FlightReservation
         return $this->publicId;
     }
 
-    public function setPublicId(): self
+    public function setPublicId($public_id): self
     {
-        $id = new PublicId('date'); 
-        $this->publicId = $id->toString();
+        $this->publicId = $public_id;
 
         return $this;
     }

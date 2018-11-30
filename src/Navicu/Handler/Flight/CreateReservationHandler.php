@@ -127,7 +127,9 @@ class CreateReservationHandler extends BaseHandler
 			$totalIncrementMarkup += $convertedAmounts['incrementMarkup'];
 			$subTotal += $convertedAmounts['subTotal'];
 			$tax  += $convertedAmounts['tax'];  
-		}       
+		}      
+
+		$options = $this->getTranstOptions($provider); 
 
 		$reservation
 	        ->setReservationDate(new \DateTime('now'))
@@ -135,15 +137,13 @@ class CreateReservationHandler extends BaseHandler
         	->setAdultNumber($itinerary['adt'])
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'])
-        	->setPublicId()
+        	->setExpireDate(new \DateTime($options['time_transf_limit']))
 	        ->setIpAddress($params['ipAddress'])
-	        ->setOrigin('navicu web');		 
+	        ->setOrigin('navicu web');
 
 	 	$manager->persist($reservation);
     	$manager->flush();
-
-    	$options = $this->getTranstOptions($provider);
-
+    	
     	$amounts['public_id'] = $reservation->getPublicId();
         $amounts['incrementAmount'] = $totalIncrementAmount;
         $amounts['incrementLock'] = $totalIncrementLock;
@@ -187,22 +187,22 @@ class CreateReservationHandler extends BaseHandler
         if ($provider === 'KIU') {        	
 
             if ((date("w") == 5) || ($response_calendar['holiday_yesterday'])) {               
-               $time_limit = ($date_now->format('H:i:s') < $date_now->format('21:00:00')) ? $date_now->format('Y-m-d 21:00:00') : null;      
+               $time_limit = ($date_now->format('H:i:s') < $date_now->format('21:00:00')) ? $date_now->format('Y-m-d 21:00:00') : $date_now->modify('+1 day');    
             } else if ($response_calendar['holiday_today']) { 
                $option_transf_visible = false;	
-               $time_limit =  null;            
+               $time_limit =  $date_now->modify('+1 day');            
             } else {
-               $time_limit = null;
+               $time_limit = $date_now->modify('+1 day');
             }
 
             /* Desabilitando opción de transferencia*/
-            $time_limit = null;
+            $time_limit = $date_now->modify('+1 day');
             $option_transf_visible = true;
             /****************************************/
             
         } else { // si el provider es amadeus
             if (($date_now->format('H:i:s') > $date_now->format('21:00:00')) || ($date_now->format('H:i:s') < $date_now->format('02:00:00'))) {
-            	$time_limit = null;
+            	$time_limit = $date_now->format('Y-m-d 21:00:00');
             	$option_transf_visible = false;
             } else {
             	$time_limit = $date_now->format('Y-m-d 21:00:00');
