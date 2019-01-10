@@ -37,8 +37,5 @@ class ExecuteTdcTransactionsInstapagoCommand extends Command
         $handler->processHandler();
 
         $response = $handler->getJsonResponseData();
-
-        dump($response);
-
     }
 }

@@ -366,9 +366,6 @@ class InstapagoPaymentGateway implements PaymentGateway
         $response = curl_exec($ch);
         curl_close($ch);
 
-        dump($response);
-        die;
-
         return $response;
     }
 

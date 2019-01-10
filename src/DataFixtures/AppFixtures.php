@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\OauthUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -9,8 +10,15 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
+      
+        // create 20 products! Bam!
+        for ($i = 1; $i < 6; $i++) {
+            $user = new OauthUser();
+            $user->setCode($i);
+            $user->setToken('1234'.$i);
+            $user->setExpiredAt(new \DateTime('2019-12-01'));
+            $manager->persist($user);
+        }
 
         $manager->flush();
     }
