@@ -85,8 +85,8 @@ class ListHandler extends BaseHandler
                 }
 
                 $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
-
                 $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+
                 $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
                         [   'iso' => $segment['flights'][0]['airline'],
                             'rate' => $segment['flights'][0]['rate'],
@@ -101,13 +101,14 @@ class ListHandler extends BaseHandler
                     );
                 
                 $segment['price'] = $convertedAmounts['subTotal'];
-                $response['itinerary'][] = $segment;
+
+                $responseFinal['itinerary'][] = $segment;
             }
         }    
 
-        $response = $this->logoAirlineExists($response);
+        $responseFinal = $this->logoAirlineExists($responseFinal);
 
-        return $response;
+        return $responseFinal;
     }
 
 
