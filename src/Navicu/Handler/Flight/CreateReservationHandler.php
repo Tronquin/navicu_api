@@ -38,6 +38,7 @@ class CreateReservationHandler extends BaseHandler
     {
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+
         $reservation = new FlightReservation();
 
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
@@ -49,7 +50,8 @@ class CreateReservationHandler extends BaseHandler
 		$subTotal = $tax = 0;
 
 		$provider = 'KIU';
-		foreach ($params['itinerary'] as $key => $itinerary) {
+		//oreach ($params['itinerary'] as $key => $itinerary) {
+        $itinerary =  $params['itinerary'];
 
 			$this->validateItinerary($itinerary);
 
@@ -127,7 +129,7 @@ class CreateReservationHandler extends BaseHandler
 			$totalIncrementMarkup += $convertedAmounts['incrementMarkup'];
 			$subTotal += $convertedAmounts['subTotal'];
 			$tax  += $convertedAmounts['tax'];  
-		}      
+		//}      
 
 		$options = $this->getTranstOptions($provider); 
 
