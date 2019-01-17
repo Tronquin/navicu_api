@@ -37,6 +37,7 @@ class AirportRepository extends BaseRepository
                     a.name,
                     a.country_name as country,
                     a.location_name as city,
+                    a.location_code,
                     a.city_name
                 FROM web_fligths_autocompleted_view a
                 WHERE a.visible = TRUE AND ".$tsQuery. "

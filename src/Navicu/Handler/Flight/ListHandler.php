@@ -33,22 +33,51 @@ class ListHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
 
+        $sourceAirports = [];
+
+        $airportSource = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['source']]);
+        if ($params['sourceSearchType'] == 'group') {            
+            $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportSource->getCityName()]);
+
+            foreach ($objectAirports  as $key => $airportSource) {
+                $sourceAirports[] = $airportSource->getIata();
+            } 
+
+        } else {
+            $sourceAirports[] = $airport->getIata();
+        }
+
+        $airportDest = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['dest']]);
+        if ($params['sourceSearchType'] == 'group') {            
+            $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportDest->getCityName()]);
+
+            foreach ($objectAirports  as $key => $airportDest) {
+                $destAirports[] = $airportDest->getIata();
+            } 
+
+        } else {
+            $destAirports[] = $airportDest->getIata();
+        }
+
+        $params['source'] = $sourceAirports;
+        $params['dest'] = $destAirports;
+
         if ($params['searchType'] == 'oneWay') {
             $resp = 'oneWay';
-            $response = OtaService::oneWay($this->getParams());
+            $response = OtaService::oneWay($params);
         }    
         else if ($params['searchType'] == 'roundTrip') {
             $resp = 'roundTrip';
-            $response = OtaService::roundTrip($this->getParams());
+            $response = OtaService::roundTrip($params);
         }  else {
             $resp = 'calendar';
-            $response = OtaService::calendar($this->getParams());
+            $response = OtaService::calendar($params);
         } 
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
         } 
-           
+
         $pricesLock = 0;
         foreach ($response[$resp] as $key => $segment) {
 
@@ -193,6 +222,9 @@ class ListHandler extends BaseHandler
             'startDate' => 'required',
             'endDate' => 'required',
             'baggage' => 'required|numeric',
+            'sourceSearchType' => 'required',
+            'destSearchType' => 'required'
+
         ];
     }
 

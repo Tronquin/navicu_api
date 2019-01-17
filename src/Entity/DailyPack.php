@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DailyPack
  *
- * @ORM\Table(name="daily_pack", indexes={@ORM\Index(name="idx_d3d841b61919b217", columns={"pack_id"})})
+ * @ORM\Table(name="daily_pack", indexes={@ORM\Index(name="IDX_D3D841B6A4834927", columns={"rule_room_id"}), @ORM\Index(name="IDX_D3D841B68BF6A167", columns={"daily_room_id"})})
  * @ORM\Entity
  */
 class DailyPack
@@ -114,187 +114,24 @@ class DailyPack
     private $promotion = false;
 
     /**
-     * @var \Pack
+     * @var \RuleRoom
      *
-     * @ORM\ManyToOne(targetEntity="Pack")
+     * @ORM\ManyToOne(targetEntity="RuleRoom")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="rule_room_id", referencedColumnName="id")
      * })
      */
-    private $pack;
+    private $ruleRoom;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getIsCompleted(): ?bool
-    {
-        return $this->isCompleted;
-    }
-
-    public function setIsCompleted(bool $isCompleted): self
-    {
-        $this->isCompleted = $isCompleted;
-
-        return $this;
-    }
-
-    public function getMinNight(): ?int
-    {
-        return $this->minNight;
-    }
-
-    public function setMinNight(?int $minNight): self
-    {
-        $this->minNight = $minNight;
-
-        return $this;
-    }
-
-    public function getMaxNight(): ?int
-    {
-        return $this->maxNight;
-    }
-
-    public function setMaxNight(?int $maxNight): self
-    {
-        $this->maxNight = $maxNight;
-
-        return $this;
-    }
-
-    public function getSpecificAvailability(): ?int
-    {
-        return $this->specificAvailability;
-    }
-
-    public function setSpecificAvailability(?int $specificAvailability): self
-    {
-        $this->specificAvailability = $specificAvailability;
-
-        return $this;
-    }
-
-    public function getBaseRate(): ?float
-    {
-        return $this->baseRate;
-    }
-
-    public function setBaseRate(?float $baseRate): self
-    {
-        $this->baseRate = $baseRate;
-
-        return $this;
-    }
-
-    public function getSellRate(): ?float
-    {
-        return $this->sellRate;
-    }
-
-    public function setSellRate(?float $sellRate): self
-    {
-        $this->sellRate = $sellRate;
-
-        return $this;
-    }
-
-    public function getNetRate(): ?float
-    {
-        return $this->netRate;
-    }
-
-    public function setNetRate(?float $netRate): self
-    {
-        $this->netRate = $netRate;
-
-        return $this;
-    }
-
-    public function getCloseOut(): ?bool
-    {
-        return $this->closeOut;
-    }
-
-    public function setCloseOut(?bool $closeOut): self
-    {
-        $this->closeOut = $closeOut;
-
-        return $this;
-    }
-
-    public function getClosedToArrival(): ?bool
-    {
-        return $this->closedToArrival;
-    }
-
-    public function setClosedToArrival(?bool $closedToArrival): self
-    {
-        $this->closedToArrival = $closedToArrival;
-
-        return $this;
-    }
-
-    public function getClosedToDeparture(): ?bool
-    {
-        return $this->closedToDeparture;
-    }
-
-    public function setClosedToDeparture(?bool $closedToDeparture): self
-    {
-        $this->closedToDeparture = $closedToDeparture;
-
-        return $this;
-    }
-
-    public function getLastModified(): ?\DateTimeInterface
-    {
-        return $this->lastModified;
-    }
-
-    public function setLastModified(?\DateTimeInterface $lastModified): self
-    {
-        $this->lastModified = $lastModified;
-
-        return $this;
-    }
-
-    public function getPromotion(): ?bool
-    {
-        return $this->promotion;
-    }
-
-    public function setPromotion(bool $promotion): self
-    {
-        $this->promotion = $promotion;
-
-        return $this;
-    }
-
-    public function getPack(): ?Pack
-    {
-        return $this->pack;
-    }
-
-    public function setPack(?Pack $pack): self
-    {
-        $this->pack = $pack;
-
-        return $this;
-    }
+    /**
+     * @var \DailyRoom
+     *
+     * @ORM\ManyToOne(targetEntity="DailyRoom")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="daily_room_id", referencedColumnName="id")
+     * })
+     */
+    private $dailyRoom;
 
 
 }

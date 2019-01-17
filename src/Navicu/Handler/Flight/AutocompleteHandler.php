@@ -45,13 +45,17 @@ class AutocompleteHandler extends BaseHandler
 
                 $results[] = [
                     'type' => 'airport',
-                    'data' => $airports[0]
+                    'label' => $airports[0]['completeName'],
+                    'code' => $airports[0]['iata'],
+                    'data' => $airports[0],
+
                 ];
 
             } else {
                 $results[] = [
                     'type' => 'group',
                     'label' => $city . ' - Todos los aeropuertos',
+                    'code' => $airports[0]['iata'],
                     'data' => $airports
                 ];
             }
