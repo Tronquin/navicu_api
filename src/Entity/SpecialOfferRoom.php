@@ -39,5 +39,34 @@ class SpecialOfferRoom
      */
     private $room;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
 
 }

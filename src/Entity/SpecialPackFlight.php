@@ -69,5 +69,70 @@ class SpecialPackFlight
      */
     private $airline;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(?string $class): self
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    public function getSpecialPack(): ?SpecialPack
+    {
+        return $this->specialPack;
+    }
+
+    public function setSpecialPack(?SpecialPack $specialPack): self
+    {
+        $this->specialPack = $specialPack;
+
+        return $this;
+    }
+
+    public function getDestiny(): ?Airport
+    {
+        return $this->destiny;
+    }
+
+    public function setDestiny(?Airport $destiny): self
+    {
+        $this->destiny = $destiny;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?Airport
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?Airport $origin): self
+    {
+        $this->origin = $origin;
+
+        return $this;
+    }
+
+    public function getAirline(): ?Airline
+    {
+        return $this->airline;
+    }
+
+    public function setAirline(?Airline $airline): self
+    {
+        $this->airline = $airline;
+
+        return $this;
+    }
+
 
 }

@@ -42,5 +42,34 @@ class PropertyRuleRoom
      */
     private $property;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getRuleRoom(): ?RuleRoom
+    {
+        return $this->ruleRoom;
+    }
+
+    public function setRuleRoom(?RuleRoom $ruleRoom): self
+    {
+        $this->ruleRoom = $ruleRoom;
+
+        return $this;
+    }
+
+    public function getProperty(): ?Property
+    {
+        return $this->property;
+    }
+
+    public function setProperty(?Property $property): self
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
 
 }

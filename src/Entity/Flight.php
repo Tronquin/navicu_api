@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Flight
  *
- * @ORM\Table(name="flight", indexes={@ORM\Index(name="idx_c257e60eec141ef8", columns={"airline"}), @ORM\Index(name="idx_c257e60ef73df7ae", columns={"flight_reservation_id"}), @ORM\Index(name="idx_c257e60eb91aa170", columns={"airport_from"}), @ORM\Index(name="idx_c257e60ed787d2c4", columns={"airport_to"}), @ORM\Index(name="idx_c257e60e6956883f", columns={"currency"}), @ORM\Index(name="IDX_C257E60E6B1C669", columns={"flight_lock"}), @ORM\Index(name="IDX_C257E60E46A06F05", columns={"flight_type_id"})})
+ * @ORM\Table(name="flight", indexes={@ORM\Index(name="idx_c257e60eec141ef8", columns={"airline"}), @ORM\Index(name="idx_c257e60eb91aa170", columns={"airport_from"}), @ORM\Index(name="idx_c257e60ed787d2c4", columns={"airport_to"}), @ORM\Index(name="idx_c257e60e6956883f", columns={"currency"}), @ORM\Index(name="IDX_C257E60E6B1C669", columns={"flight_lock"}), @ORM\Index(name="IDX_C257E60E46A06F05", columns={"flight_type_id"})})
  * @ORM\Entity
  */
 class Flight

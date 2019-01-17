@@ -12,7 +12,6 @@ use App\Navicu\Handler\BaseHandler;
  */
 class AutocompleteHandler extends BaseHandler
 {
-
     /**
      * Aqui va la logica
      *
@@ -26,15 +25,17 @@ class AutocompleteHandler extends BaseHandler
         $airports = $manager->getRepository(Airport::class)->findByWords($params['words']);
 
         foreach ($airports as &$one) {
-            $one['city_name'] = $this->upperFirstLetter($one['city_name']);
+            $one['only_city_name'] = $this->upperFirstLetter($one['city_name']);
+            $one['city_name'] = $this->upperFirstLetter($one['country']) .", ". $this->upperFirstLetter($one['city_name']);
 
-            $one['completeName'] = $one['iata'].' '.$one['city_name'] . ', ' . $one['country'] . ' - ' . $one['name'];
+            $one['completeName'] = $one['iata'].' '. $one['only_city_name'] . ', ' . $one['country'] . ' - ' . $one['name'];
         }
 
         // Agrupa por pais
         $resultsPerCountry = [];
-        foreach ($airports as $one) {
-            $resultsPerCountry[ $one['city_name'] ][] = $one;
+        foreach ($airports as $two) {
+
+            $resultsPerCountry[ $two['city_name'] ][] = $two;
         }
 
         // Si no tiene pais o el pais retorna un solo aeropuerto no se agrupa
@@ -48,16 +49,26 @@ class AutocompleteHandler extends BaseHandler
                     'label' => $airports[0]['completeName'],
                     'code' => $airports[0]['iata'],
                     'data' => $airports[0],
-
                 ];
 
             } else {
-                $results[] = [
-                    'type' => 'group',
-                    'label' => $city . ' - Todos los aeropuertos',
-                    'code' => $airports[0]['iata'],
-                    'data' => $airports
+                if (! empty($airports[0]['only_city_name'])) {
+                    $results[] = [
+                        'type' => 'group',
+                        'label' => $city. ' - Todos los aeropuertos',
+                        'code' => $airports[0]['iata'],
+                        'data' => $airports
+                    ];
+                } else {
+                    foreach ($airports as $key => $airport2) {
+                        $results[] = [
+                        'type' => 'airport',
+                        'label' => $airport2['completeName'],
+                        'code' => $airport2['iata'],
+                        'data' => $airport2,
                 ];
+                    }
+                }
             }
         }
 

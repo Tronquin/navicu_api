@@ -95,5 +95,130 @@ class SpecialPack
      */
     private $property;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getBannerRoute(): ?string
+    {
+        return $this->bannerRoute;
+    }
+
+    public function setBannerRoute(?string $bannerRoute): self
+    {
+        $this->bannerRoute = $bannerRoute;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getMinNight(): ?int
+    {
+        return $this->minNight;
+    }
+
+    public function setMinNight(?int $minNight): self
+    {
+        $this->minNight = $minNight;
+
+        return $this;
+    }
+
+    public function getMaxNight(): ?int
+    {
+        return $this->maxNight;
+    }
+
+    public function setMaxNight(?int $maxNight): self
+    {
+        $this->maxNight = $maxNight;
+
+        return $this;
+    }
+
+    public function getValidDays(): ?string
+    {
+        return $this->validDays;
+    }
+
+    public function setValidDays(?string $validDays): self
+    {
+        $this->validDays = $validDays;
+
+        return $this;
+    }
+
+    public function getPercentage(): ?float
+    {
+        return $this->percentage;
+    }
+
+    public function setPercentage(?float $percentage): self
+    {
+        $this->percentage = $percentage;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getProperty(): ?Property
+    {
+        return $this->property;
+    }
+
+    public function setProperty(?Property $property): self
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
 
 }

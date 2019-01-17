@@ -46,5 +46,46 @@ class DailyPriceUpselling
      */
     private $currencyType;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDailyUpsellingId(): ?int
+    {
+        return $this->dailyUpsellingId;
+    }
+
+    public function setDailyUpsellingId(?int $dailyUpsellingId): self
+    {
+        $this->dailyUpsellingId = $dailyUpsellingId;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getCurrencyType(): ?CurrencyType
+    {
+        return $this->currencyType;
+    }
+
+    public function setCurrencyType(?CurrencyType $currencyType): self
+    {
+        $this->currencyType = $currencyType;
+
+        return $this;
+    }
+
 
 }

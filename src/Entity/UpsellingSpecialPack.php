@@ -63,5 +63,70 @@ class UpsellingSpecialPack
      */
     private $upselling;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(?int $number): self
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    public function getMandatory(): ?bool
+    {
+        return $this->mandatory;
+    }
+
+    public function setMandatory(?bool $mandatory): self
+    {
+        $this->mandatory = $mandatory;
+
+        return $this;
+    }
+
+    public function getPercentage(): ?float
+    {
+        return $this->percentage;
+    }
+
+    public function setPercentage(?float $percentage): self
+    {
+        $this->percentage = $percentage;
+
+        return $this;
+    }
+
+    public function getSpecialPack(): ?SpecialPack
+    {
+        return $this->specialPack;
+    }
+
+    public function setSpecialPack(?SpecialPack $specialPack): self
+    {
+        $this->specialPack = $specialPack;
+
+        return $this;
+    }
+
+    public function getUpselling(): ?Upselling
+    {
+        return $this->upselling;
+    }
+
+    public function setUpselling(?Upselling $upselling): self
+    {
+        $this->upselling = $upselling;
+
+        return $this;
+    }
+
 
 }

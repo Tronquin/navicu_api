@@ -116,5 +116,166 @@ class SpecialOffer
      */
     private $typeOffer;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPercentaje(): ?float
+    {
+        return $this->percentaje;
+    }
+
+    public function setPercentaje(?float $percentaje): self
+    {
+        $this->percentaje = $percentaje;
+
+        return $this;
+    }
+
+    public function getPromotionalCode(): ?string
+    {
+        return $this->promotionalCode;
+    }
+
+    public function setPromotionalCode(?string $promotionalCode): self
+    {
+        $this->promotionalCode = $promotionalCode;
+
+        return $this;
+    }
+
+    public function getMinNights(): ?int
+    {
+        return $this->minNights;
+    }
+
+    public function setMinNights(?int $minNights): self
+    {
+        $this->minNights = $minNights;
+
+        return $this;
+    }
+
+    public function getMaxNights(): ?int
+    {
+        return $this->maxNights;
+    }
+
+    public function setMaxNights(?int $maxNights): self
+    {
+        $this->maxNights = $maxNights;
+
+        return $this;
+    }
+
+    public function getFreeNights(): ?int
+    {
+        return $this->freeNights;
+    }
+
+    public function setFreeNights(?int $freeNights): self
+    {
+        $this->freeNights = $freeNights;
+
+        return $this;
+    }
+
+    public function getIniDate(): ?\DateTimeInterface
+    {
+        return $this->iniDate;
+    }
+
+    public function setIniDate(?\DateTimeInterface $iniDate): self
+    {
+        $this->iniDate = $iniDate;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): self
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getBannerRoute(): ?string
+    {
+        return $this->bannerRoute;
+    }
+
+    public function setBannerRoute(?string $bannerRoute): self
+    {
+        $this->bannerRoute = $bannerRoute;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getValidDays(): ?string
+    {
+        return $this->validDays;
+    }
+
+    public function setValidDays(?string $validDays): self
+    {
+        $this->validDays = $validDays;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTypeOffer(): ?TypeOffer
+    {
+        return $this->typeOffer;
+    }
+
+    public function setTypeOffer(?TypeOffer $typeOffer): self
+    {
+        $this->typeOffer = $typeOffer;
+
+        return $this;
+    }
+
 
 }

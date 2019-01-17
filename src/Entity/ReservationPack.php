@@ -154,5 +154,190 @@ class ReservationPack
      */
     private $specialOffer;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNumberRooms(): ?int
+    {
+        return $this->numberRooms;
+    }
+
+    public function setNumberRooms(int $numberRooms): self
+    {
+        $this->numberRooms = $numberRooms;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getNumberAdults(): ?int
+    {
+        return $this->numberAdults;
+    }
+
+    public function setNumberAdults(int $numberAdults): self
+    {
+        $this->numberAdults = $numberAdults;
+
+        return $this;
+    }
+
+    public function getBedroom()
+    {
+        return $this->bedroom;
+    }
+
+    public function setBedroom($bedroom): self
+    {
+        $this->bedroom = $bedroom;
+
+        return $this;
+    }
+
+    public function getCancellationPolicy()
+    {
+        return $this->cancellationPolicy;
+    }
+
+    public function setCancellationPolicy($cancellationPolicy): self
+    {
+        $this->cancellationPolicy = $cancellationPolicy;
+
+        return $this;
+    }
+
+    public function getNumberKids(): ?int
+    {
+        return $this->numberKids;
+    }
+
+    public function setNumberKids(int $numberKids): self
+    {
+        $this->numberKids = $numberKids;
+
+        return $this;
+    }
+
+    public function getTypePack(): ?Categories
+    {
+        return $this->typePack;
+    }
+
+    public function setTypePack(?Categories $typePack): self
+    {
+        $this->typePack = $typePack;
+
+        return $this;
+    }
+
+    public function getPropertyCancellationPolicy(): ?PropertyCancellationPolicy
+    {
+        return $this->propertyCancellationPolicy;
+    }
+
+    public function setPropertyCancellationPolicy(?PropertyCancellationPolicy $propertyCancellationPolicy): self
+    {
+        $this->propertyCancellationPolicy = $propertyCancellationPolicy;
+
+        return $this;
+    }
+
+    public function getTypeRoom(): ?RoomType
+    {
+        return $this->typeRoom;
+    }
+
+    public function setTypeRoom(?RoomType $typeRoom): self
+    {
+        $this->typeRoom = $typeRoom;
+
+        return $this;
+    }
+
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(?Reservation $reservation): self
+    {
+        $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function getBedroom2(): ?Bedroom
+    {
+        return $this->bedroom2;
+    }
+
+    public function setBedroom2(?Bedroom $bedroom2): self
+    {
+        $this->bedroom2 = $bedroom2;
+
+        return $this;
+    }
+
+    public function getTypeCancellationPolicy(): ?Categories
+    {
+        return $this->typeCancellationPolicy;
+    }
+
+    public function setTypeCancellationPolicy(?Categories $typeCancellationPolicy): self
+    {
+        $this->typeCancellationPolicy = $typeCancellationPolicy;
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    public function getRuleRoom(): ?RuleRoom
+    {
+        return $this->ruleRoom;
+    }
+
+    public function setRuleRoom(?RuleRoom $ruleRoom): self
+    {
+        $this->ruleRoom = $ruleRoom;
+
+        return $this;
+    }
+
+    public function getSpecialOffer(): ?SpecialOffer
+    {
+        return $this->specialOffer;
+    }
+
+    public function setSpecialOffer(?SpecialOffer $specialOffer): self
+    {
+        $this->specialOffer = $specialOffer;
+
+        return $this;
+    }
+
 
 }

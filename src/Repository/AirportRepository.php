@@ -27,24 +27,31 @@ class AirportRepository extends BaseRepository
         $words = strtolower($words);
         $separatedWords = $this->separateByType($words, []);
 
-        $tsQuery = $this->getTsQuery($separatedWords['tsQuery'], "vector");
+        //$tsQuery = $this->getTsQuery($separatedWords['tsQuery'], "vector");
 
-        return $this->getEntityManager()
+        $tsQuery = "(REPLACE(LOWER(name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
+                    REPLACE(LOWER(city_name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
+                    REPLACE(LOWER(iata), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%') ";
+
+        $result = $this->getEntityManager()
             ->getConnection()
             ->query("
                 SELECT
                     a.iata,
+                    a.location_name,
                     a.name,
                     a.country_name as country,
                     a.location_name as city,
                     a.location_code,
-                    a.city_name
+                    a.city_name,
+                    a.visible
                 FROM web_fligths_autocompleted_view a
-                WHERE a.visible = TRUE AND ".$tsQuery. "
+                WHERE a.visible is true AND ".$tsQuery. "
                 LIMIT 10
             ")
-            ->fetchAll()
-        ;
+            ->fetchAll();
+
+        return $result;
     }
 
 

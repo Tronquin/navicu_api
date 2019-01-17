@@ -133,5 +133,190 @@ class DailyPack
      */
     private $dailyRoom;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getIsCompleted(): ?bool
+    {
+        return $this->isCompleted;
+    }
+
+    public function setIsCompleted(bool $isCompleted): self
+    {
+        $this->isCompleted = $isCompleted;
+
+        return $this;
+    }
+
+    public function getMinNight(): ?int
+    {
+        return $this->minNight;
+    }
+
+    public function setMinNight(?int $minNight): self
+    {
+        $this->minNight = $minNight;
+
+        return $this;
+    }
+
+    public function getMaxNight(): ?int
+    {
+        return $this->maxNight;
+    }
+
+    public function setMaxNight(?int $maxNight): self
+    {
+        $this->maxNight = $maxNight;
+
+        return $this;
+    }
+
+    public function getSpecificAvailability(): ?int
+    {
+        return $this->specificAvailability;
+    }
+
+    public function setSpecificAvailability(?int $specificAvailability): self
+    {
+        $this->specificAvailability = $specificAvailability;
+
+        return $this;
+    }
+
+    public function getBaseRate(): ?float
+    {
+        return $this->baseRate;
+    }
+
+    public function setBaseRate(?float $baseRate): self
+    {
+        $this->baseRate = $baseRate;
+
+        return $this;
+    }
+
+    public function getSellRate(): ?float
+    {
+        return $this->sellRate;
+    }
+
+    public function setSellRate(?float $sellRate): self
+    {
+        $this->sellRate = $sellRate;
+
+        return $this;
+    }
+
+    public function getNetRate(): ?float
+    {
+        return $this->netRate;
+    }
+
+    public function setNetRate(?float $netRate): self
+    {
+        $this->netRate = $netRate;
+
+        return $this;
+    }
+
+    public function getCloseOut(): ?bool
+    {
+        return $this->closeOut;
+    }
+
+    public function setCloseOut(?bool $closeOut): self
+    {
+        $this->closeOut = $closeOut;
+
+        return $this;
+    }
+
+    public function getClosedToArrival(): ?bool
+    {
+        return $this->closedToArrival;
+    }
+
+    public function setClosedToArrival(?bool $closedToArrival): self
+    {
+        $this->closedToArrival = $closedToArrival;
+
+        return $this;
+    }
+
+    public function getClosedToDeparture(): ?bool
+    {
+        return $this->closedToDeparture;
+    }
+
+    public function setClosedToDeparture(?bool $closedToDeparture): self
+    {
+        $this->closedToDeparture = $closedToDeparture;
+
+        return $this;
+    }
+
+    public function getLastModified(): ?\DateTimeInterface
+    {
+        return $this->lastModified;
+    }
+
+    public function setLastModified(?\DateTimeInterface $lastModified): self
+    {
+        $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function getPromotion(): ?bool
+    {
+        return $this->promotion;
+    }
+
+    public function setPromotion(bool $promotion): self
+    {
+        $this->promotion = $promotion;
+
+        return $this;
+    }
+
+    public function getRuleRoom(): ?RuleRoom
+    {
+        return $this->ruleRoom;
+    }
+
+    public function setRuleRoom(?RuleRoom $ruleRoom): self
+    {
+        $this->ruleRoom = $ruleRoom;
+
+        return $this;
+    }
+
+    public function getDailyRoom(): ?DailyRoom
+    {
+        return $this->dailyRoom;
+    }
+
+    public function setDailyRoom(?DailyRoom $dailyRoom): self
+    {
+        $this->dailyRoom = $dailyRoom;
+
+        return $this;
+    }
+
 
 }

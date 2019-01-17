@@ -22,17 +22,7 @@ class UpsellingTag
      */
     private $id;
 
-    /**
-     * @var \Upselling
-     *
-     * @ORM\ManyToOne(targetEntity="Upselling")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="upselling_id", referencedColumnName="id")
-     * })
-     */
-    private $upselling;
-
-    /**
+     /**
      * @var \Tag
      *
      * @ORM\ManyToOne(targetEntity="Tag")
@@ -41,6 +31,41 @@ class UpsellingTag
      * })
      */
     private $tag;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Upselling", inversedBy="upselling_tags")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $upselling;
+
+    public function getUpselling(): ?Upselling
+    {
+        return $this->upselling;
+    }
+
+    public function setUpselling(?Upselling $upselling): self
+    {
+        $this->upselling = $upselling;
+
+        return $this;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTag(): ?Tag
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?Tag $tag): self
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
 
 
 }

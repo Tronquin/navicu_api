@@ -42,5 +42,34 @@ class UpsellingChannel
      */
     private $channel;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUpselling(): ?Upselling
+    {
+        return $this->upselling;
+    }
+
+    public function setUpselling(?Upselling $upselling): self
+    {
+        $this->upselling = $upselling;
+
+        return $this;
+    }
+
+    public function getChannel(): ?Channel
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(?Channel $channel): self
+    {
+        $this->channel = $channel;
+
+        return $this;
+    }
+
 
 }

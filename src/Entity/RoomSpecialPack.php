@@ -42,5 +42,34 @@ class RoomSpecialPack
      */
     private $room;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSpecialPack(): ?SpecialPack
+    {
+        return $this->specialPack;
+    }
+
+    public function setSpecialPack(?SpecialPack $specialPack): self
+    {
+        $this->specialPack = $specialPack;
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
 
 }
