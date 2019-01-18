@@ -44,7 +44,7 @@ class ListHandler extends BaseHandler
             } 
 
         } else {
-            $sourceAirports[] = $airport->getIata();
+            $sourceAirports[] = $airportSource->getIata();
         }
 
         $airportDest = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['dest']]);

@@ -27,7 +27,6 @@ class AutocompleteHandler extends BaseHandler
         foreach ($airports as &$one) {
             $one['only_city_name'] = $this->upperFirstLetter($one['city_name']);
             $one['city_name'] = $this->upperFirstLetter($one['country']) .", ". $this->upperFirstLetter($one['city_name']);
-
             $one['completeName'] = $one['iata'].' '. $one['only_city_name'] . ', ' . $one['country'] . ' - ' . $one['name'];
         }
 
