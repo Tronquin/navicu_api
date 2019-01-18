@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Passenger
  *
- * @ORM\Table(name="passenger", indexes={@ORM\Index(name="idx_3befe8ddf73df7ae", columns={"flight_reservation"})})
+ * @ORM\Table(name="passenger")
  * @ORM\Entity
  */
 class Passenger

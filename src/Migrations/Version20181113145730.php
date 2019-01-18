@@ -466,9 +466,9 @@ final class Version20181113145730 extends AbstractMigration
 						        (nextval('holiday_calendar_id_seq'),'2019-12-08'),
 						        (nextval('holiday_calendar_id_seq'),'2019-12-24'),
 						        (nextval('holiday_calendar_id_seq'),'2019-12-25'),
-						        (nextval('holiday_calendar_id_seq'),'2019-12-31');
+						        (nextval('holiday_calendar_id_seq'),'2019-12-31'),
 						        (nextval('holiday_calendar_id_seq'),'2019-03-19'),
-       							(nextval('holiday_calendar_id_seq'),'2018-12-25');
+       							(nextval('holiday_calendar_id_seq'),'2018-12-25')
 						        ");
 
 				$this->addSql("alter table flight drop increment_expenses");
