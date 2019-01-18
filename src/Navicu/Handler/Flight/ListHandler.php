@@ -79,6 +79,7 @@ class ListHandler extends BaseHandler
         } 
 
         $pricesLock = 0;
+        $responseFinal = [];
         foreach ($response[$resp] as $key => $segment) {
 
             if (!$consolidator || ($segment['price'] < $consolidator->getCreditAvailable())) {  
