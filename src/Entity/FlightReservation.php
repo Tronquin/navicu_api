@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FlightReservation
  *
- * @ORM\Table(name="flight_reservation", indexes={@ORM\Index(name="IDX_F73DF7AE18E5767C", columns={"currency_type_id"}), @ORM\Index(name="IDX_F73DF7AE7E6A667", columns={"flight_type_schedule_id"}), @ORM\Index(name="IDX_F73DF7AEF3EFD182", columns={"flight_class_id"})})
+ * @ORM\Table(name="flight_reservation", indexes={@ORM\Index(name="IDX_F73DF7AE7E6A667", columns={"flight_type_schedule_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\FlightReservationRepository"))
  */
 class FlightReservation
