@@ -45,10 +45,6 @@ class Channel
      */
     private $status;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Upselling", mappedBy="channels")
-     */
-    private $upsellings;
 
 
     public function __construct()

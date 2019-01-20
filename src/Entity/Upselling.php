@@ -116,10 +116,7 @@ class Upselling
      */
     private $upselling_tags;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Channel", inversedBy="yes")
-     */
-    private $channels;
+
 
     public function __construct()
     {
