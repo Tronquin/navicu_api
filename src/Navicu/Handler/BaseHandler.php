@@ -19,12 +19,21 @@ abstract class BaseHandler
 {
     use ContainerAwareTrait;
 
-    /** Codigos de respuesta */
+    /** Codigos de respuesta general */
     const CODE_UNDEFINED = 0;
     const CODE_SUCCESS = 200;
     const CODE_BAD_REQUEST = 400;
     const CODE_EXCEPTION = 500;
+    const CODE_PAYMENT_ = 20;
+
+    /* codigos respuesta boleteria*/
     const CODE_NOT_AVAILABILITY = 11;
+    const CODE_REPEATED_BOOK = 12;
+    const CODE_REPEATED_TICKET = 13;
+    const CODE_ERROR_ISSUE = 20;
+
+
+    /* codigos respuesta holeteria*/
     const EXPIRED_RESERVATION = 5;
 
     /**
