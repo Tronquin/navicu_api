@@ -82,58 +82,62 @@ class ListHandler extends BaseHandler
         $responseFinal = [];
         foreach ($response[$resp] as $key => $segment) {
 
-            if (!$consolidator || ($segment['price'] < $consolidator->getCreditAvailable())) {  
+            if ($segment['flights'][0]['provider'] === 'AMA' &&
+                (! $consolidator || $consolidator->getCreditAvailable() < $segment['price'])
+            ) {
+                // Si el proveedor es Amadeus && (No esta configurado el consolidador || el credito no es suficiente)
+                continue;
+            }
 
-                $segment['original_price'] = $segment['price'];
-                $negotiatedRate = false;
-                foreach ($segment['flights'] as $key => $flight) {
+            $segment['original_price'] = $segment['price'];
+            $negotiatedRate = false;
+            foreach ($segment['flights'] as $key => $flight) {
 
-                    if ($flight['negotiated_rate']) {
-                        $negotiatedRate = $flight['negotiated_rate'];                    
-                    }  
-
-                    $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
-                    if (is_null($airline)) {
-                        $airline = $this->createAirline($flight);
-                    }
-
-                    /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
-                     * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
-                     **/
-                    $flightLock = $manager->getRepository(FlightLock::class)->findLock(
-                        $flight['airline'],
-                        $flight['rate'],                        
-                        $flight['origin'],
-                        $flight['destination'],
-                        new \DateTime($flight['departure']),
-                        $flight['money_type']
-                    );
-
-                    if ($flightLock) {
-                        $pricesLock += $flightLock->getAmount();
-                    }
+                if ($flight['negotiated_rate']) {
+                    $negotiatedRate = $flight['negotiated_rate'];
                 }
 
-                $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
-                $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+                $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
+                if (is_null($airline)) {
+                    $airline = $this->createAirline($flight);
+                }
 
-                $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
-                        [   'iso' => $segment['flights'][0]['airline'],
-                            'rate' => $segment['flights'][0]['rate'],
-                            'from' => $segment['flights'][0]['origin'],
-                            'to' => $segment['flights'][0]['destination'],
-                            'departureDate' => $flightLockDate
-                        ],$params['userCurrency'], 
-                        [
-                            'provider' => $params['provider'],
-                            'negotiatedRate' =>  $negotiatedRate,                    
-                        ]
-                    );
-                
-                $segment['price'] = $convertedAmounts['subTotal'];
+                /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
+                 * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
+                 **/
+                $flightLock = $manager->getRepository(FlightLock::class)->findLock(
+                    $flight['airline'],
+                    $flight['rate'],
+                    $flight['origin'],
+                    $flight['destination'],
+                    new \DateTime($flight['departure']),
+                    $flight['money_type']
+                );
 
-                $responseFinal['itinerary'][] = $segment;
+                if ($flightLock) {
+                    $pricesLock += $flightLock->getAmount();
+                }
             }
+
+            $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
+            $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+
+            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
+                    [   'iso' => $segment['flights'][0]['airline'],
+                        'rate' => $segment['flights'][0]['rate'],
+                        'from' => $segment['flights'][0]['origin'],
+                        'to' => $segment['flights'][0]['destination'],
+                        'departureDate' => $flightLockDate
+                    ],$params['userCurrency'],
+                    [
+                        'provider' => $params['provider'],
+                        'negotiatedRate' =>  $negotiatedRate,
+                    ]
+                );
+
+            $segment['price'] = $convertedAmounts['subTotal'];
+
+            $responseFinal['itinerary'][] = $segment;
         }    
 
         $responseFinal = $this->logoAirlineExists($responseFinal);
