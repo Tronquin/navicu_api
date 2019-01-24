@@ -28,10 +28,10 @@ security:
             pattern:  ^/navicu/login
             stateless: true
             anonymous: true
-            json_login:
-                check_path:   /navicu/login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            #json_login:
+            #    check_path:   /navicu/login_check
+            #    success_handler: lexik_jwt_authentication.handler.authentication_success
+            #    failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
             pattern:   ^/flight
