@@ -66,10 +66,14 @@ class ListHandler extends BaseHandler
             $resp = 'oneWay';
             $response = OtaService::oneWay($params);
         }    
-        else if ($params['searchType'] == 'roundTrip') {
+        elseif ($params['searchType'] == 'roundTrip') {
             $resp = 'roundTrip';
             $response = OtaService::roundTrip($params);
-        }  else {
+        }
+        elseif ($params['searchType'] == 'twiceOneWay') {
+            $resp = 'twiceOneWay';
+            $response = OtaService::twiceOneWay($params);
+        } else {
             $resp = 'calendar';
             $response = OtaService::calendar($params);
         } 
@@ -80,7 +84,7 @@ class ListHandler extends BaseHandler
 
 
         $pricesLock = 0;
-        $responseFinal = null;
+        $responseFinal = [];
         foreach ($response[$resp] as $keyGlobal => $global) {
 
             $itinerary['price'] = 0;
@@ -143,7 +147,8 @@ class ListHandler extends BaseHandler
 
                 $segment['price'] = $convertedAmounts['subTotal'];
                 $itinerary['price'] +=  $segment['price'];
-                $itinerary['itineraries'][] = $segment;
+                $itinerary['itineraries'][] = $segment;                         
+
             }
 
             $responseFinal[$keyGlobal]['groupItinerary'] = $itinerary;
