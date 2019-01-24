@@ -66,10 +66,14 @@ class ListHandler extends BaseHandler
             $resp = 'oneWay';
             $response = OtaService::oneWay($params);
         }    
-        else if ($params['searchType'] == 'roundTrip') {
+        elseif ($params['searchType'] == 'roundTrip') {
             $resp = 'roundTrip';
             $response = OtaService::roundTrip($params);
-        }  else {
+        }
+        elseif ($params['searchType'] == 'twiceOneWay') {
+            $resp = 'twiceOneWay';
+            $response = OtaService::twiceOneWay($params);
+        } else {
             $resp = 'calendar';
             $response = OtaService::calendar($params);
         } 

@@ -20,6 +20,7 @@ class OtaService
     const URL_ONE_WAY = 'oneWay';
     const URL_ROUND_TRIP = 'roundTrip';
     const URL_MULTIPLE = 'multiple';
+    const URL_TWICE_ONE_WAY = 'twiceOneWay';
     const URL_CALENDAR = 'calendar';
     const URL_BOOK = 'book';
     const URL_TICKET = 'issue';
@@ -128,6 +129,37 @@ class OtaService
 
         return self::send(self::URL_MULTIPLE, $params);
     }
+
+    /**
+     * Hace una busqueda doble one way en OTA
+     *
+     * @param array $params
+     * @return array
+     * @throws OtaException
+     */
+    public static function twiceOneWay(array $params) : array
+    {
+        $validator = new NavicuValidator();
+        $validator->validate($params, [
+            'adt' => 'required|numeric|min:1',
+            'cnn' => 'required|numeric',
+            'inf' => 'required|numeric',
+            'ins' => 'required|numeric',
+            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'scale' => 'required|numeric|between:0,3',
+            'baggage' => 'required|numeric|between:0,2',
+            'source' => 'required',
+            'dest' => 'required',
+            'startDate' => 'required|date_format:Y-m-d',
+        ]);
+
+        if ($validator->hasError()) {
+            throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
+        }
+
+        return self::send(self::URL_TWICE_ONE_WAY, $params);
+    }
+
 
     /**
      * Hace una busqueda calendar en OTA
