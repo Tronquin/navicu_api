@@ -63,8 +63,7 @@ class ListHandler extends BaseHandler
         $params['dest'] = $destAirports;
 
         if ($params['searchType'] == 'oneWay') {
-            $resp = 'on        $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
-eWay';
+            $resp = 'oneWay';
             $response = OtaService::oneWay($params);
         }    
         else if ($params['searchType'] == 'roundTrip') {
