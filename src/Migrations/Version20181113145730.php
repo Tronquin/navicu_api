@@ -500,7 +500,6 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("alter table flight drop  converted_price");
 				$this->addSql("alter table flight drop  provider");
 				$this->addSql("alter table flight drop is_refundable");
-				$this->addSql("alter table flight drop technical_stop");
 				$this->addSql("alter table flight drop increment_consolidator");
 				$this->addSql("alter table flight drop  subtotal_no_extra_increment");
 				$this->addSql("alter table flight drop  tax_total");

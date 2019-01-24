@@ -143,11 +143,10 @@ class ListHandler extends BaseHandler
 
                 $segment['price'] = $convertedAmounts['subTotal'];
                 $itinerary['price'] +=  $segment['price'];
-                $itinerary['itineraries'][] = $segment;                         
-
+                $itinerary['itineraries'][] = $segment;
             }
 
-             $responseFinal[$keyGlobal]['groupItinerary'] = $itinerary;
+            $responseFinal[$keyGlobal]['groupItinerary'] = $itinerary;
             
         }   
 
@@ -224,7 +223,7 @@ class ListHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [/*
+        return [
             'searchType' => 'required|string',
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
@@ -241,8 +240,7 @@ class ListHandler extends BaseHandler
             'endDate' => 'required',
             'baggage' => 'required|numeric',
             'sourceSearchType' => 'required',
-            'destSearchType' => 'required'*/
-
+            'destSearchType' => 'required'
         ];
     }
 

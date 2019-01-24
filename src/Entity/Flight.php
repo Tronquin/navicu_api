@@ -72,6 +72,14 @@ class Flight
     private $cabin;
 
     /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="tecnical_stop", type="boolean", nullable=true)
+     */
+    private $tecnicalStop;
+
+
+    /**
      * @var int|null
      *
      * @ORM\Column(name="segment", type="integer", nullable=true)
@@ -233,6 +241,18 @@ class Flight
     }
 
     public function setSegment(int $segment): self
+    {
+        $this->segment = $segment;
+
+        return $this;
+    }
+
+    public function getTecnicalStop(): ?int
+    {
+        return $this->tecnicalStop;
+    }
+
+    public function setTecnicalStop(int $segment): self
     {
         $this->segment = $segment;
 

@@ -50,9 +50,9 @@ class CreateReservationHandler extends BaseHandler
 		$subTotal = $tax = 0;
 
 		$provider = 'KIU';
-		//oreach ($params['itinerary'] as $key => $itinerary) {
-        $itinerary =  $params['itinerary'];
-
+		foreach ($params['itineraries'] as $key => $itinerary) {
+            
+            //$itinerary =  $params['itinerary'];
 			$this->validateItinerary($itinerary);
 
 			/** Valida si uno de los proveedores de la reserva es Amadeus**/
@@ -76,7 +76,7 @@ class CreateReservationHandler extends BaseHandler
 				$reservationGds->addFlight($flightEntity); 
 	    	}
 
-	    	foreach ($itinerary['fareFamily'] as $key => $fareFamily) {
+	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
 
 	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
 				$reservationGds->addFlightFareFamily($farefamilyEntity); 
@@ -87,8 +87,8 @@ class CreateReservationHandler extends BaseHandler
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
-	                        'from' => $itinerary['flights'][0]['from'],
-	                        'to' => $itinerary['flights'][0]['to'],
+	                        'from' => $itinerary['flights'][0]['origin'],
+	                        'to' => $itinerary['flights'][0]['destination'],
 	                        'departureDate' => $flightLockDate
 	                    ],$params['userCurrency'], 
 	                    [
@@ -106,8 +106,8 @@ class CreateReservationHandler extends BaseHandler
 	        	$localAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
-	                        'from' => $itinerary['flights'][0]['from'],
-	                        'to' => $itinerary['flights'][0]['to'],
+	                        'from' => $itinerary['flights'][0]['origin'],
+	                        'to' => $itinerary['flights'][0]['destination'],
 	                        'departureDate' => $flightLockDate
 	                    ],CurrencyType::getLocalActiveCurrency()->getAlfa3(), 
 	                    [
@@ -118,8 +118,7 @@ class CreateReservationHandler extends BaseHandler
 	        }	        
 
 	        $reservationGds = $this->updateReservationGds($reservationGds, $itinerary, $params['userCurrency'], $localAmounts);
-
-	        $reservation->addGdsReservation($reservationGds); 	     	
+	        $reservation->addGdsReservation($reservationGds);      	
 
 	        // Incrementos en moneda del usuario
 			$totalIncrementExpenses += $convertedAmounts['incrementExpenses'];
@@ -129,7 +128,7 @@ class CreateReservationHandler extends BaseHandler
 			$totalIncrementMarkup += $convertedAmounts['incrementMarkup'];
 			$subTotal += $convertedAmounts['subTotal'];
 			$tax  += $convertedAmounts['tax'];  
-		//}      
+		}      
 
 		$options = $this->getTranstOptions($provider); 
 
@@ -144,9 +143,8 @@ class CreateReservationHandler extends BaseHandler
 	        ->setOrigin('navicu web');
 
 	 	$manager->persist($reservation);
-    	$manager->flush();
+    	$manager->flush();    	
     	
-    	$amounts['public_id'] = $reservation->getPublicId();
         $amounts['incrementAmount'] = $totalIncrementAmount;
         $amounts['incrementLock'] = $totalIncrementLock;
         $amounts['incrementMarkup'] = $totalIncrementMarkup;
@@ -159,12 +157,12 @@ class CreateReservationHandler extends BaseHandler
 		$now = new \DateTime('now');
 
     	$response = [
-    		'Amounts' => $amounts,
+            'public_id' => $reservation->getPublicId(),
+    		'amounts' => $amounts,
     		'options_transf_visible' => $options['option_transf_visible'],
     		'time_transf_limit' =>$options['time_transf_limit'],
     		'date_servidor' => $now->format('Y-m-d H:i:s')
-    	];
-    	
+    	];    	
 
 		return $response;
     }
@@ -266,7 +264,7 @@ class CreateReservationHandler extends BaseHandler
         ->setDiscount($convertedAmounts['discount'])
         ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]))
         ->setAirlineCommission($airlineCommission)
-        ->setIsRefundable($itinerary['flights'][0]['isRefundable'])
+        ->setIsRefundable($itinerary['flights'][0]['is_refundable'])
         ->setStatus(FlightReservation::STATE_IN_PROCESS)
         ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
@@ -296,8 +294,8 @@ class CreateReservationHandler extends BaseHandler
 		$manager = $this->container->get('doctrine')->getManager();        
 
 		$airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flightData['airline']]);
-		$from = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['from']]);
-		$to = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['to']]);	
+		$from = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['origin']]);
+		$to = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['destination']]);	
 
 		$flight
 				->setNumber($flightData['number_flight'])
@@ -309,7 +307,8 @@ class CreateReservationHandler extends BaseHandler
 				->setDuration($flightData['duration'])
                 ->setReturnFlight($isReturn)			      
 				->setSegment($flightData['segment'])
-				->setCabin($flightData['cabin'])			
+				->setCabin($flightData['cabin'])
+                ->setTecnicalStop($flightData['tecnical_stop'])			
 		;
 
 		$manager->persist($flight);
@@ -366,8 +365,8 @@ class CreateReservationHandler extends BaseHandler
 		$validator = new NavicuValidator();	
         $validator->validate($flight, [
         	'segment' => 'required|numeric',
-            'from' => 'required|regex:/^[A-Z]{3}$/',
-            'to'  => 'required|regex:/^[A-Z]{3}$/',
+            'origin' => 'required|regex:/^[A-Z]{3}$/',
+            'destination'  => 'required|regex:/^[A-Z]{3}$/',
             'airline' => 'required|regex:/^[A-Z]{2}$/', 
             'number_flight' => 'required',
             'departure' => 'required',
@@ -422,9 +421,10 @@ class CreateReservationHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
-        'userCurrency' => 'required|regex:/^[A-Z]{3}$/',
+        /*'userCurrency' => 'required|regex:/^[A-Z]{3}$/',
         'ipAddress' => 'required|/^(?:(?:[1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^localhost$/',
         'itinerary' => 'required'
+        */
         ];
     }
 
