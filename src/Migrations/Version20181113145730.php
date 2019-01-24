@@ -181,7 +181,9 @@ final class Version20181113145730 extends AbstractMigration
 
 				$this->addSql("
 				insert into public.flight_reservation_gds (
-                id,                currency_reservation,                currency_gds,
+                id,                
+                currency_reservation,                
+                currency_gds,
                 flight_reservation_id,
                 gds_id,
                 book_code,
@@ -209,26 +211,36 @@ final class Version20181113145730 extends AbstractMigration
                 is_refundable,
                 status 
                 )
-                select nextval('flight_reservation_gds_id_seq'),
-                fr.currency,                max(f.original_currency),                fr.id,
+
+                select 
+                nextval('flight_reservation_gds_id_seq'),
+                fr.currency,                
+                max(f.original_currency),
+                fr.id,
                 case
 					WHEN max(f.provider) = 'AMA' then 2
 					else 1
-				end as prov,		fr.code,
-				fr.reservation_date,		fr.child_number,
-				fr.adult_number , 0, 0,
+				end as prov,	
+				fr.code,
+				fr.reservation_date,		
+				fr.child_number,
+				fr.adult_number , 
+				0, 
+				0,
 				sum(f.original_price_no_tax),
 				sum(f.original_price)-sum(f.original_price_no_tax),
 				max(f.gds_taxes),  
 				sum(f.price),
 				sum(f.tax_total),
-				sum(f.type_rate_increment) ,
-		                max(f.type_rate_increment_type),
-		                max(f.type_rate_increment_currency) ,
-				sum(f.increment_expenses), sum(f.increment_guarantee), sum(f.discount) ,	 
+				max(f.type_rate_increment) ,
+		        max(f.type_rate_increment_type),
+		        max(f.type_rate_increment_currency) ,
+				sum(f.increment_expenses), 
+				sum(f.increment_guarantee), 
+				sum(f.discount) ,	 
 				max(f.increment_consolidator),		
-		                max(f.airline),
-		                max(f.airline_commission),   
+		        max(f.airline),
+		        max(f.airline_commission),   
 				case
 					when (max(f.currency) = 145 and dollar_rate_sell_covertion is not null) then dollar_rate_sell_covertion
 					when (max(f.currency) = 145 and currency_rate_sell_covertion is not null) then currency_rate_sell_covertion
@@ -437,7 +449,7 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("drop view admin_flight_reservation_list_view");
 
 				$this->addSql("ALTER TABLE flight_reservation ADD expire_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-				$this->addSql('CREATE SEQUENCE holiday_calendar_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+				/*$this->addSql('CREATE SEQUENCE holiday_calendar_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
        			$this->addSql('CREATE TABLE holiday_calendar (id INT NOT NULL, Fecha TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
 
        			$this->addSql("INSERT INTO holiday_calendar(id, fecha)VALUES 
@@ -470,7 +482,7 @@ final class Version20181113145730 extends AbstractMigration
 						        (nextval('holiday_calendar_id_seq'),'2019-03-19'),
        							(nextval('holiday_calendar_id_seq'),'2018-12-25')
 						        ");
-
+				*/
 				$this->addSql("alter table flight drop increment_expenses");
 				$this->addSql("alter table flight drop   increment_guarantee");
 				$this->addSql("alter table flight drop   discount");

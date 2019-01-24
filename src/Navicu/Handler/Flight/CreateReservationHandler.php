@@ -262,13 +262,13 @@ class CreateReservationHandler extends BaseHandler
         ->setMarkupIncrementType(FlightGeneralConditions::INCREMENT_TYPE_PERCENTAGE) 
         ->setMarkupCurrency($userCurrency)
         ->setIncrementExpenses($convertedAmounts['incrementExpenses'])
-	        ->setIncrementGuarantee($convertedAmounts['incrementGuarantee'])
-	        ->setDiscount($convertedAmounts['discount'])
-	        ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]))
-	        ->setAirlineCommission($airlineCommission)
-	        ->setIsRefundable($itinerary['flights'][0]['isRefundable'])
-	        ->setStatus(FlightReservation::STATE_IN_PROCESS)
-	        ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
+        ->setIncrementGuarantee($convertedAmounts['incrementGuarantee'])
+        ->setDiscount($convertedAmounts['discount'])
+        ->setAirlineProvider($manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]))
+        ->setAirlineCommission($airlineCommission)
+        ->setIsRefundable($itinerary['flights'][0]['isRefundable'])
+        ->setStatus(FlightReservation::STATE_IN_PROCESS)
+        ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
 	        $dollarRates = NavicuCurrencyConverter::getLastRate($itinerary['currency'], new \DateTime('now'));
 	        $currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));

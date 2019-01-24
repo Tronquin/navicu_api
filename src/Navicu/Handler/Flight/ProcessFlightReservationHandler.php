@@ -15,6 +15,7 @@ use App\Navicu\Service\EmailService;
  */
 class ProcessFlightReservationHandler extends BaseHandler
 {
+
     /**
      * Aqui va la logica
      *

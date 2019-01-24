@@ -12,7 +12,7 @@ final class Version20190117134922 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
-       
+     /*  
 
      $this->addSql("CREATE TABLE public.rule_room
 					(
@@ -293,6 +293,8 @@ final class Version20190117134922 extends AbstractMigration
 	      REFERENCES public.special_offer (id) MATCH SIMPLE
 	      ON UPDATE NO ACTION ON DELETE NO ACTION");  
    
+
+   */
 
     }
 

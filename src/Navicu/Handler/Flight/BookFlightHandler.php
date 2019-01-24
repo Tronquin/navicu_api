@@ -3,10 +3,11 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\CurrencyType;
-use App\Entity\ExchangeRateHistory;
-use App\Entity\FlightReservation;
-use App\Entity\FlightReservationGds;
+use App\Entity\Airport;
 use App\Entity\FlightReservationPassenger;
+use App\Entity\FlightReservation;
+use App\Entity\ExchangeRateHistory;
+use App\Entity\FlightReservationGds;
 use App\Entity\Passenger;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
@@ -19,7 +20,7 @@ use App\Navicu\Service\OtaService;
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
 class BookFlightHandler extends BaseHandler
-{
+{    
     /**
      * Aqui va la logica
      *
@@ -30,6 +31,58 @@ class BookFlightHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+
+
+        /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
+        $validFlight = 0;
+        $airportRp = $manager->getRepository(Airport::class);
+        $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
+        $flightReservationRp = $manager->getRepository(FlightReservation::class);
+        $lastPassenger = $lastFlight = []; 
+
+        foreach ($params['passengers'] as $currentPassenger) {
+            $lastPassenger = $currentPassenger;
+            foreach ($params['flights'] as $flight) {
+                $lastFlight = $flight;
+                $passengerNames = explode(' ', $currentPassenger['fullName']);
+                $from = $airportRp->findOneByArray(['iata' => $flight['from']]);
+                $to = $airportRp->findOneByArray(['iata' => $flight['to']]);
+
+                $resultTicket = $ticketRp->getflightByDatePassenger(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                    $flight['departure'], $flight['arrival'], $from, $to);
+
+                if (count($resultTicket) > 0) {
+                    $validFlight = BaseHandler::CODE_REPEATED_TICKET;
+                    break;
+                } else {
+                    $result = $flightReservationRp->getRecentFlightReservation(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                        $flight['departure'], $flight['arrival'], $from, $to);
+                    if (count($result) > 0) {
+                        $validFlight = BaseHandler::CODE_REPEATED_BOOK;
+                        break;
+                    }
+                }
+            }
+
+            if ($validFlight != 0) {
+                break;
+            }
+        }
+
+        if ($validFlight != 0) {
+            return [
+                'code' => 400,
+                'message' => 'repeated_reservation',
+                'repeated' => [
+                       $lastFlight['to'],
+                       $lastFlight['from'],
+                       $lastPassenger['fullName'] 
+                ],
+                'reservation' =>[]
+            ];
+        }
+        /** fin de la validacion del boleto repetido **/
+
 
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
@@ -102,7 +155,12 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        return compact('reservation');
+        return [
+            'code' => 200,
+            'message' => 'success',
+            'repeated' => [],
+            'reservation' => compact('reservation')
+        ];
     }
 
     /**
