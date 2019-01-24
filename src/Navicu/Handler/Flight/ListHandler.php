@@ -63,7 +63,8 @@ class ListHandler extends BaseHandler
         $params['dest'] = $destAirports;
 
         if ($params['searchType'] == 'oneWay') {
-            $resp = 'oneWay';
+            $resp = 'on        $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
+eWay';
             $response = OtaService::oneWay($params);
         }    
         else if ($params['searchType'] == 'roundTrip') {
@@ -78,70 +79,81 @@ class ListHandler extends BaseHandler
             throw new OtaException($response['errors']);
         } 
 
+
         $pricesLock = 0;
-        $responseFinal = [];
-        foreach ($response[$resp] as $key => $segment) {
+        $responseFinal = null;
+        foreach ($response[$resp] as $keyGlobal => $global) {
 
-            if ($segment['flights'][0]['provider'] === 'AMA' &&
-                (! $consolidator || $consolidator->getCreditAvailable() < $segment['price'])
-            ) {
-                // Si el proveedor es Amadeus && (No esta configurado el consolidador || el credito no es suficiente)
-                continue;
+            $itinerary['price'] = 0;
+            $itinerary['itineraries'] = [];
+
+            foreach ($global['itineraries'] as $keyS => $segment) {          
+
+                if ($segment['flights'][0]['provider'] === 'AMA' &&
+                    (! $consolidator || $consolidator->getCreditAvailable() < $segment['price'])
+                ) {
+                    // Si el proveedor es Amadeus && (No esta configurado el consolidador || el credito no es suficiente)
+                    continue;
+                }
+
+                $segment['original_price'] = $segment['price'];
+                $negotiatedRate = false;
+                foreach ($segment['flights'] as $key => $flight) {
+
+                    if ($flight['negotiated_rate']) {
+                        $negotiatedRate = $flight['negotiated_rate'];
+                    }
+
+                    $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
+                    if (is_null($airline)) {
+                        $airline = $this->createAirline($flight);
+                    }
+
+                    /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
+                     * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
+                     **/
+                    $flightLock = $manager->getRepository(FlightLock::class)->findLock(
+                        $flight['airline'],
+                        $flight['rate'],
+                        $flight['origin'],
+                        $flight['destination'],
+                        new \DateTime($flight['departure']),
+                        $flight['money_type']
+                    );
+
+                    if ($flightLock) {
+                        $pricesLock += $flightLock->getAmount();
+                    }
+                }
+
+                $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
+                $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
+
+                $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
+                        [   'iso' => $segment['flights'][0]['airline'],
+                            'rate' => $segment['flights'][0]['rate'],
+                            'from' => $segment['flights'][0]['origin'],
+                            'to' => $segment['flights'][0]['destination'],
+                            'departureDate' => $flightLockDate
+                        ],$params['userCurrency'],
+                        [
+                            'provider' => $params['provider'],
+                            'negotiatedRate' =>  $negotiatedRate,
+                        ]
+                    );
+
+                $segment['price'] = $convertedAmounts['subTotal'];
+                $itinerary['price'] +=  $segment['price'];
+                $itinerary['itineraries'][] = $segment;                         
+
             }
 
-            $segment['original_price'] = $segment['price'];
-            $negotiatedRate = false;
-            foreach ($segment['flights'] as $key => $flight) {
-
-                if ($flight['negotiated_rate']) {
-                    $negotiatedRate = $flight['negotiated_rate'];
-                }
-
-                $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
-                if (is_null($airline)) {
-                    $airline = $this->createAirline($flight);
-                }
-
-                /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
-                 * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
-                 **/
-                $flightLock = $manager->getRepository(FlightLock::class)->findLock(
-                    $flight['airline'],
-                    $flight['rate'],
-                    $flight['origin'],
-                    $flight['destination'],
-                    new \DateTime($flight['departure']),
-                    $flight['money_type']
-                );
-
-                if ($flightLock) {
-                    $pricesLock += $flightLock->getAmount();
-                }
-            }
-
-            $segment['price'] = ($segment['price'] > $pricesLock) ? $segment['price'] : $pricesLock;
-            $flightLockDate = new \DateTime($segment['flights'][0]['departure']);
-
-            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($segment['price'], $params['currency'],
-                    [   'iso' => $segment['flights'][0]['airline'],
-                        'rate' => $segment['flights'][0]['rate'],
-                        'from' => $segment['flights'][0]['origin'],
-                        'to' => $segment['flights'][0]['destination'],
-                        'departureDate' => $flightLockDate
-                    ],$params['userCurrency'],
-                    [
-                        'provider' => $params['provider'],
-                        'negotiatedRate' =>  $negotiatedRate,
-                    ]
-                );
-
-            $segment['price'] = $convertedAmounts['subTotal'];
-
-            $responseFinal['itinerary'][] = $segment;
-        }    
+             $responseFinal[$keyGlobal]['groupItinerary'] = $itinerary;
+            
+        }   
 
         $responseFinal = $this->logoAirlineExists($responseFinal);
-
+     
         return $responseFinal;
     }
 
@@ -157,11 +169,13 @@ class ListHandler extends BaseHandler
         global $kernel;
         $dir = $kernel->getRootDir() . '/../web/images/airlines/';
 
-        if (isset($data['segments'])) {
-            foreach ($data['segments'] as $k => $segment) {
-                foreach ($segment['flights'] as $j => $flight) {
-                    
-                    $data['segments'][$k]['flights'][$j]['logo_exists'] = file_exists($dir . $flight['airline'] . '.png');
+        if (isset($data[0]['groupItinerary'])) {
+            foreach ($data as $k => $groupItinerary) {
+                foreach ($groupItinerary['groupItinerary']['itineraries'] as $j => $itinerary) {
+                    foreach ($itinerary['flights'] as $i => $flight) {
+
+                        $data[$k]['groupItinerary']['itineraries'][$j]['flights'][$i]['logo_exists'] = file_exists($dir . $flight['airline'] . '.png');
+                    }    
                 }                
             }
         }        
@@ -211,7 +225,7 @@ class ListHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [
+        return [/*
             'searchType' => 'required|string',
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
@@ -228,7 +242,7 @@ class ListHandler extends BaseHandler
             'endDate' => 'required',
             'baggage' => 'required|numeric',
             'sourceSearchType' => 'required',
-            'destSearchType' => 'required'
+            'destSearchType' => 'required'*/
 
         ];
     }
