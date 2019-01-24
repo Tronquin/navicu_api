@@ -35,7 +35,7 @@ class PaymentGatewayService
 
         } elseif ($type === PaymentGateway::STRIPE_TDC) {
             $config['api_key'] = getenv('STRIPE_API_KEY');
-            $paymenGateway = new StripeTDCPaymentGateway();
+            $paymenGateway = new StripePaymentGateway();
 
         } else if($type === PaymentGateway::PAYEEZY){
             $config['api_key'] = getenv('PAYEEZY_API_KEY');

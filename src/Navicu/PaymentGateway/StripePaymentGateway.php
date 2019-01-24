@@ -36,9 +36,9 @@ class StripePaymentGateway implements  PaymentGateway
 
     private $statusId = 1;
 
-    public function __construct(array $config)
+    public function __construct()
     {
-        $this->config = $config;
+        //$this->config = $config;
 
         /*
          * Tipos de estados de la transacción

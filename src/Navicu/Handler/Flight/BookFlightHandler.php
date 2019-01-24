@@ -32,58 +32,6 @@ class BookFlightHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
 
-
-        /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
-        $validFlight = 0;
-        $airportRp = $manager->getRepository(Airport::class);
-        $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
-        $flightReservationRp = $manager->getRepository(FlightReservation::class);
-        $lastPassenger = $lastFlight = []; 
-
-        foreach ($params['passengers'] as $currentPassenger) {
-            $lastPassenger = $currentPassenger;
-            foreach ($params['flights'] as $flight) {
-                $lastFlight = $flight;
-                $passengerNames = explode(' ', $currentPassenger['fullName']);
-                $from = $airportRp->findOneByArray(['iata' => $flight['from']]);
-                $to = $airportRp->findOneByArray(['iata' => $flight['to']]);
-
-                $resultTicket = $ticketRp->getflightByDatePassenger(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
-                    $flight['departure'], $flight['arrival'], $from, $to);
-
-                if (count($resultTicket) > 0) {
-                    $validFlight = BaseHandler::CODE_REPEATED_TICKET;
-                    break;
-                } else {
-                    $result = $flightReservationRp->getRecentFlightReservation(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
-                        $flight['departure'], $flight['arrival'], $from, $to);
-                    if (count($result) > 0) {
-                        $validFlight = BaseHandler::CODE_REPEATED_BOOK;
-                        break;
-                    }
-                }
-            }
-
-            if ($validFlight != 0) {
-                break;
-            }
-        }
-
-        if ($validFlight != 0) {
-            return [
-                'code' => 400,
-                'message' => 'repeated_reservation',
-                'repeated' => [
-                       $lastFlight['to'],
-                       $lastFlight['from'],
-                       $lastPassenger['fullName'] 
-                ],
-                'reservation' =>[]
-            ];
-        }
-        /** fin de la validacion del boleto repetido **/
-
-
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
 
@@ -100,6 +48,67 @@ class BookFlightHandler extends BaseHandler
 
             throw new NavicuException('Consolidator has not sufficient credit', BaseHandler::CODE_NOT_AVAILABILITY);
         }
+
+
+        /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
+        $validFlight = 200;
+        $airportRp = $manager->getRepository(Airport::class);
+        $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
+        $flightReservationRp = $manager->getRepository(FlightReservation::class);
+        $lastPassenger = $lastFlight = []; 
+
+        foreach ($reservation->getGdsReservations() as $reservationGds) {
+
+            foreach ($params['passengers'] as $currentPassenger) {
+                $lastPassenger = $currentPassenger;
+                foreach ($reservationGds->getFlights() as $flight) {
+                    $lastFlight = [];
+                    $lastFlight['to'] =  $flight->getAirportTo()->getIata();
+                    $lastFlight['from'] = $flight->getAirportFrom()->getIata();
+
+                    $passengerNames = explode(' ', $currentPassenger['fullName']);
+                    $from = $flight->getAirportFrom();
+                    $to = $flight->getAirportTo();
+
+                    $resultTicket = $ticketRp->getflightByDatePassenger(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                        $flight->getDepartureTime(), $flight->getArrivalTime(), $from, $to);
+
+                    if (count($resultTicket) > 0) {
+                        $validFlight = BaseHandler::CODE_REPEATED_TICKET;
+                        break;
+                    } else {
+                        $result = $flightReservationRp->getRecentFlightReservation(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                            $flight->getDepartureTime(), $flight->getArrivalTime(), $from, $to);
+                        if (count($result) > 0) {
+                            $validFlight = BaseHandler::CODE_REPEATED_BOOK;
+                            break;
+                        }
+                    }
+                }
+
+                if ($validFlight != 200) {
+                    break;
+                }
+            }
+        }    
+
+
+        if ($validFlight != 200) {
+
+            return [
+                'status_code' => $validFlight,
+                'message' => 'repeated_reservation',
+                'repeated' => [
+                       'to' => $lastFlight['to'],
+                       'from' => $lastFlight['from'],
+                       'name' => $lastPassenger['fullName'] 
+                ],
+                'reservation' =>[]
+            ];
+        }
+        /** fin de la validacion del boleto repetido **/
+
+
 
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
 
@@ -156,7 +165,7 @@ class BookFlightHandler extends BaseHandler
         }
 
         return [
-            'code' => 200,
+            'status_code' => 200,
             'message' => 'success',
             'repeated' => [],
             'reservation' => compact('reservation')
@@ -236,9 +245,11 @@ class BookFlightHandler extends BaseHandler
     {
         $passenger = new Passenger();
 
+        $passengerNames = explode(' ', $passengerData['fullName']);
+
         $passenger
-            ->setName($passengerData['firstName'])
-            ->setLastname($passengerData['lastName'])
+            ->setName(strtoupper($passengerNames[0]))
+            ->setLastname(strtoupper($passengerNames[1]))
             ->setDocumentType($passengerData['docType'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])

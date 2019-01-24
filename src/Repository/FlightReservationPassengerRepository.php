@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\FlightReservationPassenger;
+use App\Entity\Flight;
+use App\Entity\Passenger;
+use App\Entity\FlightReservationGds;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -22,15 +25,16 @@ class FlightReservationPassengerRepository extends BaseRepository
         parent::__construct($registry, FlightReservationPassenger::class);
     }
 
-
-    public function getflightByDatePassenger($firstName, $lastName, $departure, $arrival, $from, $to)  
+    public function getflightByDatePassenger($firstName, $lastName, $departure, $arrival, $from, $to): array
     {
         $now = new \DateTime("now 00:00:00");
 
         $data = $this->createQueryBuilder('t')
-            ->join(Flight::class, 'f', 'WITH', 'f.id = t.flight')
-            ->where('f.departure_time > :now and t.firstName = :firstName and t.lastName = :lastName
-                    and f.departure_time= :departure and f.airport_from = :from')
+            ->join(Passenger::class, 'p', 'WITH', 'p.id = t.passenger')
+            ->join(FlightReservationGds::class, 'frg', 'WITH', 'frg.id = t.flightReservationGds')
+            ->join(Flight::class, 'f', 'WITH', 'f.flightReservationGds = frg.id')
+            ->where('f.departureTime > :now and p.name = :firstName and p.lastname = :lastName
+                    and f.departureTime= :departure and f.airportFrom = :from')
             ->setParameter('firstName', $firstName)
             ->setParameter('lastName', $lastName)
             ->setParameter('departure', $departure)
