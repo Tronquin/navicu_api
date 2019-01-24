@@ -84,7 +84,7 @@ class ListHandler extends BaseHandler
 
 
         $pricesLock = 0;
-        $responseFinal = null;
+        $responseFinal = [];
         foreach ($response[$resp] as $keyGlobal => $global) {
 
             $itinerary['price'] = 0;
@@ -152,8 +152,7 @@ class ListHandler extends BaseHandler
             }
 
              $responseFinal[$keyGlobal]['groupItinerary'] = $itinerary;
-            
-        }   
+        }
 
         $responseFinal = $this->logoAirlineExists($responseFinal);
      
