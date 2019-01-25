@@ -62,11 +62,7 @@ class OtaService
             throw new OtaException(sprintf('Error in ota parameters: %s', json_encode($validator->getErrors())));
         }
 
-        $data = self::send(self::URL_ONE_WAY, $params);
-
-        dump($data);
-        die;
-
+        return self::send(self::URL_ONE_WAY, $params);
     }
 
     /**

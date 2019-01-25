@@ -252,9 +252,9 @@ class Flight
         return $this->tecnicalStop;
     }
 
-    public function setTecnicalStop(int $segment): self
+    public function setTecnicalStop(int $tecnicalStop): self
     {
-        $this->segment = $segment;
+        $this->tecnicalStop = $tecnicalStop;
 
         return $this;
     }

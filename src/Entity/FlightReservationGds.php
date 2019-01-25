@@ -245,7 +245,7 @@ class FlightReservationGds
 
         /**
      * @var \Doctrine\Common\Collections\Collection
-     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservationGds") 
+     * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservationGds", cascade={"persist"})
      */
     private $flights;
 

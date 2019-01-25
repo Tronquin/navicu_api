@@ -137,7 +137,7 @@ class CreateReservationHandler extends BaseHandler
 	       	->setChildNumber($itinerary['cnn'])
         	->setAdultNumber($itinerary['adt'])
         	->setInfNumber($itinerary['inf'])
-        	->setInsNumber($itinerary['ins'])
+        	->setInsNumber($itinerary['ins'] ?? 0)
         	->setExpireDate(new \DateTime($options['time_transf_limit']))
 	        ->setIpAddress($params['ipAddress'] ?? null)
 	        ->setOrigin('navicu web');
@@ -249,9 +249,9 @@ class CreateReservationHandler extends BaseHandler
         ->setChildNumber($itinerary['cnn'])
         ->setAdultNumber($itinerary['adt'])
         ->setInfNumber($itinerary['inf'])
-        ->setInsNumber($itinerary['ins'])
+        ->setInsNumber($itinerary['ins'] ?? 0)
         ->setSubtotalOriginal($itinerary['original_price'])
-        ->setTaxOriginal($itinerary['original_price'] - $itinerary['original_price_no_tax'])
+        ->setTaxOriginal($itinerary['original_price'] - $itinerary['price_no_tax'])
         ->setTaxes($itinerary['taxes'])
         ->setSubtotal($convertedAmounts['subTotal'])
         ->setTax($convertedAmounts['tax'])
@@ -298,7 +298,7 @@ class CreateReservationHandler extends BaseHandler
 		$to = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['destination']]);	
 
 		$flight
-				->setNumber($flightData['number_flight'])
+				->setNumber($flightData['flight'])
 				->setAirline($airline)
 				->setDepartureTime(\DateTime::createFromFormat('Y-m-d H:i:s', $flightData['departure']))
 				->setArrivalTime(\DateTime::createFromFormat('Y-m-d H:i:s', $flightData['arrival']))
@@ -308,11 +308,8 @@ class CreateReservationHandler extends BaseHandler
                 ->setReturnFlight($isReturn)			      
 				->setSegment($flightData['segment'])
 				->setCabin($flightData['cabin'])
-                ->setTecnicalStop($flightData['tecnical_stop'])			
+                ->setTecnicalStop($flightData['technical_stop'])
 		;
-
-		$manager->persist($flight);
-    	$manager->flush();
 
 		return $flight;
 	}
@@ -368,11 +365,12 @@ class CreateReservationHandler extends BaseHandler
             'origin' => 'required|regex:/^[A-Z]{3}$/',
             'destination'  => 'required|regex:/^[A-Z]{3}$/',
             'airline' => 'required|regex:/^[A-Z]{2}$/', 
-            'number_flight' => 'required',
+            'flight' => 'required',
             'departure' => 'required',
             'arrival' => 'required',
             'provider' => 'required',
             'rate' => 'required|regex:/^[A-Z]{1}$/',
+            'technical_stop' => 'required'
         ]); 
 
          if ($validator->hasError()) {
@@ -395,9 +393,9 @@ class CreateReservationHandler extends BaseHandler
             'adt' => 'required|numeric|min:1',
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
-            'ins' => 'required|numeric',
+            'ins' => 'numeric',
             'original_price'=> 'required|numeric',
-	        'original_price_no_tax'=> 'required|numeric',
+	        'price_no_tax'=> 'required|numeric',
 	        'taxes'=> 'required',
 	        'schedule'=> 'required',
 	        'flights' => 'required'
