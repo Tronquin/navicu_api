@@ -115,6 +115,7 @@ class ListHandler extends BaseHandler
                     /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
                      * en cuenta el precio dle bloqueo en lugar de el suministrado por el GDS
                      **/
+                    
                     $flightLock = $manager->getRepository(FlightLock::class)->findLock(
                         $flight['airline'],
                         $flight['rate'],

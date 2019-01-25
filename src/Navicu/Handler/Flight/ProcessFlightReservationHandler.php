@@ -47,9 +47,9 @@ class ProcessFlightReservationHandler extends BaseHandler
         if ($response['status_code'] !== BaseHandler::CODE_SUCCESS) {
             $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
-            //return $response;
+            return $response;
 
-            throw new NavicuException('BookFlightHandler fail', $handler->getCode());
+            //throw new NavicuException('BookFlightHandler fail', $handler->getCode());
         }
 
         /*| **********************************************************************
