@@ -49,7 +49,6 @@ class BookFlightHandler extends BaseHandler
             throw new NavicuException('Consolidator has not sufficient credit', BaseHandler::CODE_NOT_AVAILABILITY);
         }
 
-
         /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
         $validFlight = 200;
         $airportRp = $manager->getRepository(Airport::class);
@@ -61,6 +60,7 @@ class BookFlightHandler extends BaseHandler
 
             foreach ($params['passengers'] as $currentPassenger) {
                 $lastPassenger = $currentPassenger;
+
                 foreach ($reservationGds->getFlights() as $flight) {
                     $lastFlight = [];
                     $lastFlight['to'] =  $flight->getAirportTo()->getIata();
@@ -92,7 +92,6 @@ class BookFlightHandler extends BaseHandler
             }
         }    
 
-
         if ($validFlight != 200) {
 
             return [
@@ -105,9 +104,10 @@ class BookFlightHandler extends BaseHandler
                 ],
                 'reservation' =>[]
             ];
-        }
-        /** fin de la validacion del boleto repetido **/
 
+        }
+        
+        /** fin de la validacion del boleto repetido **/
 
 
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
@@ -208,6 +208,8 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
+        $passengersData = $this->formatPassengersData($params['passengers']);
+
         $flights = [];
         foreach ($reservationGds->getFlights() as $flight) {
             $flights[] = [
@@ -218,14 +220,15 @@ class BookFlightHandler extends BaseHandler
                 'airline' => $flight->getAirline()->getIso(),
                 'flightNumber' => $flight->getNumber(),
                 'rate' => $flight->getTypeRate(),
-                'segment' => $flight->getSegment()
+                'segment' => $flight->getSegment(),
+                'provider'=> $reservationGds->getGds()->getName()
             ];
         }
 
         $response = OtaService::book([
             'country' => $country,
             'currency' => $alpha3,
-            'passengers' => $params['passengers'],
+            'passengers' => $passengersData,
             'fareFamily' => $ff,
             'flights'=> $flights,
             'payment'=> $params['payments'][0],
@@ -234,6 +237,27 @@ class BookFlightHandler extends BaseHandler
 
         return $response['bookCode'];
     }
+
+
+     /**
+     * Hace un formato a la data del pasajero
+     *
+     * @param array $passengerData
+     * @return Passenger
+     */
+    private function formatPassengersData($passengersData) : array
+    {
+        foreach ($passengersData as $key => &$passengerData) {
+            $passengerNames = explode(' ', $passengerData['fullName']);
+            unset($passengerData['fullName']);
+            $passengerData['firstName'] = strtoupper($passengerNames[0]);
+            $passengerData['lastName'] = strtoupper($passengerNames[1]);
+        }
+
+        return $passengersData;
+    }
+
+
 
     /**
      * Crea un registro de pasajero
@@ -248,9 +272,9 @@ class BookFlightHandler extends BaseHandler
         $passengerNames = explode(' ', $passengerData['fullName']);
 
         $passenger
-            ->setName(strtoupper($passengerNames[0]))
-            ->setLastname(strtoupper($passengerNames[1]))
-            ->setDocumentType($passengerData['docType'])
+            ->setName($passengerData['firstName'])
+            ->setLastname($passengerData['lastName'])
+            ->setDocumentType($passengerData['type'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])
             ->setPhone($passengerData['phone']);
