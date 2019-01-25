@@ -139,7 +139,7 @@ class CreateReservationHandler extends BaseHandler
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'])
         	->setExpireDate(new \DateTime($options['time_transf_limit']))
-	        ->setIpAddress($params['ipAddress'])
+	        ->setIpAddress($params['ipAddress'] ?? null)
 	        ->setOrigin('navicu web');
 
 	 	$manager->persist($reservation);
