@@ -449,7 +449,9 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("drop view admin_flight_reservation_list_view");
 
 				$this->addSql("ALTER TABLE flight_reservation ADD expire_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-				/*$this->addSql('CREATE SEQUENCE holiday_calendar_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+				
+				/*
+				$this->addSql('CREATE SEQUENCE holiday_calendar_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
        			$this->addSql('CREATE TABLE holiday_calendar (id INT NOT NULL, Fecha TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
 
        			$this->addSql("INSERT INTO holiday_calendar(id, fecha)VALUES 
@@ -503,6 +505,8 @@ final class Version20181113145730 extends AbstractMigration
 				$this->addSql("alter table flight drop increment_consolidator");
 				$this->addSql("alter table flight drop  subtotal_no_extra_increment");
 				$this->addSql("alter table flight drop  tax_total");
+				$this->addSql("alter table flight drop price");
+				$this->addSql("alter table flight add tecnical_stop boolean");
 
 				$this->addSql("alter table flight_reservation_gds rename dollar_rate_covertion to dollar_rate_convertion");
 				$this->addSql("alter table flight_reservation_gds rename currency_rate_covertion to currency_rate_convertion");
