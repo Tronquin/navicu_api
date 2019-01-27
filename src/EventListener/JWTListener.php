@@ -91,6 +91,8 @@ class JWTListener {
 
     	$payload['exp'] = $expiration->getTimestamp();
 
+    	$event->setPayload($payload);
+
 	    if (!isset($payload['ip']) || $payload['ip'] !== $request->getClientIp()) {
 	        $event->markAsInvalid();
 	    }
