@@ -191,7 +191,7 @@ class FosUser implements UserInterface
     /**
      * @var \NvcProfile
      *
-     * @ORM\ManyToOne(targetEntity="NvcProfile")
+     * @ORM\ManyToOne(targetEntity="NvcProfile", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="nvc_profile_id", referencedColumnName="id")
      * })
@@ -461,12 +461,12 @@ class FosUser implements UserInterface
 
         return $this;
     }
-
-    public function getRoles(): ?array
+  
+    public function getRoles()
     {
-        return $this->roles;
+        return ["ROLE_USER"];
     }
-
+    
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
