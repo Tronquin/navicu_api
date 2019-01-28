@@ -257,7 +257,7 @@ class CreateReservationHandler extends BaseHandler
         ->setInsNumber($itinerary['ins'] ?? 0)
         ->setSubtotalOriginal($itinerary['original_price'])
         ->setTaxOriginal($itinerary['original_price'] - $itinerary['price_no_tax'])
-        ->setTaxes($itinerary['taxes'])
+        ->setTaxes($itinerary['taxes'] ?? '')
         ->setSubtotal($convertedAmounts['subTotal'])
         ->setTax($convertedAmounts['tax'])
         ->setIncrementConsolidator($convertedAmounts['incrementConsolidator'])
@@ -401,7 +401,6 @@ class CreateReservationHandler extends BaseHandler
             'ins' => 'numeric',
             'original_price'=> 'required|numeric',
 	        'price_no_tax'=> 'required|numeric',
-	        'taxes'=> 'required',
 	        'schedule'=> 'required',
 	        'flights' => 'required'
         ]); 
