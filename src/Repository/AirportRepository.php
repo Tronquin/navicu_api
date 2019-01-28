@@ -7,7 +7,8 @@ use App\Entity\OAuthUser;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- */
+* @author Javier Vasquez <jvasquez@jacidi.com>
+*/
 class AirportRepository extends BaseRepository
 {
 

@@ -7,6 +7,9 @@ use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
 
+/*
+* @author Javier Vasquez <jvasquez@jacidi.com>
+*/
 
 class PayeezyPaymentGateway implements  PaymentGateway
 {

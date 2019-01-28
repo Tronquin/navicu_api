@@ -18,6 +18,8 @@ class PaymentGatewayService
      * Obtiene la implementacion del PaymentGateway acorde a la pasarela
      * de pago a utilizar
      *
+    * @author Javier Vasquez <jvasquez@jacidi.com>
+
      * @param int $type
      * @return PaymentGateway
      * @throws NavicuException

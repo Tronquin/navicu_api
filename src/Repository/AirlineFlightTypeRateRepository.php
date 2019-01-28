@@ -6,7 +6,9 @@ use App\Entity\AirlineFlightTypeRate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-
+/**
+* @author Javier Vasquez <jvasquez@jacidi.com>
+*/
 class AirlineFlightTypeRateRepository extends BaseRepository
 {
     public function __construct(RegistryInterface $registry)
