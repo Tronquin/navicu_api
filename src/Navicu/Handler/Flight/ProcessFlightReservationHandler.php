@@ -44,12 +44,11 @@ class ProcessFlightReservationHandler extends BaseHandler
         $response = $handler->getData()['data'];
 
 
-        if ($response['status_code'] !== BaseHandler::CODE_SUCCESS) {
+        //if ($response['status_code'] !== BaseHandler::CODE_SUCCESS) {
+        if (! $handler->isSuccess()) {
             $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
-            return $response;
-
-            //throw new NavicuException('BookFlightHandler fail', $handler->getCode());
+            throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
 
         /*| **********************************************************************
@@ -73,7 +72,7 @@ class ProcessFlightReservationHandler extends BaseHandler
             // En caso de error envia correo de notificacion a navicu
             $this->sendPaymentDeniedEmail($params['publicId']);
 
-            throw new NavicuException('PayFlightReservationHandler fail', $handler->getCode());
+            throw new NavicuException('PayFlightReservationHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
 
         /*| **********************************************************************
@@ -89,7 +88,7 @@ class ProcessFlightReservationHandler extends BaseHandler
         if (! $handler->isSuccess()) {
             $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
-            throw new NavicuException('IssueTicketHandler fail', $handler->getCode());
+            throw new NavicuException('IssueTicketHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
 
         $responseData = $handler->getData()['data'];

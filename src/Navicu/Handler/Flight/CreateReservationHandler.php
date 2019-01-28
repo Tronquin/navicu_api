@@ -51,8 +51,9 @@ class CreateReservationHandler extends BaseHandler
 
 		$provider = 'KIU';
 		foreach ($params['itineraries'] as $key => $itinerary) {
-            
-            //$itinerary =  $params['itinerary'];
+
+            $itinerary['currency'] = $itinerary['flights'][0]['money_type'];
+
 			$this->validateItinerary($itinerary);
 
 			/** Valida si uno de los proveedores de la reserva es Amadeus**/
@@ -61,7 +62,7 @@ class CreateReservationHandler extends BaseHandler
             }   
 
 			$reservationGds = new FlightReservationGds();
-	    	$negotiatedRate = false;	   
+	    	$negotiatedRate = false;
 
 	    	foreach ($itinerary['flights'] as $key => $flight) {
 
@@ -81,7 +82,6 @@ class CreateReservationHandler extends BaseHandler
 	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
 				$reservationGds->addFlightFareFamily($farefamilyEntity); 
 	    	}
-
 
 	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
@@ -130,7 +130,7 @@ class CreateReservationHandler extends BaseHandler
 			$tax  += $convertedAmounts['tax'];  
 		}      
 
-		$options = $this->getTranstOptions($provider); 
+		$options = $this->getTransferOptions($provider);
 
 		$reservation
 	        ->setReservationDate(new \DateTime('now'))
@@ -138,7 +138,7 @@ class CreateReservationHandler extends BaseHandler
         	->setAdultNumber($itinerary['adt'])
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'] ?? 0)
-        	->setExpireDate(new \DateTime($options['time_transf_limit']))
+        	->setExpireDate($options['time_transf_limit'])
 	        ->setIpAddress($params['ipAddress'] ?? null)
 	        ->setOrigin('navicu web');
 
@@ -167,8 +167,13 @@ class CreateReservationHandler extends BaseHandler
 		return $response;
     }
 
-
-    private function getTranstOptions($provider) : array
+	/**
+	 * Funcion que devuelve las condiciones de visibilidad de la opcion de transferencia en boleteria
+	 * @param $provider
+	 * @throws NavicuException
+	 * @return array
+	 */
+    private function getTransferOptions (string $provider) : array
     {
     	$date_now = new \DateTime('now');  
         $handler = new HolidayCalendarHandler();
@@ -184,28 +189,28 @@ class CreateReservationHandler extends BaseHandler
 
         $option_transf_visible = true;
 
-        if ($provider === 'KIU') {        	
-
-            if ((date("w") == 5) || ($response_calendar['holiday_yesterday'])) {               
+        if ($provider === 'KIU') {
+            /*
+			if ((date("w") == 5) || ($responseCalendar['data']['holiday_yesterday'])) {
                $time_limit = ($date_now->format('H:i:s') < $date_now->format('21:00:00')) ? $date_now->format('Y-m-d 21:00:00') : $date_now->modify('+1 day');    
-            } else if ($response_calendar['holiday_today']) { 
+            } else if ($responseCalendar['data']['holiday_now']) {
                $option_transf_visible = false;	
                $time_limit =  $date_now->modify('+1 day');            
             } else {
                $time_limit = $date_now->modify('+1 day');
             }
-
-            /* Desabilitando opción de transferencia*/
+            */
+            /* ************************************ */
             $time_limit = $date_now->modify('+1 day');
             $option_transf_visible = true;
             /****************************************/
             
         } else { // si el provider es amadeus
             if (($date_now->format('H:i:s') > $date_now->format('21:00:00')) || ($date_now->format('H:i:s') < $date_now->format('02:00:00'))) {
-            	$time_limit = $date_now->format('Y-m-d 21:00:00');
+            	$time_limit = $date_now;
             	$option_transf_visible = false;
             } else {
-            	$time_limit = $date_now->format('Y-m-d 21:00:00');
+            	$time_limit = $date_now;
             } 
         }
 
@@ -268,9 +273,8 @@ class CreateReservationHandler extends BaseHandler
         ->setStatus(FlightReservation::STATE_IN_PROCESS)
         ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
-	        $dollarRates = NavicuCurrencyConverter::getLastRate($itinerary['currency'], new \DateTime('now'));
-	        $currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));
-
+		$dollarRates = NavicuCurrencyConverter::getLastRate($itinerary['currency'], new \DateTime('now'));
+		$currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));
    
       	$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
       	$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($userCurrency)) ? $currencyRates['buy'] : $currencyRates['sell']);
@@ -308,6 +312,7 @@ class CreateReservationHandler extends BaseHandler
                 ->setReturnFlight($isReturn)			      
 				->setSegment($flightData['segment'])
 				->setCabin($flightData['cabin'])
+                ->setTypeRate($flightData['rate'])
                 ->setTecnicalStop($flightData['technical_stop'])
 		;
 

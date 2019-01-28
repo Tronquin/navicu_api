@@ -94,16 +94,12 @@ class BookFlightHandler extends BaseHandler
 
         if ($validFlight != 200) {
 
-            return [
-                'status_code' => $validFlight,
-                'message' => 'repeated_reservation',
-                'repeated' => [
+            $repeated = [
                        'to' => $lastFlight['to'],
                        'from' => $lastFlight['from'],
-                       'name' => $lastPassenger['fullName'] 
-                ],
-                'reservation' =>[]
-            ];
+                       'name' => $lastPassenger['fullName'] ];
+
+            throw new NavicuException('RepeatReservation', $validFlight, $repeated);            
 
         }
         
@@ -164,12 +160,7 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        return [
-            'status_code' => 200,
-            'message' => 'success',
-            'repeated' => [],
-            'reservation' => compact('reservation')
-        ];
+        return compact('reservation');
     }
 
     /**
@@ -233,10 +224,7 @@ class BookFlightHandler extends BaseHandler
             'flights'=> $flights,
             'payment'=> $params['payments'][0],
             'provider' => $reservationGds->getGds()->getName()
-        ]);
-
-        dump($response);
-        die;
+        ]);        
 
         return $response['bookCode'];
     }
@@ -275,8 +263,8 @@ class BookFlightHandler extends BaseHandler
         $passengerNames = explode(' ', $passengerData['fullName']);
 
         $passenger
-            ->setName($passengerData['firstName'])
-            ->setLastname($passengerData['lastName'])
+            ->setName($passengerNames[0])
+            ->setLastname($passengerNames[1])
             ->setDocumentType($passengerData['type'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])

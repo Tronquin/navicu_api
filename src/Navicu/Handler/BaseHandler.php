@@ -64,6 +64,13 @@ abstract class BaseHandler
      */
     private $errors;
 
+     /**
+     * Detalle exception 
+     *
+     * @var array
+     */
+    private $exception_params = []; 
+
     /**
      * Data de respuesta
      *
@@ -151,19 +158,20 @@ abstract class BaseHandler
                 $this->data = $this->handler();
             }
 
-      /*  } catch (NavicuException $ex) {
+       /* } catch (NavicuException $ex) {
 
             $this->code = $ex->getCode();
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
+            $this->exception_params = $ex->getParams();
 
         } catch (\Exception $ex) {
 
             $this->code = self::CODE_EXCEPTION;
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
-        }
-        */
+        }*/
+        
     }
 
     /**
@@ -255,7 +263,8 @@ abstract class BaseHandler
 
         return [
             'code' => $this->code,
-            'errors' => $this->errors
+            'errors' => $this->errors,
+            'params' => $this->exception_params
         ];
     }
 
