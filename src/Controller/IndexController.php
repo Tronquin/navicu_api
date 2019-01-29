@@ -68,7 +68,6 @@ class IndexController extends AbstractController
 
             $params = json_decode($request->getContent(), true);
           
- 
             $name = $params['name'];
             $id = $params['id'];
             $email = $params['email'];

@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 /**
  * @Route("/flight")
  */
@@ -27,8 +27,12 @@ class FlightController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function autoComplete(Request $request)
+    public function autoComplete(Request $request, TokenStorageInterface $tt)
     {
+
+        dump($tt->getToken()->getUser());
+        die;
+
         $handler = new AutocompleteHandler($request);
         $handler->processHandler();
 

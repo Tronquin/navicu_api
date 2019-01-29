@@ -57,7 +57,7 @@ class JWTListener {
 	 */
 	public function onJwtEncoded(JWTEncodedEvent $event)
 	{
-		$request = $this->requestStack->getCurrentRequest();		
+		/*$request = $this->requestStack->getCurrentRequest();		
 
 		$em = $this->container->get('doctrine')->getManager();
 
@@ -71,7 +71,7 @@ class JWTListener {
 	
 		$em->persist($user);
 		$em->flush();
-
+	*/
 	}
 
 
