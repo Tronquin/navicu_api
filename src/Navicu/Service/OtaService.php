@@ -174,8 +174,8 @@ class OtaService
         $validator->validate($params, [
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
-            'source' => 'required|regex:/^[A-Z]{3}$/',
-            'dest' => 'required|regex:/^[A-Z]{3}$/',
+            'source' => 'required',
+            'dest' => 'required',
             'adt' => 'required|numeric|min:1',
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
