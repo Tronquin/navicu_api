@@ -93,7 +93,7 @@ class IssueTicketHandler extends BaseHandler
         $reservation->setStatus(FlightReservation::STATE_ACCEPTED);
         $manager->flush();
 
-        return compact('reservation');
+        return $response;
     }
 
     /**

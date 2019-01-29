@@ -273,7 +273,7 @@ class CreateReservationHandler extends BaseHandler
         ->setStatus(FlightReservation::STATE_IN_PROCESS)
         ->setGds($manager->getRepository(Gds::class)->findOneBy(['name' => $itinerary['flights'][0]['provider']]));
 
-		$dollarRates = NavicuCurrencyConverter::getLastRate($itinerary['currency'], new \DateTime('now'));
+		$dollarRates = NavicuCurrencyConverter::getLastRate('USD', new \DateTime('now'));
 		$currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));
    
       	$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
