@@ -369,7 +369,7 @@ class CreateReservationHandler extends BaseHandler
         	'segment' => 'required|numeric',
             'origin' => 'required|regex:/^[A-Z]{3}$/',
             'destination'  => 'required|regex:/^[A-Z]{3}$/',
-            'airline' => 'required|regex:/^[A-Z]{2}$/', 
+            'airline' => 'required', 
             'flight' => 'required',
             'departure' => 'required',
             'arrival' => 'required',

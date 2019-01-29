@@ -59,7 +59,7 @@ class NavicuCurrencyConverter
             throw new NavicuException('Currency not found');
         }
 
-        if (! $dollarRate || ! $currencyRate) {
+        if (! $dollarRate) {
             throw new NavicuException('Currency Rate not found');
         }
 

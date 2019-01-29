@@ -246,6 +246,7 @@ class FlightReservationGds
         /**
      * @var \Doctrine\Common\Collections\Collection
      * @ORM\OneToMany(targetEntity="Flight", mappedBy="flightReservationGds", cascade={"persist"})
+     * @ORM\OrderBy({"departureTime": "ASC"})
      */
     private $flights;
 

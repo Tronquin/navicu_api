@@ -230,6 +230,7 @@ class OtaService
     public static function ticket(array $params) : array
     {
         $validator = new NavicuValidator();
+
         $validator->validate($params, [
             'country' => 'required|in:VE,US',
             'currency' => 'required|in:VES,USD',
