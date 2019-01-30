@@ -84,7 +84,7 @@ class CreateReservationHandler extends BaseHandler
 	    	}
 
 	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
-	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
+	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
 	                        'from' => $itinerary['flights'][0]['origin'],
@@ -103,7 +103,7 @@ class CreateReservationHandler extends BaseHandler
 
 	        } else {
 
-	        	$localAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['price'], $itinerary['currency'],
+	        	$localAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
 	                        'from' => $itinerary['flights'][0]['origin'],

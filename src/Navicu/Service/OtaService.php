@@ -388,7 +388,6 @@ class OtaService
 
         $url = $url . '?' . http_build_query($params);
 
-
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
