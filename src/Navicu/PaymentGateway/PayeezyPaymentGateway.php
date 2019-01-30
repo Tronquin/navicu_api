@@ -79,6 +79,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
      */
     public function processPayments($request)
     {
+
         $response = [];
         $this->success = false;
         foreach ($request as &$payment) {
@@ -104,7 +105,13 @@ class PayeezyPaymentGateway implements  PaymentGateway
        $args = $this->generateArgs($request);
        //$this->logger->warning('generateArgs:');
        //$this->logger->warning(json_encode($args));
+
+       dump($args);
+
        $response = $this->purchase($args);
+
+       dump($response);
+       die;
 
        $response = json_decode($response, true);
        $response['checkInDate'] = $request['date'];
@@ -119,7 +126,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
     {
         $data = array();
 
-        $tempExpirydate = explode('/', $request['ExpirationDate']);
+        $tempExpirydate = explode('/', $request['expirationDate']);
         $expirationDate = $tempExpirydate[0] . str_split($tempExpirydate[1], 2)[1];
 
         $data['method'] = 'credit_card'; //HARD CODE, cambiar luego
@@ -762,7 +769,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
 
         curl_close($request);
         //  Genera log de la compra
-        $this->generatePurchaseLog($response, $payload);
+        //$this->generatePurchaseLog($response, $payload);
 
         return $response;
     }
@@ -834,14 +841,18 @@ class PayeezyPaymentGateway implements  PaymentGateway
     public function purchase($args = array())
     {
         $payload = $this->getPayload($args, "purchase");
-        $this->logger->warning('payload: ');
-        $this->logger->warning(json_encode($payload));
+
+        dump($payload);
+
+        //$this->logger->warning('payload: ');
+        //$this->logger->warning(json_encode($payload));
         $headerArray = $this->hmacAuthorizationToken($payload);
-        $this->logger->warning('headerArray:');
-        $this->logger->warning(json_encode($headerArray));
+        //$this->logger->warning('headerArray:');
+        //$this->logger->warning(json_encode($headerArray));
         $postTransaction = $this->postTransaction($payload, $headerArray);
-        $this->logger->warning('postTransaction:');
-        $this->logger->warning(json_encode($postTransaction));
+        dump($postTransaction );
+        //$this->logger->warning('postTransaction:');
+        //$this->logger->warning(json_encode($postTransaction));
 
         return $postTransaction;
     }

@@ -99,6 +99,7 @@ class PayFlightReservationHandler extends BaseHandler
             $payments[$i]['description'] = 'Pago de reserva ' . $reservation->getPublicId();
             $payments[$i]['expirationDate'] = $payment['expirationMonth'] . '/' . $payment['expirationYear'];
             $payments[$i]['ip'] = $ip;
+            $payments[$i]['date'] = \Date('d-m-Y');
         }
 
         $responsePayments = $paymentGateway->processPayments($payments);

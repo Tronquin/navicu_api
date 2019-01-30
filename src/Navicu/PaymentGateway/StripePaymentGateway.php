@@ -21,7 +21,7 @@ class StripePaymentGateway implements  PaymentGateway
     /**
      * indica el estado de la transacción tras un evento de pago
      */
-    private $success;
+    private  $success;
 
     /**
      * indica la moneda de la operacion
