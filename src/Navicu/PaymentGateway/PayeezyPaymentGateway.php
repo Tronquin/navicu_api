@@ -6,7 +6,7 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
-
+use App\Navicu\Service\NavicuCurrencyConverter;
 /*
 * @author Javier Vasquez <jvasquez@jacidi.com>
 */
@@ -105,18 +105,10 @@ class PayeezyPaymentGateway implements  PaymentGateway
        $args = $this->generateArgs($request);
        //$this->logger->warning('generateArgs:');
        //$this->logger->warning(json_encode($args));
-
-       dump($args);
-
        $response = $this->purchase($args);
-
-       dump($response);
-       die;
-
        $response = json_decode($response, true);
        $response['checkInDate'] = $request['date'];
        $response = $this->formaterResponseData($response);
-
        //$this->logger->warning('formaterResponseData:');
        //$this->logger->warning(json_encode($response));
        return $response;
@@ -131,7 +123,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
 
         $data['method'] = 'credit_card'; //HARD CODE, cambiar luego
         $data['amount'] = str_replace(',' , '' , $request['amount']);
-        $data['currency_code'] = $this->currency;
+        $data['currency_code'] = 'USD';
         $data['card_type'] = $this->check_cc($request['number'], false);
          /*$data['card_holder_name'] = $request['firstName']." ".$request['lastName'];*/
         $data['card_holder_name'] = $request['holder'];
@@ -751,6 +743,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
     public  function postTransaction($payload, $headers)
     {
         $request = curl_init();
+
         curl_setopt($request, CURLOPT_URL, $this->config['url'] );
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_POSTFIELDS, $payload);
@@ -765,6 +758,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
             'nonce:'.$headers['nonce'],
             'timestamp:'.$headers['timestamp'],
         ));
+
         $response = curl_exec($request);
 
         curl_close($request);
@@ -841,16 +835,12 @@ class PayeezyPaymentGateway implements  PaymentGateway
     public function purchase($args = array())
     {
         $payload = $this->getPayload($args, "purchase");
-
-        dump($payload);
-
         //$this->logger->warning('payload: ');
         //$this->logger->warning(json_encode($payload));
         $headerArray = $this->hmacAuthorizationToken($payload);
         //$this->logger->warning('headerArray:');
         //$this->logger->warning(json_encode($headerArray));
         $postTransaction = $this->postTransaction($payload, $headerArray);
-        dump($postTransaction );
         //$this->logger->warning('postTransaction:');
         //$this->logger->warning(json_encode($postTransaction));
 
@@ -1153,8 +1143,8 @@ class PayeezyPaymentGateway implements  PaymentGateway
     public function formaterResponseData($response)
     {
         if (isset($response['amount'])) {
-            $np = RateExteriorCalculator::calculateRateChangeToBs(((integer)$response['amount']) / 100);
-        }
+            $np = NavicuCurrencyConverter::convert((((integer)$response['amount']) / 100), 'USD', 'VES');
+            }
         else {
             return [
                 'id' => null,
@@ -1164,7 +1154,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
                 'status' => 2,
                 'amount' => 0,
                 'response' => $response,
-                'currency' => $this->currency,
+                'currency' => 'VES',
                 'dollarPrice' => 0,
                 'nationalPrice' => 0,
                 'responsecode' => 'error',
@@ -1172,17 +1162,17 @@ class PayeezyPaymentGateway implements  PaymentGateway
                 'message' => 'error'
             ];
         }
-        new RateExteriorCalculator($this->rf,'USD',$response['checkInDate']);
+
         return [
-            'id' => $response['transaction_id'],
+            'id' => isset($response['transaction_id']) ? $response['transaction_id'] : $response['correlation_id'],
             'success' => $response['transaction_status'] == "approved",
             'code' => ($response['transaction_status'] == "approved") ? '201' : '400',
-            'reference' => $response['transaction_id'],
+            'reference' => isset($response['transaction_id']) ? $response['transaction_id'] : $response['correlation_id'],
             'status' => $response["transaction_status"] == 'approved' ? 1 : 2,
-            'amount' => ((integer)$response['amount'])/$this->zeroDecimalBase, //devuelve el monto sin comas
+            'amount' => ((integer)$response['amount'])/100, //devuelve el monto sin comas
             'response' => $response,
-            'currency' => $this->currency,
-            'dollarPrice' => RateExteriorCalculator::calculateRateChange($np),
+            'currency' => 'VES',
+            'dollarPrice' => ((integer)$response['amount'])/100,
             'nationalPrice' => $np,
             'responsecode' => 'success',
             'holder' => $response['card']['cardholder_name'],

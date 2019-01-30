@@ -44,10 +44,8 @@ class PaymentGatewayService
             $config['api_secret'] = getenv('PAYEEZY_API_SECRET');
             $config['merchant_token'] = getenv('PAYEEZY_MERCHANT_TOKEN');
             $config['base_url'] = getenv('PAYEEZY_BASEURL');
-            $config['url'] = getenv('PAYEEZY_URl');
-
+            $config['url'] = getenv('PAYEEZY_URL');
             $paymenGateway = new PayeezyPaymentGateway($config);
-
         } else {
             throw new NavicuException('Payment Type Undefined');
         }
