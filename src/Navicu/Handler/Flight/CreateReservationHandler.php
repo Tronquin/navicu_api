@@ -144,11 +144,14 @@ class CreateReservationHandler extends BaseHandler
 
 	 	$manager->persist($reservation);
     	$manager->flush();    	
-    	
+
+    	/** @var CurrencyType $userCurrency */
+    	$userCurrency = $manager->getRepository(CurrencyType::class)->findOneBy([ 'alfa3' => $params['userCurrency'] ]);
+
         $amounts['incrementAmount'] = $totalIncrementAmount;
         $amounts['incrementLock'] = $totalIncrementLock;
         $amounts['incrementMarkup'] = $totalIncrementMarkup;
-		$amounts['currencySymbol'] = $params['userCurrency'];
+		$amounts['currencySymbol'] = $userCurrency->getSimbol();
 		$amounts['subtotal'] = $subTotal;
 		$amounts['tax'] = $tax;
 		$amounts['incrementExpenses'] = $totalIncrementExpenses;
