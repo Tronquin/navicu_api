@@ -21,6 +21,7 @@ class NavicuCurrencyConverter
 
     /** Alpha3 de las monedas */
     const CURRENCY_DOLLAR = 'USD';
+    const CURRENCY_EURO = 'EUR';
 
     /**
      * Guarda la ultima tasa calculada para cada moneda. Este array
@@ -164,7 +165,11 @@ class NavicuCurrencyConverter
 
         $rateToCurrency = $rateSell ? $lastRateToCurrency['sell'] : $lastRateToCurrency['buy'];
 
-        return ($dollarAmount * $rateToCurrency);
+        if (self::CURRENCY_EURO !== $toCurrency) {
+            return ($dollarAmount * $rateToCurrency);
+        } else {
+            return ($amount / $rateToCurrency);
+        }
     }
 
     /**
