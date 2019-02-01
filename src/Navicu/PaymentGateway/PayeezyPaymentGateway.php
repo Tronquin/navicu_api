@@ -293,7 +293,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
         // Transformamos el monto a centimos porque asi lo exige payeezy
 
         //$args['amount'] = (RateExteriorCalculator::calculateRateChange($args['amount']) * 100);
-        $args['amount'] = $args['amount'] * 100;
+        $args['amount'] = intval($args['amount'] * 100);
 
 
         if ($transaction_type == "authorize" || $transaction_type == "purchase")
@@ -1175,7 +1175,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
             'dollarPrice' => ((integer)$response['amount'])/100,
             'nationalPrice' => $np,
             'responsecode' => 'success',
-            'holder' => $response['card']['cardholder_name'],
+            'holder' => $response['card']['cardholder_name'] ?? '',
             'message' => 'success'
         ];
     }
