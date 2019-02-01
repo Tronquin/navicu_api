@@ -5,6 +5,7 @@ namespace App\Navicu\Handler\Flight;
 use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
 use App\Entity\PaymentType;
+use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
@@ -48,7 +49,7 @@ class PayFlightReservationHandler extends BaseHandler
             return compact('reservation');
         }
 
-        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'])) {
+        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'], $params['userCurrency'])) {
             throw new NavicuException('Payment fail');
         }
 
@@ -88,10 +89,17 @@ class PayFlightReservationHandler extends BaseHandler
      * @return bool
      * @throws NavicuException
      */
-    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
+    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType, string $currency) : bool
     {
+
         $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
+        
+        // Stripe
+        if ($paymentType === 2) {
+            $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
+            $paymentGateway->setCurrency($currency);         
+        }
 
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
 
