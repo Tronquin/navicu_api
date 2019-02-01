@@ -51,18 +51,20 @@ class ResumeReservationHandler extends BaseHandler
                 $roundLocal = 0;
             }
 
+            $currencyRateConvertion = $reservationGds->getCurrencyRateConvertion();
+            $currencyRateConvertion = $currencyRateConvertion ?? 0.0;
             /** Montos convertidos a la moneda de la reserva**/
             $subTotal += NavicuCurrencyConverter::convertToRate(
                 $reservationGds->getSubtotal(), 
                 CurrencyType::getLocalActiveCurrency()->getAlfa3(), 
                 $reservationGds->getCurrencyReservation()->getAlfa3(), 
-                $reservationGds->getDollarRateConvertion(), 
-                $reservationGds->getCurrencyRateConvertion());
+                $reservationGds->getDollarRateConvertion(),
+                $currencyRateConvertion);
 
-            $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-            $incrementGuarantee += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-            $discount += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
-            $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $reservationGds->getCurrencyRateConvertion());
+            $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $incrementGuarantee += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $discount += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
 
             /** Montos en moneda local**/
             $subTotalLocal += $reservationGds->getSubtotal();

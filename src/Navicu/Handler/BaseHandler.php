@@ -25,6 +25,7 @@ abstract class BaseHandler
     const CODE_BAD_REQUEST = 400;
     const CODE_EXCEPTION = 500;
     const CODE_PAYMENT_ = 20;
+    const CODE_EXCHANGE_RATE_DOLLAR = 25;
 
     /* codigos respuesta boleteria*/
     const CODE_NOT_AVAILABILITY = 11;
