@@ -165,11 +165,14 @@ class NavicuCurrencyConverter
 
         $rateToCurrency = $rateSell ? $lastRateToCurrency['sell'] : $lastRateToCurrency['buy'];
 
-        if (self::CURRENCY_EURO !== $toCurrency) {
-            return ($dollarAmount * $rateToCurrency);
+        if (self::CURRENCY_EURO === $toCurrency) {            
+            if ($currency !== self::CURRENT_CURRENCY_VE) {
+                $amount = self::convert($dollarAmount, self::CURRENCY_DOLLAR, CurrencyType::getLocalActiveCurrency()->getAlfa3(), $dateString, $rateSell);                
+            }
+            return ($amount / $rateToCurrency); 
         }
 
-        return ($amount / $rateToCurrency);
+        return ($dollarAmount * $rateToCurrency);        
     }
 
     /**
