@@ -114,7 +114,7 @@ class BookFlightHandler extends BaseHandler
 
             if ($dollarRate <> $gdsReservation->getDollarRateConvertion()) {
                 // Valida si existe cambios en la tasa del dollar
-                throw new NavicuException('Change in dollar rate', self::CODE_EXCHANGE_RATE_DOLLAR);
+                throw new NavicuException('Change in dollar rate', self::CODE_NOT_AVAILABILITY);
             }
 
             if (is_null($gdsReservation->getBookCode())) {
