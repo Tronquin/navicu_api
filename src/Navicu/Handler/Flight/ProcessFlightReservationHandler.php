@@ -63,7 +63,6 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler = new PayFlightReservationHandler();
         $handler->setParam('publicId', $params['publicId']);
         $handler->setParam('paymentType', $params['paymentType']);
-        $handler->setParam('userCurrency', $params['userCurrency']);
         $handler->setParam('payments', $params['payments']);
         $handler->processHandler();
 

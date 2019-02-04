@@ -49,7 +49,7 @@ class PayFlightReservationHandler extends BaseHandler
             return compact('reservation');
         }
 
-        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'], $params['userCurrency'])) {
+        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'])) {
             throw new NavicuException('Payment fail');
         }
 
@@ -89,11 +89,14 @@ class PayFlightReservationHandler extends BaseHandler
      * @return bool
      * @throws NavicuException
      */
-    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType, string $currency) : bool
+    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
     {
 
         $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
+
+        $flight_reservation_gds = $reservation->getGdsReservations();
+        $currency = $flight_reservation_gds[0]->getCurrencyReservation()->getAlfa3();
         
         // Stripe
         if ($paymentType === 2) {
