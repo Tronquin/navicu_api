@@ -167,9 +167,9 @@ class NavicuCurrencyConverter
 
         if (self::CURRENCY_EURO !== $toCurrency) {
             return ($dollarAmount * $rateToCurrency);
-        } else {
-            return ($amount / $rateToCurrency);
         }
+
+        return ($amount / $rateToCurrency);
     }
 
     /**
@@ -207,6 +207,14 @@ class NavicuCurrencyConverter
             // Si se quiere llevar a dolar, ya esta calculado
 
             return $dollarAmount;
+        }
+
+        if (self::CURRENCY_EURO === $toCurrency) {
+            $activeCurrencyIso = CurrencyType::getLocalActiveCurrency()->getAlfa3();
+            $dateString = $date->format('Y-m-d');
+            $amountInBs = self::convert($dollarAmount, self::CURRENCY_DOLLAR, $activeCurrencyIso, $dateString, $rateSell);
+
+            return ($amountInBs / $rateToCurrency);
         }
 
         return ($dollarAmount * $rateToCurrency);
