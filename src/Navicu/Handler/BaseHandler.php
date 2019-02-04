@@ -171,7 +171,7 @@ abstract class BaseHandler
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
         }
-        
+       
     }
 
     /**
