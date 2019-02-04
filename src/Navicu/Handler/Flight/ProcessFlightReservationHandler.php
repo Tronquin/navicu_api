@@ -37,7 +37,7 @@ class ProcessFlightReservationHandler extends BaseHandler
          * .......................................................................
          */
       
-       /* $handler = new BookFlightHandler();
+        $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
         $handler->setParam('passengers', $params['passengers']);
         $handler->setParam('payments', $params['payments']);
@@ -51,7 +51,7 @@ class ProcessFlightReservationHandler extends BaseHandler
 
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
-        */
+        
         /*| **********************************************************************
          *| Paso 2:
          *| - Valida que el monto pagado no supere el total de la reserva
