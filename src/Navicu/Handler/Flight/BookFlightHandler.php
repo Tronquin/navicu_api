@@ -6,12 +6,12 @@ use App\Entity\CurrencyType;
 use App\Entity\Airport;
 use App\Entity\FlightReservationPassenger;
 use App\Entity\FlightReservation;
-use App\Entity\ExchangeRateHistory;
 use App\Entity\FlightReservationGds;
 use App\Entity\Passenger;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Service\OtaService;
 
 /**
@@ -94,16 +94,12 @@ class BookFlightHandler extends BaseHandler
 
         if ($validFlight != 200) {
 
-            return [
-                'status_code' => $validFlight,
-                'message' => 'repeated_reservation',
-                'repeated' => [
+            $repeated = [
                        'to' => $lastFlight['to'],
                        'from' => $lastFlight['from'],
-                       'name' => $lastPassenger['fullName'] 
-                ],
-                'reservation' =>[]
-            ];
+                       'name' => $lastPassenger['fullName'] ];
+
+            throw new NavicuException('RepeatReservation', $validFlight, $repeated);            
 
         }
         
@@ -112,32 +108,20 @@ class BookFlightHandler extends BaseHandler
 
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
 
+            $dollarRates = NavicuCurrencyConverter::getLastRate('USD', new \DateTime());
+            $alpha3CurrencyGds = $gdsReservation->getCurrencyGds()->getAlfa3();
+            $dollarRate = CurrencyType::isLocalCurrency($alpha3CurrencyGds) ? $dollarRates['buy'] : $dollarRates['sell'];
+
+            if ($dollarRate <> $gdsReservation->getDollarRateConvertion()) {
+                // Valida si existe cambios en la tasa del dollar
+                throw new NavicuException('Change in dollar rate', self::CODE_NOT_AVAILABILITY);
+            }
+
             if (is_null($gdsReservation->getBookCode())) {
                 // Genera el book, solo hago este paso en caso de no poseer book
                 $gdsReservation->setBookCode( $this->getBook($gdsReservation) );
             }
 
-            $reservationCurrency = $gdsReservation->getCurrencyReservation();
-            $gdsCurrency = $gdsReservation->getCurrencyGds();
-
-            if (! CurrencyType::isLocalCurrency( $reservationCurrency->getAlfa3() )) {
-                // Guarda la tasa de conversion con respecto a la moneda de la reserva
-
-                $exchangeRp = $manager->getRepository(ExchangeRateHistory::class);
-                $today = (new \DateTime())->format('Y-m-d');
-
-                if ($gdsCurrency->getAlfa3() === 'USD') {
-                    $rate = $exchangeRp->getLastRateNavicuSell($today, $gdsCurrency->getId());
-                } else {
-                    $rate = $exchangeRp->getLastRateNavicuInBs($today, $gdsCurrency->getId());
-                }
-
-                if ($gdsReservation->getCurrencyReservation()->getAlfa3() === 'USD') {
-                    $gdsReservation->setDollarRateConvertion($rate[0]['new_rate_navicu']);
-                } else {
-                    $gdsReservation->setCurrencyRateConvertion($rate[0]['new_rate_navicu']);
-                }
-            }
         }
 
         // Actualiza la informacion de la reserva
@@ -164,12 +148,7 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        return [
-            'status_code' => 200,
-            'message' => 'success',
-            'repeated' => [],
-            'reservation' => compact('reservation')
-        ];
+        return compact('reservation');
     }
 
     /**
@@ -233,10 +212,7 @@ class BookFlightHandler extends BaseHandler
             'flights'=> $flights,
             'payment'=> $params['payments'][0],
             'provider' => $reservationGds->getGds()->getName()
-        ]);
-
-        dump($response);
-        die;
+        ]);        
 
         return $response['bookCode'];
     }
@@ -275,8 +251,8 @@ class BookFlightHandler extends BaseHandler
         $passengerNames = explode(' ', $passengerData['fullName']);
 
         $passenger
-            ->setName($passengerData['firstName'])
-            ->setLastname($passengerData['lastName'])
+            ->setName($passengerNames[0])
+            ->setLastname($passengerNames[1])
             ->setDocumentType($passengerData['type'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])

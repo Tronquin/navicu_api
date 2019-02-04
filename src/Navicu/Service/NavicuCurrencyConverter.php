@@ -21,6 +21,7 @@ class NavicuCurrencyConverter
 
     /** Alpha3 de las monedas */
     const CURRENCY_DOLLAR = 'USD';
+    const CURRENCY_EURO = 'EUR';
 
     /**
      * Guarda la ultima tasa calculada para cada moneda. Este array
@@ -59,7 +60,7 @@ class NavicuCurrencyConverter
             throw new NavicuException('Currency not found');
         }
 
-        if (! $dollarRate || ! $currencyRate) {
+        if (! $dollarRate) {
             throw new NavicuException('Currency Rate not found');
         }
 
@@ -164,7 +165,14 @@ class NavicuCurrencyConverter
 
         $rateToCurrency = $rateSell ? $lastRateToCurrency['sell'] : $lastRateToCurrency['buy'];
 
-        return ($dollarAmount * $rateToCurrency);
+        if (self::CURRENCY_EURO === $toCurrency) {            
+            if ($currency !== self::CURRENT_CURRENCY_VE) {
+                $amount = self::convert($dollarAmount, self::CURRENCY_DOLLAR, CurrencyType::getLocalActiveCurrency()->getAlfa3(), $dateString, $rateSell);                
+            }
+            return ($amount / $rateToCurrency); 
+        }
+
+        return ($dollarAmount * $rateToCurrency);        
     }
 
     /**
@@ -202,6 +210,14 @@ class NavicuCurrencyConverter
             // Si se quiere llevar a dolar, ya esta calculado
 
             return $dollarAmount;
+        }
+
+        if (self::CURRENCY_EURO === $toCurrency) {
+            $activeCurrencyIso = CurrencyType::getLocalActiveCurrency()->getAlfa3();
+            $dateString = $date->format('Y-m-d');
+            $amountInBs = self::convert($dollarAmount, self::CURRENCY_DOLLAR, $activeCurrencyIso, $dateString, $rateSell);
+
+            return ($amountInBs / $rateToCurrency);
         }
 
         return ($dollarAmount * $rateToCurrency);

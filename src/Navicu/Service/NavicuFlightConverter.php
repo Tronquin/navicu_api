@@ -44,7 +44,7 @@ class NavicuFlightConverter
 
         // Calcula el incremento por markup de aerolinea
         $incrementMarkup = self::calculateIncrementMarkup($otaAmount, $otaCurrency, $currency);
-       
+
         // Subtotal
         $subTotal = $otaAmount + $incrementLock + $incrementMarkup + $incrementConsolidator['amount'];
 
@@ -141,7 +141,7 @@ class NavicuFlightConverter
             return ['amount' => $valor, 'type' => $type, 'increment' => $increment ];
         }
 
-        return ['amount' => $amount, 'type' => Consolidator::INCREMENT_TYPE_USD, 'increment' => 0];;
+        return ['amount' => 0, 'type' => Consolidator::INCREMENT_TYPE_USD, 'increment' => 0];;
     }
 
     /**

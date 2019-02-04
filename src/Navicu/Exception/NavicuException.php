@@ -12,14 +12,25 @@ use App\Navicu\Handler\BaseHandler;
  */
 class NavicuException extends \Exception
 {
+
+    protected $params;
+
     /**
      * Init Exception
      *
      * @param string $message
      * @param int $code
      */
-    public function __construct($message, $code = BaseHandler::CODE_EXCEPTION)
-    {
+    public function __construct($message, $code = BaseHandler::CODE_EXCEPTION, array $params = [])
+    {  
+        $this->params = $params;
         parent::__construct($message, $code, null);
     }
+
+
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
 }

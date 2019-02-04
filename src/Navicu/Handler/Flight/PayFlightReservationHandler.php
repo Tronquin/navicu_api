@@ -5,6 +5,7 @@ namespace App\Navicu\Handler\Flight;
 use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
 use App\Entity\PaymentType;
+use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
@@ -90,8 +91,18 @@ class PayFlightReservationHandler extends BaseHandler
      */
     private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
     {
+
         $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
+
+        $flight_reservation_gds = $reservation->getGdsReservations();
+        $currency = $flight_reservation_gds[0]->getCurrencyReservation()->getAlfa3();
+        
+        // Stripe
+        if ($paymentType === 2) {
+            $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
+            $paymentGateway->setCurrency($currency);         
+        }
 
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
 
@@ -99,6 +110,7 @@ class PayFlightReservationHandler extends BaseHandler
             $payments[$i]['description'] = 'Pago de reserva ' . $reservation->getPublicId();
             $payments[$i]['expirationDate'] = $payment['expirationMonth'] . '/' . $payment['expirationYear'];
             $payments[$i]['ip'] = $ip;
+            $payments[$i]['date'] = \Date('d-m-Y');
         }
 
         $responsePayments = $paymentGateway->processPayments($payments);

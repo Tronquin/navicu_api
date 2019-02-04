@@ -4,6 +4,9 @@ namespace App\Navicu\Service;
 
 use Psr\Log\LoggerInterface;
 
+/**
+* @author Javier Vasquez <jvasquez@jacidi.com>
+*/
 class LogGenerator
 {
     private $logger;

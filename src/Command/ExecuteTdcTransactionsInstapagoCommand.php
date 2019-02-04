@@ -10,6 +10,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use App\Navicu\Handler\Main\ExecuteTdcTransactionInstapagoHandler;
 
+/**
+ * Registra un nuevo usuario para el consumo de la api
+ *
+ * @author Javier Vasquez <jvasquez@jacidi.com>
+ */
+
 class ExecuteTdcTransactionsInstapagoCommand extends Command
 {
     protected function configure()

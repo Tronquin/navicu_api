@@ -25,6 +25,7 @@ abstract class BaseHandler
     const CODE_BAD_REQUEST = 400;
     const CODE_EXCEPTION = 500;
     const CODE_PAYMENT_ = 20;
+    const CODE_EXCHANGE_RATE_DOLLAR = 25;
 
     /* codigos respuesta boleteria*/
     const CODE_NOT_AVAILABILITY = 11;
@@ -63,6 +64,13 @@ abstract class BaseHandler
      * @var array
      */
     private $errors;
+
+     /**
+     * Detalle exception 
+     *
+     * @var array
+     */
+    private $exception_params = []; 
 
     /**
      * Data de respuesta
@@ -132,7 +140,7 @@ abstract class BaseHandler
      */
     final public function processHandler() : void
     {
-       //try {
+       try {
             $this->processed = true;
 
             $validator = new NavicuValidator();
@@ -150,12 +158,12 @@ abstract class BaseHandler
                 $this->codeHttp = self::CODE_SUCCESS;
                 $this->data = $this->handler();
             }
-
-      /*  } catch (NavicuException $ex) {
+        } catch (NavicuException $ex) {
 
             $this->code = $ex->getCode();
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
+            $this->exception_params = $ex->getParams();
 
         } catch (\Exception $ex) {
 
@@ -163,7 +171,7 @@ abstract class BaseHandler
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
         }
-        */
+       
     }
 
     /**
@@ -255,7 +263,8 @@ abstract class BaseHandler
 
         return [
             'code' => $this->code,
-            'errors' => $this->errors
+            'errors' => $this->errors,
+            'params' => $this->exception_params
         ];
     }
 

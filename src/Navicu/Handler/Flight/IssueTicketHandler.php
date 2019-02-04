@@ -6,6 +6,7 @@ use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\OtaService;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * Genera el ticket para una reserva
@@ -24,6 +25,8 @@ class IssueTicketHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+        $dotenv = new Dotenv();
+        $dotenv->load(__DIR__ . '/../../../../.env');
 
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
@@ -37,13 +40,25 @@ class IssueTicketHandler extends BaseHandler
             $currency = $gdsReservation->getCurrencyGds()->getAlfa3();
             $country = $currency === 'USD' ? 'US' : 'VE';
 
-            $response = OtaService::ticket([
-                'country' => $country,
-                'currency' => $currency,
-                'PaymentType' => 1, // Cash Kiu
-                'BookingID' => $gdsReservation->getBookCode(),
-                'provider' => $gdsReservation->getGds()->getName()
-            ]);
+            if (getenv('APP_ENV') === 'prod') {
+                 $response = OtaService::ticket([
+                    'country' => $country,
+                    'currency' => $currency,
+                    'PaymentType' => 1, // Cash Kiu
+                    'BookingID' => $gdsReservation->getBookCode(),
+                    'provider' => $gdsReservation->getGds()->getName()
+                 ]);
+            } else {
+                 $response = OtaService::ticketTest([
+                    'country' => $country,
+                    'currency' => $currency,
+                    'PaymentType' => 1, // Cash Kiu
+                    'BookingID' => $gdsReservation->getBookCode(),
+                    'provider' => $gdsReservation->getGds()->getName()
+                ]);
+            }
+
+           
 
             foreach ($response['TicketItemInfo'] as $data) {
 
@@ -78,7 +93,7 @@ class IssueTicketHandler extends BaseHandler
         $reservation->setStatus(FlightReservation::STATE_ACCEPTED);
         $manager->flush();
 
-        return compact('reservation');
+        return $response;
     }
 
     /**

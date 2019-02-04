@@ -5,7 +5,13 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
+use Omnipay\Common\CreditCard;
+use Omnipay\Omnipay;
+use App\Navicu\Service\NavicuCurrencyConverter;
 
+/**
+* @author Javier Vasquez <jvasquez@jacidi.com>
+*/
 
 class StripePaymentGateway implements  PaymentGateway
 {
@@ -18,7 +24,7 @@ class StripePaymentGateway implements  PaymentGateway
     /**
      * indica el estado de la transacción tras un evento de pago
      */
-    private $success;
+    private  $success;
 
     /**
      * indica la moneda de la operacion
@@ -36,9 +42,9 @@ class StripePaymentGateway implements  PaymentGateway
 
     private $statusId = 1;
 
-    public function __construct()
+    public function __construct(array $config)
     {
-        //$this->config = $config;
+        $this->config = $config;
 
         /*
          * Tipos de estados de la transacción
@@ -79,6 +85,47 @@ class StripePaymentGateway implements  PaymentGateway
         }
     }
 
+
+   /* $gateway = Omnipay::create('Stripe');
+ 
+   // Initialise the gateway
+    $gateway->initialize(array(
+        'apiKey' => 'MyApiKey',
+   ));
+ 
+    // Create a credit card object
+     $card = new CreditCard(array(
+               'firstName'    => 'Example',
+               'lastName'     => 'Customer',
+               'number'       => '4242424242424242',
+               'expiryMonth'  => '01',
+               'expiryYear'   => '2020',
+               'cvv'          => '123',
+               'email'                 => 'customer@example.com',
+               'billingAddress1'       => '1 Scrubby Creek Road',
+               'billingCountry'        => 'AU',
+               'billingCity'           => 'Scrubby Creek',
+               'billingPostcode'       => '4999',
+               'billingState'          => 'QLD',
+    ));
+ 
+    // Do a purchase transaction on the gateway
+    $transaction = $gateway->purchase(array(
+        'amount'                   => '10.00',
+        'currency'                 => 'USD',
+       'card'                     => $card,
+    ));
+    $response = $transaction->send();
+    if ($response->isSuccessful()) {
+     echo "Purchase transaction was successful!\n";
+        $sale_id = $response->getTransactionReference();
+        echo "Transaction reference = " . $sale_id . "\n";
+ 
+       $balance_transaction_id = $response->getBalanceTransactionReference();
+       echo "Balance Transaction reference = " . $balance_transaction_id . "\n";
+   }
+    */
+
     /**
      * este metodo toma un conjunto de pagos, los valida y los procesa
      *
@@ -117,7 +164,7 @@ class StripePaymentGateway implements  PaymentGateway
         $amount = str_replace(".","",(string)$amount);  //Eliminar las comas del monto a cobrar
 
         if (empty($request['firstName']))
-            throw new NavicuException(\get_class($this) . ': first_name_required');
+            throw new NavicuException(\get_class($this) . ': first_name_required');        
         if (empty($request['lastName']))
             throw new NavicuException(get_class($this) . ': last_name_required');
         if (empty($request['number']) || !$this->checkLuhn($request['number']))
@@ -150,7 +197,7 @@ class StripePaymentGateway implements  PaymentGateway
      */
     public function formaterRequestData($request)
     {
-        new RateExteriorCalculator($this->rf,$this->currency,$request['checkInDate']);
+       //new RateExteriorCalculator($this->rf,$this->currency,$request['checkInDate']);
 
         $amount = str_replace(",","",(string)$request['amount']); //Eliminar las comas del monto a cobrar
         //$amount = RateExteriorCalculator::calculateRateChange($amount); //cambia el monto a la moneda seleccionada
@@ -191,9 +238,8 @@ class StripePaymentGateway implements  PaymentGateway
     {
         $dcharge = $response->__toJSON(); // Se pasa la respuesta de la API a Json para pasarla a json_decode
         $c_data = json_decode($dcharge,true);
-        $np = RateExteriorCalculator::calculateRateChangeToBs(((integer)$c_data['amount'])/$this->zeroDecimalBase);
-        new RateExteriorCalculator($this->rf,'USD',$response['checkInDate']);
-
+        $np = NavicuCurrencyConverter::convert((((integer)$c_data['amount']) / $this->zeroDecimalBase), $this->currency, 'VES');
+        
         return [
             'id' => $c_data['id'],
             'success' => $c_data['status'] == "succeeded",
@@ -203,7 +249,7 @@ class StripePaymentGateway implements  PaymentGateway
             'amount' => ((integer)$c_data['amount'])/$this->zeroDecimalBase, //devuelve el monto sin comas
             'response' => $dcharge,
             'currency' => $this->currency,
-            'dollarPrice' => RateExteriorCalculator::calculateRateChange($np),
+            'dollarPrice' => $c_data['amount'],          
             'nationalPrice' => $np,
             'responsecode' => 'success',
             'holder' => $response['source']['name'],
@@ -217,13 +263,15 @@ class StripePaymentGateway implements  PaymentGateway
      * @author Gabriel Camacho <kbo025@gmail.com>
      * @version 07-10-2015
      */
-    public function formaterResponseErrorData($response,$request)
+    public function formaterResponseErrorData($response, $request)
     {
         $national = str_replace(".",",",str_replace(",","",$response['amount']));
-        $foreign = RateExteriorCalculator::calculateRateChange($national);
-        new RateExteriorCalculator($this->rf,'USD');
-        $dollar = RateExteriorCalculator::calculateRateChange($national);
+        //$foreign = RateExteriorCalculator::calculateRateChange($national);
+        $foreign = NavicuCurrencyConverter::convert((((integer)$response['amount'])), 'VES', $this->currency);
+        //new RateExteriorCalculator($this->rf,'USD');
+        $dollar = NavicuCurrencyConverter::convert((((integer)$response['amount'])), 'VES', 'USD');
         $name = $request['holder'];
+
         return [
             'id' => null,
             'success' => false,
@@ -303,21 +351,34 @@ class StripePaymentGateway implements  PaymentGateway
      * establece en que moneda se realizaran los cobros
      *
      * @param string $currency
-     * @param RepositoryFactoryInterface $rf
      * @return Object
      */
-    public function setCurrency($currency ,RepositoryFactoryInterface $rf = null)
+    public function setCurrency($currency)
     {
-        $this->currency = $currency;
-        $this->rf = $rf;
-        $currency = $this->rf->get('CurrencyType')->findOneBy(['alfa3'=>$currency]);
-        $this->zeroDecimalBase = $currency->getZeroDecimalBase();
+        $this->currency = $currency;        
     }
 
     public function getCurrency()
     {
         return $this->currency;
     }
+
+    /**
+     * establece en que moneda se realizaran los cobros
+     *
+     * @param string $zero_decimal_base
+     * @return Object
+     */
+    public function setZeroDecimalBase($zeroDecimalBase)
+    {
+        $this->zeroDecimalBase = $zeroDecimalBase;        
+    }
+
+    public function getZeroDecimalBase()
+    {
+        return $this->zeroDecimalBase;
+    }
+
 
     /**
      * algoritmo que chequea que sea un numero de TDC valido

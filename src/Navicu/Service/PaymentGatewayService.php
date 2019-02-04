@@ -18,6 +18,8 @@ class PaymentGatewayService
      * Obtiene la implementacion del PaymentGateway acorde a la pasarela
      * de pago a utilizar
      *
+    * @author Javier Vasquez <jvasquez@jacidi.com>
+
      * @param int $type
      * @return PaymentGateway
      * @throws NavicuException
@@ -35,16 +37,15 @@ class PaymentGatewayService
 
         } elseif ($type === PaymentGateway::STRIPE_TDC) {
             $config['api_key'] = getenv('STRIPE_API_KEY');
-            $paymenGateway = new StripePaymentGateway();
+            $paymenGateway = new StripePaymentGateway($config);
 
         } else if($type === PaymentGateway::PAYEEZY){
             $config['api_key'] = getenv('PAYEEZY_API_KEY');
             $config['api_secret'] = getenv('PAYEEZY_API_SECRET');
-            $config['merchat_token'] = getenv('PAYEEZY_MERCHANT_TOKEN');
+            $config['merchant_token'] = getenv('PAYEEZY_MERCHANT_TOKEN');
             $config['base_url'] = getenv('PAYEEZY_BASEURL');
-            $config['url'] = getenv('PAYEEZY_URl');
-            $paymenGateway = new PayeezyPaymentGateway();
-
+            $config['url'] = getenv('PAYEEZY_URL');
+            $paymenGateway = new PayeezyPaymentGateway($config);
         } else {
             throw new NavicuException('Payment Type Undefined');
         }

@@ -36,6 +36,11 @@ class ListHandler extends BaseHandler
         $sourceAirports = [];
 
         $airportSource = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['source']]);
+
+
+        
+
+
         if ($params['sourceSearchType'] == 'group') {            
             $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportSource->getCityName()]);
 
@@ -238,8 +243,8 @@ class ListHandler extends BaseHandler
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'source' => 'required|regex:/^[A-Z]{3}$/',
-            'dest' => 'required|regex:/^[A-Z]{3}$/',
+            'source' => 'required',
+            'dest' => 'required',
             'cabin' => 'required',
             'scale' => 'required|numeric',
             'startDate' => 'required',
