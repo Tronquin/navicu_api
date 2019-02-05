@@ -36,7 +36,6 @@ class ProcessFlightReservationHandler extends BaseHandler
          *| - Guarda la informacion de los pasajeros
          * .......................................................................
          */
-      
         $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
         $handler->setParam('passengers', $params['passengers']);
@@ -44,14 +43,12 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler->processHandler();
         $response = $handler->getData()['data'];
 
-
-        //if ($response['status_code'] !== BaseHandler::CODE_SUCCESS) {
         if (! $handler->isSuccess()) {
             $this->addErrorToHandler( $handler->getErrors()['errors'] );
 
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
-        
+
         /*| **********************************************************************
          *| Paso 2:
          *| - Valida que el monto pagado no supere el total de la reserva
@@ -156,7 +153,7 @@ class ProcessFlightReservationHandler extends BaseHandler
         EmailService::sendFromEmailRecipients(
             'flightResume',
             'Fallo correo confirmacion de ticket - navicu.com',
-            'Email/emailTicketFail.html.twig',
+            'Email:Flight/emailTicketFail.html.twig',
             compact('publicId')
         );
     }
