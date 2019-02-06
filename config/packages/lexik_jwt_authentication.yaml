@@ -12,14 +12,14 @@ lexik_jwt_authentication:
         authorization_header:
             enabled: true
             prefix:  navicu
-            name:    token
+            name:    session
 
         # check token in a cookie
         cookie:
             enabled: false
-            name:    TOKEN
+            name:    SESSION
             
         # check token in query string parameter
         query_parameter:
             enabled: false
-            name:    token    
+            name:    session    

@@ -33,21 +33,19 @@ class JWTListener {
 	 */
 	public function onJWTCreated(JWTCreatedEvent $event)
 	{
-	    $request = $this->requestStack->getCurrentRequest();
+	   $request = $this->requestStack->getCurrentRequest();
 	    
 	    $user = $event->getUser();
 	    
 	    $payload       = $event->getData();
-	    $payload['ip'] = $request->getClientIp();
 		$payload['name'] = $user->getNvcProfile()->getFullName();
 	   	$payload['email'] = $user->getEmail();
 
 	    $event->setData($payload);
 	    
-	    $header        = $event->getHeader();
-	    $header['cty'] = 'JWT';
-
-	    $event->setHeader($header);
+	    //$header        = $event->getHeader();
+	    //$header['cty'] = 'JWT';
+	    //$event->setHeader($header);
 
 	}
 
@@ -71,7 +69,7 @@ class JWTListener {
 	
 		$em->persist($user);
 		$em->flush();
-	*/
+	    */
 	}
 
 
@@ -82,7 +80,7 @@ class JWTListener {
 	 */
 	public function onJWTDecoded(JWTDecodedEvent $event)
 	{
-	    $request = $this->requestStack->getCurrentRequest();
+	   /* $request = $this->requestStack->getCurrentRequest();
 	    
 	    $payload = $event->getPayload();
 
@@ -96,6 +94,7 @@ class JWTListener {
 	    if (!isset($payload['ip']) || $payload['ip'] !== $request->getClientIp()) {
 	        $event->markAsInvalid();
 	    }
+	   */
 	}
 
 

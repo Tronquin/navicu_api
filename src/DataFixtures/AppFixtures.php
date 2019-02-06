@@ -15,7 +15,7 @@ class AppFixtures extends Fixture
         for ($i = 1; $i < 6; $i++) {
             $user = new OauthUser();
             $user->setCode($i);
-            $user->setToken('1234'.$i);
+            $user->setToken('d3f31afd5459a'.$i);
             $user->setExpiredAt(new \DateTime('2019-12-01'));
             $manager->persist($user);
         }

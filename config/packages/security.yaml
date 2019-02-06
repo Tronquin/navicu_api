@@ -2,7 +2,7 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     encoders:
         App\Entity\FosUser:
-            algorithm: bcrypt
+            algorithm: sha512 #bcrypt
 
             
     providers:
@@ -10,7 +10,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\FosUser
-                property: username
+            #    property: username
 
             # activate different ways to authenticate
 
@@ -29,17 +29,17 @@ security:
 
     firewalls:
         login:
-            pattern:  ^/navicu/login
+            pattern:  ^/security/login
             stateless: true
             anonymous: true
             provider: app_user_provider
             json_login:
-                check_path:   /navicu/login_check
+                check_path:   /security/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
-            pattern:   ^/flight
+            pattern:   ^/
             stateless: true
             anonymous: true
             provider: app_user_provider
@@ -50,7 +50,7 @@ security:
 
     access_control:
         
-        - { path: ^/flight, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/flight, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }

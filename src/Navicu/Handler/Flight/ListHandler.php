@@ -37,10 +37,6 @@ class ListHandler extends BaseHandler
 
         $airportSource = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['source']]);
 
-
-        
-
-
         if ($params['sourceSearchType'] == 'group') {            
             $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportSource->getCityName()]);
 

@@ -29,10 +29,6 @@ class FlightController extends AbstractController
      */
     public function autoComplete(Request $request, TokenStorageInterface $tt)
     {
-
-        dump($tt->getToken()->getUser());
-        die;
-
         $handler = new AutocompleteHandler($request);
         $handler->processHandler();
 

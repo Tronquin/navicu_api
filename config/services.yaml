@@ -36,14 +36,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
     
-    acme_api.event.jwt_encoded_listener:
-        class: App\EventListener\JWTListener
-        arguments: [ '@request_stack' ]
-        tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_encoded, method: onJWTEncoded }
+    #acme_api.event.jwt_encoded_listener:
+    #    class: App\EventListener\JWTListener
+    #    arguments: [ '@request_stack' ]
+    #    tags:
+    #        - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_encoded, method: onJWTEncoded }
 
-    acme_api.event.jwt_decoded_listener:
-        class: App\EventListener\JWTListener
-        arguments: [ '@request_stack' ]
-        tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }        
+    #acme_api.event.jwt_decoded_listener:
+    #    class: App\EventListener\JWTListener
+    #    arguments: [ '@request_stack' ]
+    #    tags:
+    #        - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }        
