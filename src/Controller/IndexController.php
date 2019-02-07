@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Navicu\Handler\TestHandler;
 use App\Navicu\Handler\Main\ListCurrencyHandler;
+use App\Navicu\Handler\SocialServices\SocialServiceHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,6 +41,22 @@ class IndexController extends AbstractController
 
         return $handler->getJsonResponseData();
    }
+
+   /**
+     * Obtiene el token secreto de las redes sociales (google, facebook,etc)
+     *
+     * @Route("/social_provider_data", name="socialproviderdata", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function socialProviderData(Request $request)
+    {
+        $handler = new SocialServiceHandler($request);
+        $handler->processHandler();
+        
+        return $handler->getJsonResponseData();
+    }
 
 
     /**
