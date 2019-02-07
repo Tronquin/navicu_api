@@ -2,7 +2,9 @@
 
 namespace App\Controller\Flight;
 
+use App\Navicu\Handler\CompleteReservationHandler;
 use App\Navicu\Handler\Flight\AutocompleteHandler;
+use App\Navicu\Handler\Flight\BookFlightHandler;
 use App\Navicu\Handler\Flight\ConfirmPrereservationHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
@@ -51,7 +53,6 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
-
      /**
      * Obtiene listado de vuelos 
      *
@@ -67,8 +68,6 @@ class FlightController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
-
-
 
      /**
      * Obtiene calendario de vuelos
@@ -103,8 +102,6 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
-
-
     /**
      * Obtiene listado de vuelos 
      *
@@ -116,6 +113,38 @@ class FlightController extends AbstractController
     public function resumeReservation(Request $request)
     {
         $handler = new ResumeReservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Genera el book para una reserva
+     *
+     * @Route("/book_reservation", name="flight_book_reservation", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bookReservation(Request $request)
+    {
+        $handler = new BookFlightHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Registra pago y emite ticket a una reserva
+     *
+     * @Route("/complete_reservation", name="flight_complete_reservation", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function completeReservation(Request $request)
+    {
+        $handler = new CompleteReservationHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
@@ -138,7 +167,6 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
-
     /**
      * Muestra la información necesara para la confirmación de la rerserva NO TDC
      *
@@ -154,6 +182,5 @@ class FlightController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
-
 
 }

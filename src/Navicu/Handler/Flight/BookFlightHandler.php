@@ -51,7 +51,6 @@ class BookFlightHandler extends BaseHandler
 
         /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
         $validFlight = 200;
-        $airportRp = $manager->getRepository(Airport::class);
         $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
         $flightReservationRp = $manager->getRepository(FlightReservation::class);
         $lastPassenger = $lastFlight = []; 
