@@ -4,6 +4,7 @@ namespace App\EventListener;
 
 use Psr\Container\ContainerInterface;
 use App\Entity\FosUser;
+use App\Entity\ClienteProfile;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
@@ -36,17 +37,18 @@ class JWTListener {
 	   $request = $this->requestStack->getCurrentRequest();
 	    
 	    $user = $event->getUser();
-	    
+
+	    $manager = $this->container->get('doctrine')->getManager();
+        $clientProfile = $manager->getRepository(ClienteProfile::class)->findOneBy([ 'user' => $user ]);
+
 	    $payload       = $event->getData();
-		$payload['name'] = $user->getNvcProfile()->getFullName();
+		$payload['name'] = $clientProfile->getFullName();
 	   	$payload['email'] = $user->getEmail();
 
-	    $event->setData($payload);
-	    
+	    $event->setData($payload);	    
 	    //$header        = $event->getHeader();
 	    //$header['cty'] = 'JWT';
 	    //$event->setHeader($header);
-
 	}
 
 

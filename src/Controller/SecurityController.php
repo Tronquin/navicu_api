@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Navicu\Handler\Security\UserExistsHandler;
-use App\Navicu\Handler\Security\RegisterUserSimpleHandler;
+use App\Navicu\Handler\Security\RegisterUserClientHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 /**
  * @Route("/security")
@@ -30,15 +32,17 @@ class SecurityController extends AbstractController
      */
     public function getLoginCheckAction()
     { 
+
     }
 
     /**
      * @Route("/register", name="register")
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function registerAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
     {
-        $handler = new RegisterUserSimpleHandler($request);
+        $handler = new RegisterUserClientHandler($request);
         $handler->setParam('encoder', $encoder);
+        $handler->setParam('generator', $JWTManager);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
