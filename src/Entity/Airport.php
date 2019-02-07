@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Airport
 {
+    const AGENCY_TYPE_AIRPORT = 'airport';
+    const AGENCY_TYPE_UNKNOWN = 'unknown';
+
     /**
      * @var int
      *
@@ -87,6 +90,11 @@ class Airport
      * })
      */
     private $location;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $agencyType;
 
     public function getId(): ?int
     {
@@ -197,6 +205,18 @@ class Airport
     public function setLocation(?Location $location): self
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getAgencyType(): ?string
+    {
+        return $this->agencyType;
+    }
+
+    public function setAgencyType(string $agencyType): self
+    {
+        $this->agencyType = $agencyType;
 
         return $this;
     }
