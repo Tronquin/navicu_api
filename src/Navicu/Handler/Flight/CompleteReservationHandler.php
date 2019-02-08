@@ -96,7 +96,7 @@ class CompleteReservationHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'paymentType' => 'required|numeric|between:1,3',
+            'paymentType' => 'required|numeric|between:1,8',
             'payments' => 'required',
         ];
     }

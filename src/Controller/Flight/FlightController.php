@@ -2,9 +2,9 @@
 
 namespace App\Controller\Flight;
 
-use App\Navicu\Handler\CompleteReservationHandler;
 use App\Navicu\Handler\Flight\AutocompleteHandler;
 use App\Navicu\Handler\Flight\BookFlightHandler;
+use App\Navicu\Handler\Flight\CompleteReservationHandler;
 use App\Navicu\Handler\Flight\ConfirmPrereservationHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;

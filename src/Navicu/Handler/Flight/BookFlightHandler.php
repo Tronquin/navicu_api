@@ -147,7 +147,13 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        return compact('reservation');
+        $bookingGo = $reservation->getGdsReservations()[0]->getBookCode();
+        $bookingReturn = isset($reservation->getGdsReservations()[1]) ?
+            $reservation->getGdsReservations()[1]->getBookCode() :
+            null
+        ;
+
+        return compact('reservation', 'bookingGo', 'bookingReturn');
     }
 
     /**
@@ -209,7 +215,7 @@ class BookFlightHandler extends BaseHandler
             'passengers' => $passengersData,
             'fareFamily' => $ff,
             'flights'=> $flights,
-            'payment'=> $params['payments'][0],
+            'payment'=> $params['payments'][0] ?? [],
             'provider' => $reservationGds->getGds()->getName()
         ]);        
 

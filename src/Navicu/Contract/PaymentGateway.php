@@ -21,7 +21,7 @@ interface PaymentGateway
     const AAVV = 5;    
     const NATIONAL_TRANSFER = 6;
     const PANDCO_TRANSFER = 7;
-    const Paypal=8;
+    const PAYPAL=8;
  
     /**
      * este metodo toma un conjunto de pagos, los valida y los procesa
