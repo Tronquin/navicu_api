@@ -58,15 +58,16 @@ class RedSocial
     private $ageRange;
 
     /**
-     * @var \ClienteProfile
+     * @var \ClientProfile
      *
-     * @ORM\ManyToOne(targetEntity="ClienteProfile")
+     * @ORM\ManyToOne(targetEntity="ClientProfile", inversedBy="redSocial")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      * })
      */
     private $client;
 
+ 
     public function getId(): ?int
     {
         return $this->id;
@@ -132,17 +133,38 @@ class RedSocial
         return $this;
     }
 
-    public function getClient(): ?ClienteProfile
+    public function getClient(): ?ClientProfile
     {
         return $this->client;
     }
 
-    public function setClient(?ClienteProfile $client): self
+    public function setClient(?ClientProfile $client): self
     {
         $this->client = $client;
 
         return $this;
     }
 
+    /**
+     * La función actualiza los datos de una RedSocial, dado un array ($data).
+     *
+     * @author Joel D. Requena P. <Joel.2005.2@gmail.com>
+     * @author Currently Working: Javier Vasquez
+     *
+     * @param Array $data
+     * @return void
+     */ 
+    public function updateObject($data, &$client)
+    {
+        $this->setIdSocial($data["idSocial"]);
+        $this->setType($data["type"]);
+        $this->setLink($data["url"]);
+        $this->setPhoto("undefined");
+        $this->setAgeRange(0);
+        $this->setClient($client);
+        $client->addRedSocial($this);
+
+        return $this;
+    }
 
 }

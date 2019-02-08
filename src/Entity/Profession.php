@@ -34,7 +34,7 @@ class Profession
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="ClienteProfile", mappedBy="profession")
+     * @ORM\ManyToMany(targetEntity="ClientProfile", mappedBy="profession")
      */
     private $client;
 

@@ -34,7 +34,7 @@ class Hobbies
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="ClienteProfile", mappedBy="hobbies")
+     * @ORM\ManyToMany(targetEntity="ClientProfile", mappedBy="hobbies")
      */
     private $client;
 
