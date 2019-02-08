@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Navicu\Handler\Security\UserExistsHandler;
 use App\Navicu\Handler\Security\RegisterUserClientHandler;
+use App\Navicu\Handler\Security\LoginRedSocialClientHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/register", name="register")
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    public function registerClientAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
     {
         $handler = new RegisterUserClientHandler($request);
         $handler->setParam('encoder', $encoder);
@@ -48,5 +49,18 @@ class SecurityController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
+
+    /**
+     * @Route("/register_red_social", name="registerRedSocial")
+     */
+    public function loginRedSociaClientlAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    {
+        $handler = new LoginRedSocialClientHandler($request);
+        $handler->setParam('encoder', $encoder);
+        $handler->setParam('generator', $JWTManager);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
 
 }

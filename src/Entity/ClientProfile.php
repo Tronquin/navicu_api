@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ClienteProfile
+ * ClientProfile
  *
  * @ORM\Table(name="cliente_profile", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_60e631fba76ed395", columns={"user_id"})}, indexes={@ORM\Index(name="idx_60e631fb64d218e", columns={"location_id"})})
  * @ORM\Entity
  */
-class ClienteProfile
+class ClientProfile
 {
     /**
      * @var int
@@ -187,12 +187,18 @@ class ClienteProfile
     private $hobbies;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RedSocial", mappedBy="clientProfile")
+     */
+    private $redSocial;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->profession = new \Doctrine\Common\Collections\ArrayCollection();
         $this->hobbies = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->redSocial = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -463,6 +469,37 @@ class ClienteProfile
     {
         if ($this->hobbies->contains($hobby)) {
             $this->hobbies->removeElement($hobby);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RedSocial[]
+     */
+    public function getRedSocial(): Collection
+    {
+        return $this->redSocial;
+    }
+
+    public function addRedSocial(RedSocial $redSocial): self
+    {
+        if (!$this->redSocial->contains($redSocial)) {
+            $this->redSocial[] = $redSocial;
+            $redSocial->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRedSocial(RedSocial $redSocial): self
+    {
+        if ($this->redSocial->contains($redSocial)) {
+            $this->redSocial->removeElement($redSocial);
+            // set the owning side to null (unless already changed)
+            if ($redSocial->getClient() === $this) {
+                $redSocial->setClient(null);
+            }
         }
 
         return $this;
