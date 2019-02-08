@@ -97,9 +97,8 @@ class PayFlightReservationHandler extends BaseHandler
 
         $flight_reservation_gds = $reservation->getGdsReservations();
         $currency = $flight_reservation_gds[0]->getCurrencyReservation()->getAlfa3();
-        
-        // Stripe
-        if ($paymentType === 2) {
+
+        if ($paymentType === PaymentGateway::STRIPE_TDC) {
             $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
             $paymentGateway->setCurrency($currency);         
         }

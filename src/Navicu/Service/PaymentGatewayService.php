@@ -1,7 +1,9 @@
 <?php
 namespace App\Navicu\Service;
 
+use App\Navicu\PaymentGateway\BanckTransferPaymentGateway;
 use App\Navicu\PaymentGateway\InstapagoPaymentGateway;
+use App\Navicu\PaymentGateway\InternationalBanckTransferPaymentGateway;
 use App\Navicu\PaymentGateway\PayeezyPaymentGateway;
 use App\Navicu\PaymentGateway\PaypalPaymentGateway;
 use App\Navicu\PaymentGateway\StripePaymentGateway;
@@ -48,12 +50,16 @@ class PaymentGatewayService
             $config['url'] = getenv('PAYEEZY_URL');
             $paymenGateway = new PayeezyPaymentGateway($config);
 
+        } elseif ($type === PaymentGateway::INTERNATIONAL_TRANSFER) {
+            $paymenGateway = new InternationalBanckTransferPaymentGateway();
+        } elseif ($type === PaymentGateway::NATIONAL_TRANSFER) {
+            $paymenGateway = new BanckTransferPaymentGateway();
         } elseif ($type === PaymentGateway::PAYPAL) {
             $paymenGateway = new PaypalPaymentGateway();
-
         } else {
             throw new NavicuException('Payment Type Undefined');
         }
+
         return $paymenGateway;
     }
 } 

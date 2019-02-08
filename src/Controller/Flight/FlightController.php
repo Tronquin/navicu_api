@@ -11,6 +11,7 @@ use App\Navicu\Handler\Flight\ListHandler;
 use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use App\Navicu\Handler\Flight\CreateReservationHandler;
+use App\Navicu\Handler\Flight\SetTransferHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,7 +86,6 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
-
     /**
      * Obtiene calendario de vuelos
      *
@@ -119,7 +119,12 @@ class FlightController extends AbstractController
     }
 
     /**
-     * Genera el book para una reserva
+     * Genera el book para una reserva. Actualmente esto
+     * se utiliza para pagos por paypal
+     *
+     * 1. Genera book <---- (hace esto)
+     * 2. Paypal cobra
+     * 3. Emite ticket
      *
      * @Route("/book_reservation", name="flight_book_reservation", methods="POST")
      *
@@ -135,7 +140,12 @@ class FlightController extends AbstractController
     }
 
     /**
-     * Registra pago y emite ticket a una reserva
+     * Registra pago y emite ticket a una reserva. Actualmente
+     * se utiliza para pagos por paypal
+     *
+     * 1. Genera book
+     * 2. Paypal cobra
+     * 3. Emite ticket <---- (hace esto)
      *
      * @Route("/complete_reservation", name="flight_complete_reservation", methods="POST")
      *
@@ -152,7 +162,12 @@ class FlightController extends AbstractController
 
     /**
      * Genera el book, procesa el pago, genera el ticket
-     * y envia correo de confirmacion de la reserva
+     * y envia correo de confirmacion de la reserva. Se
+     * utiliza actualmente para pagos por TDC
+     *
+     * 1. Genera book   <---- (hace esto)
+     * 2. Cobro TDC     <---- (hace esto)
+     * 3. Emite ticket  <---- (hace esto)
      *
      * @Route("/process_reservation", name="flight_process_reservation", methods="POST")
      *
@@ -162,6 +177,22 @@ class FlightController extends AbstractController
     public function processReservation(Request $request)
     {
         $handler = new ProcessFlightReservationHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Indica que opcion transferencia para una reserva
+     *
+     * @Route("/transfer_reservation", name="transfer_reservation")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function setTransfer(Request $request)
+    {
+        $handler = new SetTransferHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
@@ -182,5 +213,4 @@ class FlightController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
-
 }
