@@ -41,11 +41,12 @@ class JWTListener {
 	    $manager = $this->container->get('doctrine')->getManager();
         $clientProfile = $manager->getRepository(ClientProfile::class)->findOneBy([ 'user' => $user ]);
 
-	    $payload       = $event->getData();
-		$payload['name'] = $clientProfile->getFullName();
-	   	$payload['email'] = $user->getEmail();
-
-	    $event->setData($payload);	    
+        if (! empty($clientProfile)) {
+		    $payload       = $event->getData();
+			$payload['name'] = $clientProfile->getFullName();
+		   	$payload['email'] = $user->getEmail();
+		    $event->setData($payload);	  
+	    }  
 	    //$header        = $event->getHeader();
 	    //$header['cty'] = 'JWT';
 	    //$event->setHeader($header);

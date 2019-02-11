@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Navicu\Handler\Security\UserExistsHandler;
-use App\Navicu\Handler\Security\RegisterUserSimpleHandler;
+use App\Navicu\Handler\Security\LoginUserHandler;
+use App\Navicu\Handler\Security\RegisterUserClientHandler;
 use App\Navicu\Handler\SocialServices\SocialServiceHandler;
 use App\Navicu\Handler\Security\LoginRedSocialClientHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,11 +31,24 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login_check", name="login")
+     * @Route("/login_check", name="login_check")
      */
     public function getLoginCheckAction()
     { 
+        // $password = substr(sha1(uniqid(mt_rand(), true)),0,8);
+    }
 
+    /**
+     * @Route("/login", name="login")
+     */
+    public function getLoginAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    { 
+        $handler = new LoginUserHandler($request);
+        $handler->setParam('encoder', $encoder);
+        $handler->setParam('generator', $JWTManager);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
     }
 
     /**
