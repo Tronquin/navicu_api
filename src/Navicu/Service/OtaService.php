@@ -402,7 +402,7 @@ class OtaService
         }
 
         if ($response['code'] !== self::CODE_SUCCESS) {
-            throw new OtaException($response['errors']);
+            throw new OtaException($response['errors'], $response['code']);
         }
 
         return $response;

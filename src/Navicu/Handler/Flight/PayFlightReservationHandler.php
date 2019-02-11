@@ -108,10 +108,14 @@ class PayFlightReservationHandler extends BaseHandler
         $payments = $this->completePaymentInfo($reservation, $payments, $paymentGateway);
         $responsePayments = $paymentGateway->processPayments($payments);
 
+
         foreach ($responsePayments as $payment) {
 
-            $flightPayment = new FlightPayment();
+            if (!$payment['success']) {
+                throw new NavicuException('Payment fail',500, $payment['paymentError']);
+            }
 
+            $flightPayment = new FlightPayment();
             $v_code = $payment['id'] ?? $payment['code'];
             $v_amount = $payment['amount'] ?? 0;
             $holderId = $payment['holderId'] ?? null;
@@ -152,9 +156,9 @@ class PayFlightReservationHandler extends BaseHandler
             $manager->flush();
         }
 
-        if (! $paymentGateway->isSuccess()) {
-            throw new NavicuException('Payment fail');
-        }
+        /*if (! $paymentGateway->isSuccess()) {
+            throw new NavicuException('Payment fail', 500,$responsePayments);
+        }*/
 
         return true;
     }
