@@ -1,8 +1,11 @@
 <?php
 namespace App\Navicu\Service;
 
+use App\Navicu\PaymentGateway\BanckTransferPaymentGateway;
 use App\Navicu\PaymentGateway\InstapagoPaymentGateway;
+use App\Navicu\PaymentGateway\InternationalBanckTransferPaymentGateway;
 use App\Navicu\PaymentGateway\PayeezyPaymentGateway;
+use App\Navicu\PaymentGateway\PaypalPaymentGateway;
 use App\Navicu\PaymentGateway\StripePaymentGateway;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
@@ -39,16 +42,24 @@ class PaymentGatewayService
             $config['api_key'] = getenv('STRIPE_API_KEY');
             $paymenGateway = new StripePaymentGateway($config);
 
-        } else if($type === PaymentGateway::PAYEEZY){
+        } elseif($type === PaymentGateway::PAYEEZY) {
             $config['api_key'] = getenv('PAYEEZY_API_KEY');
             $config['api_secret'] = getenv('PAYEEZY_API_SECRET');
             $config['merchant_token'] = getenv('PAYEEZY_MERCHANT_TOKEN');
             $config['base_url'] = getenv('PAYEEZY_BASEURL');
             $config['url'] = getenv('PAYEEZY_URL');
             $paymenGateway = new PayeezyPaymentGateway($config);
+
+        } elseif ($type === PaymentGateway::INTERNATIONAL_TRANSFER) {
+            $paymenGateway = new InternationalBanckTransferPaymentGateway();
+        } elseif ($type === PaymentGateway::NATIONAL_TRANSFER) {
+            $paymenGateway = new BanckTransferPaymentGateway();
+        } elseif ($type === PaymentGateway::PAYPAL) {
+            $paymenGateway = new PaypalPaymentGateway();
         } else {
             throw new NavicuException('Payment Type Undefined');
         }
+
         return $paymenGateway;
     }
 } 

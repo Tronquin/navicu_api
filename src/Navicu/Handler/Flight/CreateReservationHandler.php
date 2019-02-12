@@ -77,7 +77,7 @@ class CreateReservationHandler extends BaseHandler
 				$reservationGds->addFlight($flightEntity); 
 	    	}
 
-	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
+	    	foreach ([$itinerary['fare_family']] as $key => $fareFamily) {
 
 	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
 				$reservationGds->addFlightFareFamily($farefamilyEntity); 

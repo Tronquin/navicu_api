@@ -51,7 +51,6 @@ class BookFlightHandler extends BaseHandler
 
         /** verificar que algun pasajero alla reservado en un laps reciente o ya tenga bolet al destino en la misma fecha **/
         $validFlight = 200;
-        $airportRp = $manager->getRepository(Airport::class);
         $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
         $flightReservationRp = $manager->getRepository(FlightReservation::class);
         $lastPassenger = $lastFlight = []; 
@@ -148,7 +147,13 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        return compact('reservation');
+        $bookingGo = $reservation->getGdsReservations()[0]->getBookCode();
+        $bookingReturn = isset($reservation->getGdsReservations()[1]) ?
+            $reservation->getGdsReservations()[1]->getBookCode() :
+            null
+        ;
+
+        return compact('reservation', 'bookingGo', 'bookingReturn');
     }
 
     /**
@@ -210,7 +215,7 @@ class BookFlightHandler extends BaseHandler
             'passengers' => $passengersData,
             'fareFamily' => $ff,
             'flights'=> $flights,
-            'payment'=> $params['payments'][0],
+            'payment'=> $params['payments'][0] ?? [],
             'provider' => $reservationGds->getGds()->getName()
         ]);        
 

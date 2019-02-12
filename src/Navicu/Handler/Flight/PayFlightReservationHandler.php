@@ -6,6 +6,7 @@ use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
 use App\Entity\PaymentType;
 use App\Entity\CurrencyType;
+use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
@@ -75,7 +76,7 @@ class PayFlightReservationHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'paymentType' => 'required|numeric|between:1,3',
+            'paymentType' => 'required|numeric|between:1,8',
             'payments' => 'required'
         ];
     }
@@ -91,28 +92,20 @@ class PayFlightReservationHandler extends BaseHandler
      */
     private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
     {
-
         $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
 
         $flight_reservation_gds = $reservation->getGdsReservations();
         $currency = $flight_reservation_gds[0]->getCurrencyReservation()->getAlfa3();
-        
-        // Stripe
-        if ($paymentType === 2) {
+
+        if ($paymentType === PaymentGateway::STRIPE_TDC) {
             $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
             $paymentGateway->setCurrency($currency);         
         }
 
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
 
-        foreach ($payments as $i => $payment) {
-            $payments[$i]['description'] = 'Pago de reserva ' . $reservation->getPublicId();
-            $payments[$i]['expirationDate'] = $payment['expirationMonth'] . '/' . $payment['expirationYear'];
-            $payments[$i]['ip'] = $ip;
-            $payments[$i]['date'] = \Date('d-m-Y');
-        }
-
+        $payments = $this->completePaymentInfo($reservation, $payments, $paymentGateway);
         $responsePayments = $paymentGateway->processPayments($payments);
 
         foreach ($responsePayments as $payment) {
@@ -164,5 +157,47 @@ class PayFlightReservationHandler extends BaseHandler
         }
 
         return true;
+    }
+
+    /**
+     * Estandariza el request sin importa el medio de pago
+     *
+     * @param FlightReservation $reservation
+     * @param array $payments
+     * @param PaymentGateway $paymentGateway
+     * @return array
+     */
+    private function completePaymentInfo(FlightReservation $reservation, array $payments, PaymentGateway $paymentGateway)
+    {
+        $response = [];
+        $totalToPay = 0;
+        //$response['complete'] = 1;
+
+        foreach ($payments as $payment) {
+
+            $payment['amount'] = str_replace(',', '.', (string)$payment['amount']);
+            $amount = number_format($payment['amount'], 2);
+            $totalToPay += $payment['amount'];
+
+            $response[] = array_merge(
+                $payment,
+                [
+                    'description' => sprintf('Pago de la compra N° %s', $reservation->getPublicId()),
+                    'ip' => $this->container->get('request_stack')->getCurrentRequest()->getClientIp(),
+                    'amount' => $amount,
+                    'date' => \date('d-m-Y'),
+                    'expirationDate' => isset($payment['expirationMonth'])? $payment['expirationMonth'] . '/' . $payment['expirationYear'] : null,
+                    'number' => isset($payment['number']) ? $payment['number'] : null ,
+                ]
+            );
+        }
+
+        $currency = $paymentGateway->getCurrency();
+        if ($currency === CurrencyType::getLocalActiveCurrency()->getAlfa3()) {
+            //$response['complete'] = (strval(round(floatval($totalToPay))) < strval(round(floatval($reservation->getTotalToPay()))) ? 0 : 1);
+        }
+        //$response['complete'] = 1;
+
+        return $response;
     }
 }
