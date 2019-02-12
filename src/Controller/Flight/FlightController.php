@@ -201,7 +201,7 @@ class FlightController extends AbstractController
     /**
      * Muestra la información necesara para la confirmación de la rerserva NO TDC
      *
-     * @Route("/confirm_prereservation", name="flight_confirm_prereservation", methods="GET")
+     * @Route("/list_bank/{publicId}", name="list_bank_reservation", methods="GET")
      *
      * @param Request $request
      * @return JsonResponse

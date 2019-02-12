@@ -10,11 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\FOSRestController;
-
-
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\FosUser;
+
 /**
  * @Route("/navicu")
  */ 
@@ -80,7 +78,7 @@ class IndexController extends AbstractController
  
         try {
             $code = 200;
-            $error = false;
+            $error = false;
 
             $params = json_decode($request->getContent(), true);
           
@@ -109,7 +107,7 @@ class IndexController extends AbstractController
             $em->persist($user);
             $em->flush();
  
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $code = 500;
             $error = true;
             $message = "An error has occurred trying to register the user - Error: {$ex->getMessage()}";
@@ -130,6 +128,4 @@ class IndexController extends AbstractController
 
         return new JsonResponse($response);
     }
-
-
 }

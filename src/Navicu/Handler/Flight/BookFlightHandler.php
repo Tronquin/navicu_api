@@ -170,7 +170,6 @@ class BookFlightHandler extends BaseHandler
         return [
             'publicId' => 'required',
             'passengers' => 'required',
-            'payments' => 'required'
         ];
     }
 

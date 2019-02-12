@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reservation
 {
+    /** Estados de la reserva */
+    const STATE_PRE_RESERVATION = 0;
+    const STATE_PENDING_PAYMENT = 1;
+    const STATE_ACCEPTED = 2;
+    const STATE_CANCEL = 3;
+
     /**
      * @var int
      *

@@ -2,6 +2,7 @@
 
 namespace App\Navicu\Handler\Flight;
 
+use App\Entity\Reservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 
@@ -23,6 +24,12 @@ class SetTransferHandler extends BaseHandler
     {
         $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
+        /** @var Reservation $reservation */
+        $reservation = $manager->getRepository(Reservation::class)->findOneBy(['publicId' => $params['publicId'] ]);
+
+        if (! $reservation) {
+            throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
+        }
 
         // TODO holidays
 
@@ -36,15 +43,8 @@ class SetTransferHandler extends BaseHandler
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
-        // Registro pago a la reserva
-        $handler = new PayFlightReservationHandler();
-        $handler->setParam('publicId', $params['publicId']);
-        $handler->setParam('paymentType', $params['paymentType']);
-        $handler->setParam('payments', $params['payments']);
-
-        if (! $handler->isSuccess()) {
-            throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
-        }
+        $reservation->setState(Reservation::STATE_PRE_RESERVATION);
+        $manager->flush();
 
         return $handler->getData()['data'];
     }
@@ -61,7 +61,8 @@ class SetTransferHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'paymentType' => 'required|in:4,6,7'
+            'publicId' => 'required',
+            'passengers' => 'required'
         ];
     }
 }
