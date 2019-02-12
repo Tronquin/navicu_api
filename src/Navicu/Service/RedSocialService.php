@@ -13,7 +13,6 @@ use Symfony\Component\Dotenv\Dotenv;
  */
 class RedSocialService
 {
-
 	/** Metodos para el request */
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
@@ -39,6 +38,49 @@ class RedSocialService
         $paramsUrl['input_token'] = $params['input_token'];
         $paramsUrl['access_token'] = getenv('FACEBOOK_SECRET_PROVIDER');
 
+        $response = self::send($url, $paramsUrl);
+
+        return $response;
+    }
+
+
+    /**
+     * obtener email y nombre de token facebook
+     *
+     * @param array $params
+     * @return array
+     * @throws OtaException
+     */
+    public static function getDataFacebook(array $params) : array
+    {
+        $dotenv = new Dotenv();
+        $dotenv->load(__DIR__ . '/../../../.env');
+
+        $url = 'https://graph.facebook.com/' . $params['user_id'];
+        $paramsUrl = [];
+        $paramsUrl['fields'] = 'email';
+        $paramsUrl['access_token'] = $params['input_token'];
+        $response = self::send($url, $paramsUrl);
+
+        return $response;
+    }
+
+
+    /**
+     * obtener email y nombre de token google
+     *
+     * @param array $params
+     * @return array
+     * @throws OtaException
+     */
+    public static function getDataGoogle(array $params) : array
+    {
+        $dotenv = new Dotenv();
+        $dotenv->load(__DIR__ . '/../../../.env');
+
+        $url = 'https://www.googleapis.com/oauth2/v1/tokeninfo';        
+        $paramsUrl = [];
+        $paramsUrl['access_token'] = $params['access_token'];
         $response = self::send($url, $paramsUrl);
 
         return $response;

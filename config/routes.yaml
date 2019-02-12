@@ -1,3 +1,6 @@
 index:
     path: /api/
     controller: App\Controller\DefaultController::index
+logout:
+    path: /logout
+    
