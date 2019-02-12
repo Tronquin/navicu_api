@@ -1191,7 +1191,6 @@ class PayeezyPaymentGateway implements  PaymentGateway
         $code = '99';
         $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
 
-
         if ($error['code'] === 'invalid_card_number') {
 
             $code = '21';

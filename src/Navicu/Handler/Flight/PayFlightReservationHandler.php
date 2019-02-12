@@ -112,7 +112,7 @@ class PayFlightReservationHandler extends BaseHandler
         foreach ($responsePayments as $payment) {
 
             if (!$payment['success']) {
-                throw new NavicuException('Payment fail',500, $payment['paymentError']);
+                throw new NavicuException('Payment fail', BaseHandler::CODE_EXCEPTION, $payment['paymentError']);
             }
 
             $flightPayment = new FlightPayment();
