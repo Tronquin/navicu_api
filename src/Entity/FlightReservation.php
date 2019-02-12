@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FlightReservation
 {
     /** Flight reservation states */
+    const STATE_PRE_RESERVATION = 0;
     const STATE_IN_PROCESS = 1;
     const STATE_ACCEPTED = 2;
     const STATE_CANCEL = 3;

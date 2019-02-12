@@ -185,12 +185,28 @@ class FlightController extends AbstractController
     /**
      * Indica que opcion transferencia para una reserva
      *
-     * @Route("/transfer_reservation", name="transfer_reservation")
+     * @Route("/transfer_reservation", name="transfer_reservation", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function setTransfer(Request $request)
+    {
+        $handler = new SetTransferHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Registra pagos a una transferencia
+     *
+     * @Route("/transfer_payment_reservation", name="transfer_payment_reservation", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function transferPayment(Request $request)
     {
         $handler = new SetTransferHandler($request);
         $handler->processHandler();

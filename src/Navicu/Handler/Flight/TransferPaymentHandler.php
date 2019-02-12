@@ -7,11 +7,11 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 
 /**
- * Indica que una reserva se paga por transferencia
+ * Registra pagos a una transferencia
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
-class SetTransferHandler extends BaseHandler
+class TransferPaymentHandler extends BaseHandler
 {
 
     /**
@@ -33,17 +33,19 @@ class SetTransferHandler extends BaseHandler
 
         // TODO holidays
 
-        // Genera el book para apartar la disponibilidad durante el dia
-        $handler = new BookFlightHandler();
+        $handler = new PayFlightReservationHandler();
         $handler->setParam('publicId', $params['publicId']);
-        $handler->setParam('passengers', $params['passengers']);
+        $handler->setParam('paymentType', $params['paymentType']);
         $handler->setParam('payments', $params['payments']);
+        $handler->processHandler();
 
         if (! $handler->isSuccess()) {
-            throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
+
+            throw new NavicuException('PayFlightReservationHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
-        $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
+        $reservation->setStatus(FlightReservation::STATE_IN_PROCESS);
         $manager->flush();
 
         return $handler->getData()['data'];
@@ -61,8 +63,21 @@ class SetTransferHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
+            'paymentType' => 'required|in:4,6',
             'publicId' => 'required',
-            'passengers' => 'required'
+            'payments' => 'required'
         ];
+    }
+
+    /**
+     * Carga todos los errores a este handler
+     *
+     * @param array $errors
+     */
+    private function addErrorToHandler(array $errors) : void
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
     }
 }

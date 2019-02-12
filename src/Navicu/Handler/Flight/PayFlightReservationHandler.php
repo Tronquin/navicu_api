@@ -9,8 +9,6 @@ use App\Entity\CurrencyType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
-use App\Navicu\Service\AirlineService;
-use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\PaymentGatewayService;
 
 class PayFlightReservationHandler extends BaseHandler
@@ -53,10 +51,6 @@ class PayFlightReservationHandler extends BaseHandler
         if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'])) {
             throw new NavicuException('Payment fail');
         }
-
-        // Movimientos en los creditos de aerolinea y consolidador
-        ConsolidatorService::setMovementFromReservation($reservation);
-        AirlineService::setMovementFromReservation($reservation, '-');
 
         $manager->flush();
 
@@ -155,10 +149,6 @@ class PayFlightReservationHandler extends BaseHandler
             $manager->persist($flightPayment);
             $manager->flush();
         }
-
-        /*if (! $paymentGateway->isSuccess()) {
-            throw new NavicuException('Payment fail', 500,$responsePayments);
-        }*/
 
         return true;
     }

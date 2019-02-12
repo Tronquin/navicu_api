@@ -54,7 +54,6 @@ class ProcessFlightReservationHandler extends BaseHandler
          *| - Valida que el monto pagado no supere el total de la reserva
          *| - Procesa el pago del cliente
          *| - Registra el pago y lo asocia a la reserva
-         *| - Consume el credito de la aerolinea y del consolidador
          * .......................................................................
          */
         $handler = new PayFlightReservationHandler();
@@ -77,6 +76,7 @@ class ProcessFlightReservationHandler extends BaseHandler
          *| Paso 3:
          *| - Genera el ticket en OTA
          *| - Registra los ticket en DB y los asocia a la reserva
+         *| - Consume el credito de la aerolinea y del consolidador
          * .......................................................................
          */
         $handler = new IssueTicketHandler();

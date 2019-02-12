@@ -5,6 +5,8 @@ namespace App\Navicu\Handler\Flight;
 use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\AirlineService;
+use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -58,8 +60,6 @@ class IssueTicketHandler extends BaseHandler
                 ]);
             }
 
-           
-
             foreach ($response['TicketItemInfo'] as $data) {
 
                 foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
@@ -92,6 +92,10 @@ class IssueTicketHandler extends BaseHandler
 
         $reservation->setStatus(FlightReservation::STATE_ACCEPTED);
         $manager->flush();
+
+        // Movimientos en los creditos de aerolinea y consolidador
+        ConsolidatorService::setMovementFromReservation($reservation);
+        AirlineService::setMovementFromReservation($reservation, '-');
 
         return $response;
     }
