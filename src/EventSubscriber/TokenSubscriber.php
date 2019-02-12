@@ -23,7 +23,7 @@ class TokenSubscriber implements EventSubscriberInterface
     
       $request = $event->getRequest();
     
-      if (! $request->headers->has('token')) {
+      /*if (! $request->headers->has('token')) {
 
             return $event->setController(function () {
                 return new JsonResponse(['code' => 400, 'errors' => ['token is required']]);
@@ -52,7 +52,7 @@ class TokenSubscriber implements EventSubscriberInterface
                 return new JsonResponse(['code' => 400, 'errors' => ['token expired']]);
             });
         }
-        
+        */
        
     }
 

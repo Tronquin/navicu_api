@@ -31,13 +31,14 @@ class FosUserRepository extends BaseRepository implements UserLoaderInterface
     public function findOneByCredentials(array $credentials)
     {
         $username = $email = null;
+
         $username = isset($credentials['username']) ? $credentials['username'] : $username ;   
         $email = isset($credentials['email']) ? $credentials['email'] : $email ;               
 
         return $this->createQueryBuilder('u')
             ->where('u.username = :username OR u.email = :email')
             ->setParameter('username', $username)
-            ->setParameter('email', $username)
+            ->setParameter('email', $email)
             ->getQuery()
             ->getOneOrNullResult();  
     }

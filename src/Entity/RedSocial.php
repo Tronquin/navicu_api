@@ -156,7 +156,7 @@ class RedSocial
      */ 
     public function updateObject($data, &$client)
     {
-        $this->setIdSocial($data["idSocial"]);
+        $this->setIdSocial($data["user_id"]);
         $this->setType($data["type"]);
         $this->setLink($data["url"]);
         $this->setPhoto("undefined");

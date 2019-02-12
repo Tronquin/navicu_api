@@ -29,7 +29,7 @@ class LoginUserHandler extends BaseHandler
         if ($encoder->isPasswordValid($user, $params['password'])) {
             $token = $generator->create($user);
         } else {
-            new throw new NavicuException("Bad Credentials", 400);            
+             throw new NavicuException("Bad Credentials", 400);            
         }
 
         return [

@@ -36,27 +36,15 @@ class LoginRedSocialClientHandler extends BaseHandler
         $validSocial = false;
         $respSocial = [];
 
-        dump($params['type']);
-        dump(RedSocialService::FACEBOOK);
 
         if ($params['type'] === RedSocialService::FACEBOOK) {
 
-            dump('entra 1');
-
             $respSocial = RedSocialService::validTokenFacebook(['input_token' => $params['token']]);
-
-            dump($respSocial);
-
             $validSocial = (isset($respSocial['data']['is_valid']) ? $respSocial['data']['is_valid'] : false);
-
-            dump($validSocial);
 
             if ($validSocial) {
                 $idProvider = explode('|', getenv('FACEBOOK_PROVIDER'));
-                dump($idProvider);
-
                 $validSocial = ($idProvider[0] === $respSocial['data']['app_id'] ? $validSocial : false) ;
-                dump($validSocial);
             }
 
         } else {
@@ -65,10 +53,7 @@ class LoginRedSocialClientHandler extends BaseHandler
 
         if ($validSocial) {
 
-            dump($user);
-
             if (is_null($user)) {
-
 
                 $client = new ClientProfile();
 
@@ -82,7 +67,12 @@ class LoginRedSocialClientHandler extends BaseHandler
                 $client->setEmail($email->toString());
                 $client->setEmailNews(true);
 
+                if (isset($params["mame"])) {
+                    $client->setFullName($params["name"]);
+                }    
+
                 $redSocial = new RedSocial();
+                $params['user_id'] = $respSocial['data']['user_id'];
                 $redSocial->updateObject($params, $client);
 
                 $username = \explode('@', $params['email']);
@@ -123,14 +113,19 @@ class LoginRedSocialClientHandler extends BaseHandler
 
             } else {
 
-                $sessions = $manager->getRepository(RedSocial::class)->findBy(['idSocial' => $respSocial['user_id']]);
+                $sessions = $manager->getRepository(RedSocial::class)->findBy(['idSocial' => $respSocial['data']['user_id']]);
 
                 if (count($sessions) > 0) {
                     $client = $manager->getRepository(ClientProfile::class)->findOneBy(['user' => $user]);
-                    $redSocial = new RedSocial();
-                    $redSocial->updateObject($params, $client);
-                    $manager->persist($client);
-                    $manager->persist($redSocial);
+
+
+                    /*  
+                        $redSocial = new RedSocial();
+                        $params['user_id'] = $respSocial['data']['user_id'];
+                        $redSocial->updateObject($params, $client);
+                        $manager->persist($client);
+                        $manager->persist($redSocial);
+                    */   
 
                 } else {
                     throw new NavicuException('User Id not Valid', 400);
@@ -140,7 +135,6 @@ class LoginRedSocialClientHandler extends BaseHandler
             $token = $generator->create($user);
             return ['token' => $token];
         }
-
 
         throw new NavicuException('Invalid Token', 400);
 
@@ -163,7 +157,8 @@ class LoginRedSocialClientHandler extends BaseHandler
             'url' => 'required',
             'type' => 'required',
             'token' => 'required',
-            'idSocial' => 'required'
+            'idSocial' => 'required',
+            'name' => 'required'
         ];
     }
 }        
