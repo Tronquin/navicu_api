@@ -26,7 +26,6 @@ class SecurityController extends AbstractController
     {
         $handler = new UserExistsHandler($request);
         $handler->processHandler();
-
         return $handler->getJsonResponseData();
     }
 
@@ -63,6 +62,19 @@ class SecurityController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
+    
+    /**
+     * @Route("/direct_register", name="register")
+     */
+    public function directRegisterClientAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    {
+        $handler = new DirectRegisterUserClientHandler($request);
+        $handler->setParam('encoder', $encoder);
+        $handler->setParam('generator', $JWTManager);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
 
     /**
      * Devuelve el token secreto de las redes sociales (google, facebook,etc)
@@ -75,8 +87,7 @@ class SecurityController extends AbstractController
     public function socialProviderData(Request $request)
     {
         $handler = new SocialServiceHandler($request);
-        $handler->processHandler();
-        
+        $handler->processHandler();        
         return $handler->getJsonResponseData();
     }
 

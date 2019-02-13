@@ -2,24 +2,22 @@
 
 namespace App\Navicu\Handler\Flight;
 
-use App\Entity\BankType;
-use App\Entity\HolidayCalendar;
 use App\Entity\NvcBank;
 use App\Entity\FlightReservation;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Exception\NavicuException;
 /**
- * Obtiene el listado de cabinas disponibles
+ * Obtiene listado de cuentas bancarias
  *
  * @author Javier Vasquez <jvasquez@gmail.com>
  */
-class ConfirmPrereservationHandler extends BaseHandler
+class ListBankHandler extends BaseHandler
 {
     /**
+     * Handler que retorna un listado de bancos deacuerdo a la moneda de la reserva
      *
-     * Handler que retorna un listado de bancos deacuerdo a la moneda de la reserva 
      * @return array
-     *
+     * @throws NavicuException
      */
     protected function handler() : array
     {
@@ -30,13 +28,10 @@ class ConfirmPrereservationHandler extends BaseHandler
         $currency = $listReservationGds[0]->getCurrencyReservation();
         $date = new \DateTime('now'); 
 
-
-        if ($reservation->getExpireDate()->format('Y-m-d H:i:s') >= $date->format('Y-m-d H:i:s')) {           
-            throw new NavicuException('Expired Reservation: ',BaseHandler::EXPIRED_RESERVATION);       
+        if ($reservation->getExpireDate() < $date) {
+            throw new NavicuException('Expired Reservation: ', BaseHandler::EXPIRED_RESERVATION);
         }
 
-
-        //$banks = $manager->getRepository(BankType::class)->getListBanksArray(1, true);
         $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);          
 
         foreach ($nvcBankList as $nvcBank) {
@@ -79,7 +74,7 @@ class ConfirmPrereservationHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'publicId'=>'required'
+            'publicId' => 'required'
         ];
     }
 }

@@ -127,6 +127,8 @@ class BanckTransferPaymentGateway implements  PaymentGateway
             'code' => '201',
             'status' => 0,
             'response' => null,
+            'bank' => $response['bank'],
+            'receiverBank' => $response['receivingBank'],
             'responsecode' => 'success',
             'message' => 'success',
         ]);

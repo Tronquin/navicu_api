@@ -9,8 +9,6 @@ use App\Entity\CurrencyType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
-use App\Navicu\Service\AirlineService;
-use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\PaymentGatewayService;
 
 class PayFlightReservationHandler extends BaseHandler
@@ -54,10 +52,6 @@ class PayFlightReservationHandler extends BaseHandler
             throw new NavicuException('Payment fail');
         }
 
-        // Movimientos en los creditos de aerolinea y consolidador
-        ConsolidatorService::setMovementFromReservation($reservation);
-        AirlineService::setMovementFromReservation($reservation, '-');
-
         $manager->flush();
 
         return compact('reservation');
@@ -100,7 +94,10 @@ class PayFlightReservationHandler extends BaseHandler
 
         if ($paymentType === PaymentGateway::STRIPE_TDC) {
             $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
-            $paymentGateway->setCurrency($currency);         
+        }
+
+        if (method_exists($paymentGateway, 'setCurrency')) {
+            $paymentGateway->setCurrency($currency);
         }
 
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
@@ -108,10 +105,14 @@ class PayFlightReservationHandler extends BaseHandler
         $payments = $this->completePaymentInfo($reservation, $payments, $paymentGateway);
         $responsePayments = $paymentGateway->processPayments($payments);
 
+
         foreach ($responsePayments as $payment) {
 
-            $flightPayment = new FlightPayment();
+            if (!$payment['success']) {
+                throw new NavicuException('Payment fail', BaseHandler::CODE_EXCEPTION, $payment['paymentError']);
+            }
 
+            $flightPayment = new FlightPayment();
             $v_code = $payment['id'] ?? $payment['code'];
             $v_amount = $payment['amount'] ?? 0;
             $holderId = $payment['holderId'] ?? null;
@@ -140,7 +141,10 @@ class PayFlightReservationHandler extends BaseHandler
                 ->setType($paymentType)
                 ->setPaymentType($paymentTypeInstance)
                 ->setPaymentCommision($paymentTypeInstance->getCommision())
-                ->setResponse($payment['response']);
+                ->setResponse($payment['response'])
+                ->setBank($payment['bank'] ?? null)
+                ->setReceiverBank($payment['receiverBank'] ?? null)
+            ;
 
             if ($request) {
                 $flightPayment->setRequest(json_encode($request)); // TODO encrypt
@@ -150,10 +154,6 @@ class PayFlightReservationHandler extends BaseHandler
 
             $manager->persist($flightPayment);
             $manager->flush();
-        }
-
-        if (! $paymentGateway->isSuccess()) {
-            throw new NavicuException('Payment fail');
         }
 
         return true;

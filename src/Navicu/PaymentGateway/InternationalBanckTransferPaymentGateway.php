@@ -90,10 +90,8 @@ class InternationalBanckTransferPaymentGateway implements PaymentGateway
             throw new NavicuException('confirmationId');
         if (empty($request['bank']) || !is_string($request['bank']))
             throw new NavicuException('invalid_issuing_bank');
-        if (empty($request['receivingBank']) || is_string($request['receivingBank']))
+        if (empty($request['receivingBank']) || !is_string($request['receivingBank']))
             throw new NavicuException('invalid_receiving_bank');
-        if(empty($request['checkInDate']) && !($request['checkInDate'] instanceof \DateTime))
-            throw new NavicuException('invalid_reservation_check_in');
 
         return true;
     }
@@ -143,6 +141,8 @@ class InternationalBanckTransferPaymentGateway implements PaymentGateway
             'currency' => $this->currency,
             'dollarPrice' => $response['amount'],
             'nationalPrice' => $np,
+            'bank' => $response['bank'],
+            'receiverBank' => $response['receivingBank'],
             'responsecode' => 'success',
             'message' => 'success',
         ]);

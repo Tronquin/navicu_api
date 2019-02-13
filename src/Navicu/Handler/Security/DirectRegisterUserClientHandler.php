@@ -21,9 +21,7 @@ class RegisterUserClientHandler extends BaseHandler
      */
     protected function handler() : array
     {
-
-        $params = $this->getParams();   
-
+        $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['email'], 'username' => $params['username'] ]);
 
@@ -73,8 +71,12 @@ class RegisterUserClientHandler extends BaseHandler
         if (isset($params["typeIdentity"]))
             $client->setTypeIdentity($params["typeIdentity"]);
 
-
-
+        if (isset($params['state'])) {
+            $rpLocation = $rf->get('Location');
+            $location = $manager->getRepository(Location::class)->findOneBy(['id' => $params['state']]);
+            if ($location)
+                $client->setLocation($location);
+        }
 
         if (isset($params["gender"])) {
                 $client->setGender($params["gender"]);
@@ -114,9 +116,7 @@ class RegisterUserClientHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'email' => 'required',
-            'username' => 'required',
-            'password' => 'required'
+            'email' => 'required'
         ];
     }
 }        

@@ -140,7 +140,7 @@ abstract class BaseHandler
      */
     final public function processHandler() : void
     {
-       //try {
+        try {
             $this->processed = true;
 
             $validator = new NavicuValidator();
@@ -158,7 +158,7 @@ abstract class BaseHandler
                 $this->codeHttp = self::CODE_SUCCESS;
                 $this->data = $this->handler();
             }
-        /*} catch (NavicuException $ex) {
+        } catch (NavicuException $ex) {
 
             $this->code = $ex->getCode();
             $this->codeHttp = self::CODE_EXCEPTION;
@@ -171,7 +171,6 @@ abstract class BaseHandler
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
         }
-       */
     }
 
     /**
@@ -305,6 +304,18 @@ abstract class BaseHandler
     public function getCodeHttp() : int
     {
         return $this->codeHttp;
+    }
+
+    /**
+     * Carga todos los errores a este handler
+     *
+     * @param array $errors
+     */
+    protected function addErrorToHandler(array $errors) : void
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
     }
 
     /**

@@ -5,13 +5,14 @@ namespace App\Controller\Flight;
 use App\Navicu\Handler\Flight\AutocompleteHandler;
 use App\Navicu\Handler\Flight\BookFlightHandler;
 use App\Navicu\Handler\Flight\CompleteReservationHandler;
-use App\Navicu\Handler\Flight\ConfirmPrereservationHandler;
+use App\Navicu\Handler\Flight\ListBankHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
 use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use App\Navicu\Handler\Flight\CreateReservationHandler;
 use App\Navicu\Handler\Flight\SetTransferHandler;
+use App\Navicu\Handler\Flight\TransferPaymentHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -185,7 +186,7 @@ class FlightController extends AbstractController
     /**
      * Indica que opcion transferencia para una reserva
      *
-     * @Route("/transfer_reservation", name="transfer_reservation")
+     * @Route("/transfer_reservation", name="transfer_reservation", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
@@ -199,16 +200,32 @@ class FlightController extends AbstractController
     }
 
     /**
-     * Muestra la información necesara para la confirmación de la rerserva NO TDC
+     * Registra pagos a una transferencia
      *
-     * @Route("/confirm_prereservation", name="flight_confirm_prereservation", methods="GET")
+     * @Route("/transfer_payment_reservation", name="transfer_payment_reservation", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function confirmPrereservation(Request $request)
+    public function transferPayment(Request $request)
     {
-        $handler = new ConfirmPrereservationHandler($request);
+        $handler = new TransferPaymentHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Obtiene listado de cuentas bancarias
+     *
+     * @Route("/list_bank/{publicId}", name="list_bank_reservation", methods="GET")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listBank(Request $request)
+    {
+        $handler = new ListBankHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

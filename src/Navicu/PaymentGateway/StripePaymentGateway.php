@@ -86,45 +86,6 @@ class StripePaymentGateway implements  PaymentGateway
     }
 
 
-   /* $gateway = Omnipay::create('Stripe');
- 
-   // Initialise the gateway
-    $gateway->initialize(array(
-        'apiKey' => 'MyApiKey',
-   ));
- 
-    // Create a credit card object
-     $card = new CreditCard(array(
-               'firstName'    => 'Example',
-               'lastName'     => 'Customer',
-               'number'       => '4242424242424242',
-               'expiryMonth'  => '01',
-               'expiryYear'   => '2020',
-               'cvv'          => '123',
-               'email'                 => 'customer@example.com',
-               'billingAddress1'       => '1 Scrubby Creek Road',
-               'billingCountry'        => 'AU',
-               'billingCity'           => 'Scrubby Creek',
-               'billingPostcode'       => '4999',
-               'billingState'          => 'QLD',
-    ));
- 
-    // Do a purchase transaction on the gateway
-    $transaction = $gateway->purchase(array(
-        'amount'                   => '10.00',
-        'currency'                 => 'USD',
-       'card'                     => $card,
-    ));
-    $response = $transaction->send();
-    if ($response->isSuccessful()) {
-     echo "Purchase transaction was successful!\n";
-        $sale_id = $response->getTransactionReference();
-        echo "Transaction reference = " . $sale_id . "\n";
- 
-       $balance_transaction_id = $response->getBalanceTransactionReference();
-       echo "Balance Transaction reference = " . $balance_transaction_id . "\n";
-   }
-    */
 
     /**
      * este metodo toma un conjunto de pagos, los valida y los procesa
@@ -239,7 +200,7 @@ class StripePaymentGateway implements  PaymentGateway
         $dcharge = $response->__toJSON(); // Se pasa la respuesta de la API a Json para pasarla a json_decode
         $c_data = json_decode($dcharge,true);
         $np = NavicuCurrencyConverter::convert((((integer)$c_data['amount']) / $this->zeroDecimalBase), $this->currency, 'VES');
-        
+
         return [
             'id' => $c_data['id'],
             'success' => $c_data['status'] == "succeeded",
@@ -286,7 +247,38 @@ class StripePaymentGateway implements  PaymentGateway
             'responsecode' => $response['type'],
             'holder' => $name,
             'message' => $response['message'],
+            'paymentError' => self::getPaymentError($response)
         ];
+    }
+
+    private function getPaymentError($response) {
+
+        $code = '99';
+        $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
+
+        if ($response['type'] === 'card_error') {
+            if ($response['code'] === 'incorrect_number') {
+
+                $code = '21';
+                $messages = ['El número de tarjeta parece no estar correcto','¡Intenta colocarlo de nuevo!'];
+
+            } else if ($response['code'] === 'card_declined') {
+
+                $code = '22';
+                $messages = ['La tarjeta ha sido rechazada','Intenta con otra o realiza una transferencia bancaria'];
+
+            } else if ($response['code'] === 'invalid_expiry_year') {
+
+                $code = '23';
+                $messages = ['La fecha de vencimiento de tu tarjeta no es correcta','¡Verifica tus datos e intenta colocarla nuevamente!'];
+            }
+        }
+
+        return [
+            'code' => $code,
+            'messages' => $messages
+        ];
+
     }
 
     /**

@@ -170,7 +170,6 @@ class BookFlightHandler extends BaseHandler
         return [
             'publicId' => 'required',
             'passengers' => 'required',
-            'payments' => 'required'
         ];
     }
 
@@ -209,6 +208,7 @@ class BookFlightHandler extends BaseHandler
             ];
         }
 
+
         $response = OtaService::book([
             'country' => $country,
             'currency' => $alpha3,
@@ -218,6 +218,7 @@ class BookFlightHandler extends BaseHandler
             'payment'=> $params['payments'][0] ?? [],
             'provider' => $reservationGds->getGds()->getName()
         ]);        
+
 
         return $response['bookCode'];
     }

@@ -108,6 +108,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
        $response = $this->purchase($args);
        $response = json_decode($response, true);
        $response['checkInDate'] = $request['date'];
+
        $response = $this->formaterResponseData($response);
        //$this->logger->warning('formaterResponseData:');
        //$this->logger->warning(json_encode($response));
@@ -1142,6 +1143,8 @@ class PayeezyPaymentGateway implements  PaymentGateway
      */
     public function formaterResponseData($response)
     {
+
+
         if (isset($response['amount'])) {
             $np = NavicuCurrencyConverter::convert((((integer)$response['amount']) / 100), 'USD', 'VES');
             }
@@ -1159,7 +1162,8 @@ class PayeezyPaymentGateway implements  PaymentGateway
                 'nationalPrice' => 0,
                 'responsecode' => 'error',
                 'holder' => null,
-                'message' => 'error'
+                'message' => 'error',
+                'paymentError' => self::getPaymentError($response)
             ];
         }
 
@@ -1176,7 +1180,31 @@ class PayeezyPaymentGateway implements  PaymentGateway
             'nationalPrice' => $np,
             'responsecode' => 'success',
             'holder' => $response['card']['cardholder_name'] ?? '',
-            'message' => 'success'
+            'message' => 'success',
+            'paymentError' => $response['transaction_status'] !== "approved" ? self::getPaymentError($response) : []
+        ];
+    }
+
+    private function getPaymentError($response) {
+
+        $error = $response['Error']['messages'][0];
+        $code = '99';
+        $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
+
+        if ($error['code'] === 'invalid_card_number') {
+
+            $code = '21';
+            $messages = ['El número de tarjeta parece no estar correcto','¡Intenta colocarlo de nuevo!'];
+
+        } else if ($error['code'] === 'invalid_exp_date') {
+
+            $code = '23';
+            $messages = ['La fecha de vencimiento de tu tarjeta no es correcta','¡Verifica tus datos e intenta colocarla nuevamente!'];
+        }
+
+        return [
+            'code' => $code,
+            'messages' => $messages
         ];
     }
 
@@ -1255,6 +1283,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
     /**
      * establece en que moneda se realizaran los cobros
      *
+     * @param string $currency
      * @param string $currency
      * @param RepositoryFactoryInterface $rf
      * @return Object

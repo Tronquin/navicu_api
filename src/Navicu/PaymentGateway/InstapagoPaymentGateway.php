@@ -288,10 +288,10 @@ class InstapagoPaymentGateway implements PaymentGateway
                    // $logger->warning('NO SUCCESS, BanescoTDCPayment: Anular Posibles Pagos');
 
                     foreach ($request as &$current) {
-
+                        //dd($current);
                         $current['response']['cardNumber'] = $current['number'];
                         $current['response']['cvc'] = $current['cvc'];
-                        $current['response']['expirationDate'] = $current['ExpirationDate'];
+                        $current['response']['expirationDate'] = $current['expirationDate'];
                         $current['id'] = (isset($current['response']['id']) ? $current['response']['id'] : null);
                         $current['response']['id'] = $current['id'];
 
@@ -381,7 +381,7 @@ class InstapagoPaymentGateway implements PaymentGateway
      **/
     public function validateRequestData($request)
     {
-        if(empty($request['CardNumber']) || !$this->checkLuhn($request['CardNumber']) || !$this->checkVenezuelanCard($request['CardNumber']))
+       /* if(empty($request['CardNumber']) || !$this->checkLuhn($request['CardNumber']) || !$this->checkVenezuelanCard($request['CardNumber']))
             throw new NavicuException(\get_class($this) . ': invalid_card_number');
         if(empty($request['ExpirationDate']) || !$this->checkExpiredDate($request['ExpirationDate']))
             throw new NavicuException(\get_class($this) . ': invalid_expiration_date');
@@ -398,8 +398,8 @@ class InstapagoPaymentGateway implements PaymentGateway
         if(empty($request['StatusId']))
             throw new NavicuException(\get_class($this) . ': empty_status_id');
         if(empty($request['IP']))
-            throw new NavicuException(\get_class($this) . ': empty_ip');
-        
+            throw new NavicuException(\get_class($this) . ': empty_ip');*/
+
         return true;
     }
 
@@ -502,6 +502,7 @@ class InstapagoPaymentGateway implements PaymentGateway
                 'status' => $response["success"] ? 1 : 2,
                 'amount' => $amount,
                 'response' => $jsonResponse,
+                'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         } else {
             $return = array_merge($response,[
@@ -515,6 +516,7 @@ class InstapagoPaymentGateway implements PaymentGateway
                 'amount' => $amount,
                 'response' => $jsonResponse,
                 'message' => 'error',
+                'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         }
 
@@ -532,6 +534,41 @@ class InstapagoPaymentGateway implements PaymentGateway
         */
 
         return $return;
+    }
+
+    private function getPaymentError($response)
+    {
+
+        $code = '99';
+        $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
+
+        if ($response['responsecode'] === '02') {
+
+            $code = $response['responsecode'];
+            $messages = ['El número de cédula parece no estar correcto','¡Intenta colocarlo de nuevo!'];
+
+        } else if ($response['responsecode'] === '05' || $response['responsecode'] === '99') {
+
+            $code = $response['responsecode'];
+            $messages = ['La tarjeta ha sido rechazada','Intenta con otra o realiza una transferencia bancaria'];
+
+        } else if ($response['responsecode'] === '14' || $response['responsecode'] === '15' || $response['responsecode'] === '82')  {
+
+            $code = $response['responsecode'];
+            $messages = ['Disculpe, los datos de la tarjeta de crédito','no son correctos, por favor ingrese los datos nuevamente'];
+
+        } else if ($response['responsecode'] === '51') {
+
+            $code = $response['responsecode'];
+            $messages = ['La tarjeta que utilizaste no cuenta con fondo suficiente','Recarga tu saldo o realiza una transferencia bancaria'];
+
+        }
+
+        return [
+            'code' => $code,
+            'messages' => $messages,
+            'card' => $response['CardNumber']
+        ];
     }
 
     /**

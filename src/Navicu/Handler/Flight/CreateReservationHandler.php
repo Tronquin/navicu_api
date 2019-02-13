@@ -347,20 +347,6 @@ class CreateReservationHandler extends BaseHandler
 		return $fareFamily;
 	}
 
-
-	/**
-     * Carga todos los errores a este handler
-     *
-     * @param array $errors
-     */
-    private function addErrorToHandler(array $errors) : void
-    {
-        foreach ($errors as $error) {
-            $this->addError($error);
-        }
-    }
-
-
     /**
      * Todas las reglas de validacion para los parametros de los vuelos
      * 
