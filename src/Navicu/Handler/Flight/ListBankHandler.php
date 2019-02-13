@@ -2,22 +2,20 @@
 
 namespace App\Navicu\Handler\Flight;
 
-use App\Entity\BankType;
-use App\Entity\HolidayCalendar;
 use App\Entity\NvcBank;
 use App\Entity\FlightReservation;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Exception\NavicuException;
 /**
- * Obtiene el listado de cabinas disponibles
+ * Obtiene listado de cuentas bancarias
  *
  * @author Javier Vasquez <jvasquez@gmail.com>
  */
-class ConfirmPrereservationHandler extends BaseHandler
+class ListBankHandler extends BaseHandler
 {
     /**
+     * Handler que retorna un listado de bancos deacuerdo a la moneda de la reserva
      *
-     * Handler que retorna un listado de bancos deacuerdo a la moneda de la reserva 
      * @return array
      * @throws NavicuException
      */

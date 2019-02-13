@@ -26,12 +26,15 @@ class TransferPaymentHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId'] ]);
+        $date = new \DateTime('now');
 
         if (! $reservation) {
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
 
-        // TODO holidays
+        if ($reservation->getExpireDate() < $date) {
+            throw new NavicuException('Expired Reservation: ', BaseHandler::EXPIRED_RESERVATION);
+        }
 
         $handler = new PayFlightReservationHandler();
         $handler->setParam('publicId', $params['publicId']);
