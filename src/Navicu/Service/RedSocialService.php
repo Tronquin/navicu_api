@@ -36,7 +36,7 @@ class RedSocialService
         $url = 'https://graph.facebook.com/debug_token';
         $paramsUrl = [];
         $paramsUrl['input_token'] = $params['input_token'];
-        $paramsUrl['access_token'] = getenv('FACEBOOK_SECRET_PROVIDER');
+        $paramsUrl['access_token'] = getenv('FACEBOOK_PROVIDER');
 
         $response = self::send($url, $paramsUrl);
 
