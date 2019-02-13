@@ -128,18 +128,6 @@ class ProcessFlightReservationHandler extends BaseHandler
     }
 
     /**
-     * Carga todos los errores a este handler
-     *
-     * @param array $errors
-     */
-    private function addErrorToHandler(array $errors) : void
-    {
-        foreach ($errors as $error) {
-            $this->addError($error);
-        }
-    }
-
-    /**
      * Envia correo alternativo en caso que falle el envio del
      * correo de confirmacion con el numero del ticket al cliente.
      * La intencion es notificar a navicu sobre el fallo y gestionar

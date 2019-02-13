@@ -12,6 +12,7 @@ use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use App\Navicu\Handler\Flight\CreateReservationHandler;
 use App\Navicu\Handler\Flight\SetTransferHandler;
+use App\Navicu\Handler\Flight\TransferPaymentHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -208,7 +209,7 @@ class FlightController extends AbstractController
      */
     public function transferPayment(Request $request)
     {
-        $handler = new SetTransferHandler($request);
+        $handler = new TransferPaymentHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

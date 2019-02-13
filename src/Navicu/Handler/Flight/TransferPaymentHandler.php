@@ -68,16 +68,4 @@ class TransferPaymentHandler extends BaseHandler
             'payments' => 'required'
         ];
     }
-
-    /**
-     * Carga todos los errores a este handler
-     *
-     * @param array $errors
-     */
-    private function addErrorToHandler(array $errors) : void
-    {
-        foreach ($errors as $error) {
-            $this->addError($error);
-        }
-    }
 }

@@ -307,6 +307,18 @@ abstract class BaseHandler
     }
 
     /**
+     * Carga todos los errores a este handler
+     *
+     * @param array $errors
+     */
+    protected function addErrorToHandler(array $errors) : void
+    {
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
+    }
+
+    /**
      * Obtiene todos los parametros del request al params del handler
      *
      * @param Request $request

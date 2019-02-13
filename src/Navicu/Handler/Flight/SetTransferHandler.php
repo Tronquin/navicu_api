@@ -37,9 +37,12 @@ class SetTransferHandler extends BaseHandler
         $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
         $handler->setParam('passengers', $params['passengers']);
-        $handler->setParam('payments', $params['payments']);
+        $handler->setParam('payments', $params['payments'] ?? []);
+        $handler->processHandler();
 
         if (! $handler->isSuccess()) {
+            $this->addErrorToHandler( $handler->getErrors()['errors'] );
+
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 

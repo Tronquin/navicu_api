@@ -94,7 +94,10 @@ class PayFlightReservationHandler extends BaseHandler
 
         if ($paymentType === PaymentGateway::STRIPE_TDC) {
             $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
-            $paymentGateway->setCurrency($currency);         
+        }
+
+        if (method_exists($paymentGateway, 'setCurrency')) {
+            $paymentGateway->setCurrency($currency);
         }
 
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
@@ -138,7 +141,10 @@ class PayFlightReservationHandler extends BaseHandler
                 ->setType($paymentType)
                 ->setPaymentType($paymentTypeInstance)
                 ->setPaymentCommision($paymentTypeInstance->getCommision())
-                ->setResponse($payment['response']);
+                ->setResponse($payment['response'])
+                ->setBank($payment['bank'] ?? null)
+                ->setReceiverBank($payment['receiverBank'] ?? null)
+            ;
 
             if ($request) {
                 $flightPayment->setRequest(json_encode($request)); // TODO encrypt

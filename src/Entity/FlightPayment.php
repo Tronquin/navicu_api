@@ -147,6 +147,20 @@ class FlightPayment
      */
     private $flightReservation;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="bank", type="string", length=4, nullable=true)
+     */
+    private $bank;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="receiverbank", type="string", length=4, nullable=true)
+     */
+    private $receiverBank;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -356,5 +370,27 @@ class FlightPayment
         return $this;
     }
 
+    public function getBank(): ?string
+    {
+        return $this->bank;
+    }
 
+    public function setBank(?string $bank): self
+    {
+        $this->bank = $bank;
+
+        return $this;
+    }
+
+    public function getReceiverBank(): ?string
+    {
+        return $this->receiverBank;
+    }
+
+    public function setReceiverBank(?string $receiverBank): self
+    {
+        $this->receiverBank = $receiverBank;
+
+        return $this;
+    }
 }
