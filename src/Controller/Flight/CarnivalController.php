@@ -3,7 +3,7 @@
 namespace App\Controller\Flight;
 
 use App\Navicu\Handler\Carnival\PackageListHandler;
-use App\Navicu\Handler\ProcessPaymentPackageHandler;
+use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +32,7 @@ class CarnivalController extends AbstractController
     /**
      * Procesa el pago del paquete
      *
-     * @Route("/package_list", name="flight_carnival_package_list")
+     * @Route("/payment_package", name="flight_carnival_payment_package", methods={"POST"})
      *
      * @param Request $request
      * @return JsonResponse
