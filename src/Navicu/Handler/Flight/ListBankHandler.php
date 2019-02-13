@@ -23,6 +23,7 @@ class ListBankHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+        /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['publicId']);          
         $listReservationGds = $reservation->getGdsReservations();
         $currency = $listReservationGds[0]->getCurrencyReservation();
@@ -54,10 +55,14 @@ class ListBankHandler extends BaseHandler
         }      
 
         $response = [];
-        $response['receptors'] = $receptors;
-        $response['emisors'] = $emisors;
+        $response['receptors'] = $receptors ?? [];
+        $response['emisors'] = $emisors ?? [];
         $response['date_servidor'] = $date->format('Y-m-d H:i:s');
         $response['expire_date'] = $reservation->getExpireDate()->format('Y-m-d H:i:s');
+
+        $now = new \DateTime();
+        $diff = $now->diff($reservation->getExpireDate());
+        $response['timeToExpiration'] = sprintf('%s hora(s) %s minuto(s)', $diff->h, $diff->i);
 
         return $response;
     }    
