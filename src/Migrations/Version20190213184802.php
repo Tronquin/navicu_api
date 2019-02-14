@@ -31,7 +31,7 @@ final class Version20190213184802 extends AbstractMigration
         }
 
         $this->addSql('CREATE SEQUENCE package_temp_payment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE package_temp_payment (id INT NOT NULL, package_temp_id INT NOT NULL, content TEXT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE package_temp_payment (id INT NOT NULL, package_temp_id INT NOT NULL, content TEXT NOT NULL, status INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_71FEAFE5E5F8CAA3 ON package_temp_payment (package_temp_id)');
         $this->addSql('ALTER TABLE package_temp_payment ADD CONSTRAINT FK_71FEAFE5E5F8CAA3 FOREIGN KEY (package_temp_id) REFERENCES package_temp (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }

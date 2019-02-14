@@ -3,6 +3,7 @@
 namespace App\Controller\Flight;
 
 use App\Navicu\Handler\Carnival\PackageListHandler;
+use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
 use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,7 +18,7 @@ class CarnivalController extends AbstractController
     /**
      * Obtiene un listado de los paquetes de carnaval
      *
-     * @Route("/package_list/{currency}", name="flight_carnival_package_list")
+     * @Route("/package_list/{currency}", name="flight_carnival_package_list", methods={"GET"})
      *
      * @param Request $request
      * @return JsonResponse
@@ -41,6 +42,21 @@ class CarnivalController extends AbstractController
     public function paymentPackage(Request $request)
     {
         $handler = new ProcessPaymentPackageHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Lista de pagos pendientes
+     *
+     * @Route("/payment_package_pending", name="flight_carnival_payment_package_pending", methods={"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function paymentList()
+    {
+        $handler = new PaymentPackageListHandler();
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

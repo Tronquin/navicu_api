@@ -9,6 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PackageTempPayment
 {
+    /** Estatus de la reserva */
+    const STATUS_PRE_RESERVATION = 0;
+    const STATUS_IN_PROCESS = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_CANCEL = 3;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -26,6 +32,11 @@ class PackageTempPayment
      * @ORM\Column(type="text")
      */
     private $content;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -52,6 +63,18 @@ class PackageTempPayment
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

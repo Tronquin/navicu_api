@@ -43,6 +43,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
         $packagePayment = new PackageTempPayment();
         $packagePayment->setContent(json_encode($params['content']));
         $packagePayment->setPackageTemp($package);
+        $packagePayment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
 
         // Descuenta la disponibilidad del paquete
         $package->addPackageTempPayment($packagePayment);
@@ -68,7 +69,8 @@ class ProcessPaymentPackageHandler extends BaseHandler
         return [
             'packageId' => 'required|numeric',
             'content' => 'required',
-            'payments' => 'required'
+            'payments' => 'required',
+            'paymentType' => 'required|numeric|between:1,8'
         ];
     }
 }
