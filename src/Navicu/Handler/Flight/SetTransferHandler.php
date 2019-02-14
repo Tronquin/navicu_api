@@ -31,8 +31,6 @@ class SetTransferHandler extends BaseHandler
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
 
-        // TODO holidays
-
         // Genera el book para apartar la disponibilidad durante el dia
         $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
