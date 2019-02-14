@@ -183,7 +183,7 @@ class OtaService
             'startDate' => 'required|date_format:Y-m-d',
             'endDate' => 'required|date_format:Y-m-d',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'roundTrip' => 'required|numeric|between:0,1'
+            'roundTrip' => 'numeric|between:0,1'
         ]);
 
         if ($validator->hasError()) {

@@ -247,7 +247,8 @@ class ListHandler extends BaseHandler
             'endDate' => 'required',
             'baggage' => 'required|numeric',
             'sourceSearchType' => 'required',
-            'destSearchType' => 'required'
+            'destSearchType' => 'required',
+            'roundTrip' => 'in:1,0'
         ];
     }
 
