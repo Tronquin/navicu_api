@@ -21,7 +21,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/user_exists/{email}", name="register")
+     * @Route("/user_exists/{email}", name="user_exists")
      */
     public function userExists(Request $request)
     {
