@@ -21,7 +21,9 @@ class PaymentPackageListHandler extends BaseHandler
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $payments = $manager->getRepository(PackageTempPayment::class)->findAll();
+        $payments = $manager->getRepository(PackageTempPayment::class)->findBy([
+            'status' => PackageTempPayment::STATUS_IN_PROCESS
+        ]);
 
         $payments = array_map(function (PackageTempPayment $payment) {
 
