@@ -14,7 +14,7 @@ use App\Navicu\Exception\NavicuException;
  *
  * @author Javier Vasquez <jvasquez@jacidi.com>
  */
-class RegisterUserClientHandler extends BaseHandler
+class DirectRegisterUserClientHandler extends BaseHandler
 {
     /**
      * @return array
@@ -33,19 +33,8 @@ class RegisterUserClientHandler extends BaseHandler
         $generator = $params['generator'];
        
         $user = new FosUser();
-        $user->setEmail($params['email']);
-        $user->setUsernameCanonical($params['username']);
-        $user->setEmailCanonical($params['email']);
-        $user->setUsername($params['username']);
-        $user->setEnabled(true);
-        $user->setLocked(true);
-        $user->setSalt(123456);
-        $user->setExpired(false);
-        $user->setCredentialsExpired(false);
-        $user->setPlainPassword($params['password']);
+        $user->updateObject($params);
         $user->setPassword($encoder->encodePassword($user, $params['password']));
-        $user->setCreatedAt(new \DateTime('now'));
-        $user->setUpdatedAt(new \DateTime('now'));
 
         $client = new ClientProfile();        
 
