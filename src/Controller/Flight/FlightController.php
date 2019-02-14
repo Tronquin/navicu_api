@@ -31,7 +31,7 @@ class FlightController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function autoComplete(Request $request, TokenStorageInterface $tt)
+    public function autoComplete(Request $request)
     {
         $handler = new AutocompleteHandler($request);
         $handler->processHandler();
@@ -95,9 +95,10 @@ class FlightController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function createReservation(Request $request)    {
+    public function createReservation(Request $request, TokenStorageInterface $ti)    {
 
-        $handler = new CreateReservationHandler($request);       
+        $handler = new CreateReservationHandler($request);
+        $handler->setParam('ti', $ti);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

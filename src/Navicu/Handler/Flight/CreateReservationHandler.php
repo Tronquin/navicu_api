@@ -38,9 +38,9 @@ class CreateReservationHandler extends BaseHandler
     {
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
+        $token_interface = $params['ti'];
 
         $reservation = new FlightReservation();
-
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
 		$totalIncrementGuarantee = $totalIncrementGuaranteeLocal = 0;
 		$totalDiscount = $totalDiscountLocal = 0;
@@ -51,9 +51,7 @@ class CreateReservationHandler extends BaseHandler
 
 		$provider = 'KIU';
 		foreach ($params['itineraries'] as $key => $itinerary) {
-
             $itinerary['currency'] = $itinerary['flights'][0]['money_type'];
-
 			$this->validateItinerary($itinerary);
 
 			/** Valida si uno de los proveedores de la reserva es Amadeus**/
@@ -77,8 +75,7 @@ class CreateReservationHandler extends BaseHandler
 				$reservationGds->addFlight($flightEntity); 
 	    	}
 
-	    	foreach ([$itinerary['fare_family']] as $key => $fareFamily) {
-
+	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
 	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
 				$reservationGds->addFlightFareFamily($farefamilyEntity); 
 	    	}
@@ -98,11 +95,8 @@ class CreateReservationHandler extends BaseHandler
 	                );
 
 	        if (CurrencyType::getLocalActiveCurrency()->getAlfa3() ==  $params['userCurrency']) {
-
 	        	$localAmounts = $convertedAmounts;
-
 	        } else {
-
 	        	$localAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
 	                    [   'iso' => $itinerary['flights'][0]['airline'],
 	                        'rate' => $itinerary['flights'][0]['rate'],
@@ -142,6 +136,10 @@ class CreateReservationHandler extends BaseHandler
 	        ->setIpAddress($params['ipAddress'] ?? null)
 	        ->setOrigin('navicu web');
 
+        if (is_object($token_interface->getToken()->getUser())) {
+            $reservation->setClientProfile($token_interface->getToken()->getUser()->getClientProfile()[0]);
+        }
+
 	 	$manager->persist($reservation);
     	$manager->flush();    	
 
@@ -176,7 +174,7 @@ class CreateReservationHandler extends BaseHandler
 	 * @throws NavicuException
 	 * @return array
 	 */
-    private function getTransferOptions (string $provider) : array
+    private function getTransferOptions ($provider) : array
     {
     	$date_now = new \DateTime('now');  
         $handler = new HolidayCalendarHandler();
@@ -329,7 +327,7 @@ class CreateReservationHandler extends BaseHandler
      * @return FlightFareFamily
      */
 	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
-	{      
+	{
 
 		$fareFamily = new FlightFareFamily();
 		$manager = $this->container->get('doctrine')->getManager(); 
@@ -339,7 +337,7 @@ class CreateReservationHandler extends BaseHandler
 				->setDescription($fareFamilyData['description'])
 				->setServices(json_encode($fareFamilyData['services']))
 				->setPrices(json_encode($fareFamilyData['prices']))
-				->setSelected($fareFamilyData['selected'])				
+				->setSelected($fareFamilyData['selected'])
 		;
 
 		$manager->persist($fareFamily);

@@ -161,6 +161,11 @@ class FlightReservation
      */
     private $payments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ClientProfile", inversedBy="flightReservations")
+     */
+    private $clientProfile;
+
     public function __construct()
     {
         $this->gdsReservations = new ArrayCollection();
@@ -444,6 +449,18 @@ class FlightReservation
                 $payment->setFlightReservation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClientProfile(): ?ClientProfile
+    {
+        return $this->clientProfile;
+    }
+
+    public function setClientProfile(?ClientProfile $clientProfile): self
+    {
+        $this->clientProfile = $clientProfile;
 
         return $this;
     }

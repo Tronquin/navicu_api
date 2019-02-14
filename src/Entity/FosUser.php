@@ -191,6 +191,7 @@ class FosUser implements UserInterface
      */
     private $referenceDate;
 
+
     /**
      * @var \NvcProfile
      *
@@ -275,6 +276,12 @@ class FosUser implements UserInterface
      * )
      */
     private $role;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="ClientProfile", mappedBy="user",cascade={"persist"})
+     */
+    private $clientProfile;
 
     /**
      * Constructor
@@ -741,6 +748,18 @@ class FosUser implements UserInterface
         $this->setPassword($encoder->encodePassword($this, $this->getPlainPassword()));
         $this->setCreatedAt(new \DateTime('now'));
         $this->setUpdatedAt(new \DateTime('now'));
+
+        return $this;
+    }
+
+    public function getClientProfile(): ?Collection
+    {
+        return $this->clientProfile;
+    }
+
+    public function setClientProfile(?ClientProfile $clientProfile): self
+    {
+        $this->clientProfile = $clientProfile;
 
         return $this;
     }

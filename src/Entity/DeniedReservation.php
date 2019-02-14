@@ -137,7 +137,7 @@ class DeniedReservation
     /**
      * @var \ClienteProfile
      *
-     * @ORM\ManyToOne(targetEntity="ClienteProfile")
+     * @ORM\ManyToOne(targetEntity="ClientProfile")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      * })

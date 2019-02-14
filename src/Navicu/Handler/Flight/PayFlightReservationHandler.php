@@ -105,7 +105,6 @@ class PayFlightReservationHandler extends BaseHandler
         $payments = $this->completePaymentInfo($reservation, $payments, $paymentGateway);
         $responsePayments = $paymentGateway->processPayments($payments);
 
-
         foreach ($responsePayments as $payment) {
 
             if (!$payment['success']) {

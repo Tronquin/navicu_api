@@ -192,6 +192,11 @@ class ClientProfile
     private $redSocial;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FlightReservation", mappedBy="clientProfile")
+     */
+    private $flightReservations;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -199,6 +204,7 @@ class ClientProfile
         $this->profession = new \Doctrine\Common\Collections\ArrayCollection();
         $this->hobbies = new \Doctrine\Common\Collections\ArrayCollection();
         $this->redSocial = new ArrayCollection();
+        $this->flightReservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -499,6 +505,37 @@ class ClientProfile
             // set the owning side to null (unless already changed)
             if ($redSocial->getClient() === $this) {
                 $redSocial->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FlightReservation[]
+     */
+    public function getFlightReservations(): Collection
+    {
+        return $this->flightReservations;
+    }
+
+    public function addFlightReservation(FlightReservation $flightReservation): self
+    {
+        if (!$this->flightReservations->contains($flightReservation)) {
+            $this->flightReservations[] = $flightReservation;
+            $flightReservation->setClientProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlightReservation(FlightReservation $flightReservation): self
+    {
+        if ($this->flightReservations->contains($flightReservation)) {
+            $this->flightReservations->removeElement($flightReservation);
+            // set the owning side to null (unless already changed)
+            if ($flightReservation->getClientProfile() === $this) {
+                $flightReservation->setClientProfile(null);
             }
         }
 
