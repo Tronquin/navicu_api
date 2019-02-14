@@ -11,7 +11,7 @@ use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Exception\NavicuException;
 use Symfony\Component\Dotenv\Dotenv;
 /**
- * Verifica si existe un usuario
+ * Registra un usuario por red social
  *
  * @author Javier Vasquez <jvasquez@jacidi.com>
  */
@@ -104,19 +104,7 @@ class LoginRedSocialClientHandler extends BaseHandler
             $params['password'] = substr(sha1(uniqid(mt_rand(), true)), 0, 8);
 
             $user = new FosUser();
-            $user->setEmail($params['email']);
-            $user->setUsernameCanonical($params['username']);
-            $user->setEmailCanonical($params['email']);
-            $user->setUsername($params['username']);
-            $user->setEnabled(true);
-            $user->setLocked(true);
-            $user->setSalt(123456);
-            $user->setExpired(false);
-            $user->setCredentialsExpired(false);
-            $user->setPlainPassword($params['password']);
-            $user->setPassword($encoder->encodePassword($user, $params['password']));
-            $user->setCreatedAt(new \DateTime('now'));
-            $user->setUpdatedAt(new \DateTime('now'));
+            $user->updateObject($params, $encoder);
 
             $client->setUser($user);
             $manager->persist($user);

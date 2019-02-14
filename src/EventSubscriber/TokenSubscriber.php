@@ -33,7 +33,6 @@ class TokenSubscriber implements EventSubscriberInterface
         $manager = $this->container->get('doctrine')->getManager();
         $token = $request->headers->get('token');
 
-
         $oAuthUser = $manager->getRepository(OauthUser::class)->findOneBy(['token' => $token]);
 
         if (! $oAuthUser) {

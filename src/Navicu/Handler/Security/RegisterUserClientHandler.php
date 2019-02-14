@@ -35,19 +35,7 @@ class RegisterUserClientHandler extends BaseHandler
         $generator = $params['generator'];
        
         $user = new FosUser();
-        $user->setEmail($params['email']);
-        $user->setUsernameCanonical($params['username']);
-        $user->setEmailCanonical($params['email']);
-        $user->setUsername($params['username']);
-        $user->setEnabled(true);
-        $user->setLocked(true);
-        $user->setSalt(123456);
-        $user->setExpired(false);
-        $user->setCredentialsExpired(false);
-        $user->setPlainPassword($params['password']);
-        $user->setPassword($encoder->encodePassword($user, $params['password']));
-        $user->setCreatedAt(new \DateTime('now'));
-        $user->setUpdatedAt(new \DateTime('now'));
+        $user->updateObject($params, $encoder);
 
         $client = new ClientProfile();        
 
@@ -57,7 +45,7 @@ class RegisterUserClientHandler extends BaseHandler
            if(isset($params["firstName"])) {
                $client->setFullName($params["firstName"].' '.$params["lastName"]);
            }else{
-               $client->setFullName($params["username"].' '.$params["lastName"]);
+               $client->setFullName($params["username"]);
            }
         }        
         $client->setIdentityCard($params["identityCard"]);
@@ -73,11 +61,8 @@ class RegisterUserClientHandler extends BaseHandler
         if (isset($params["typeIdentity"]))
             $client->setTypeIdentity($params["typeIdentity"]);
 
-
-
-
         if (isset($params["gender"])) {
-                $client->setGender($params["gender"]);
+            $client->setGender($params["gender"]);
         }           
 
         if (isset($params["phone"])) {

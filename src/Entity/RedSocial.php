@@ -148,7 +148,6 @@ class RedSocial
     /**
      * La función actualiza los datos de una RedSocial, dado un array ($data).
      *
-     * @author Joel D. Requena P. <Joel.2005.2@gmail.com>
      * @author Currently Working: Javier Vasquez
      *
      * @param Array $data
