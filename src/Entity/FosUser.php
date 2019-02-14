@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Navicu\Exception\NavicuException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use function GuzzleHttp\Psr7\try_fopen;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * FosUser
@@ -688,6 +691,56 @@ class FosUser implements UserInterface
         if ($this->role->contains($role)) {
             $this->role->removeElement($role);
         }
+
+        return $this;
+    }
+
+    /**
+     * La función actualiza los datos de un Usuario, dado un array ($data).
+     *
+     * @author Currently Working: Javier Vasquez
+     *
+     * @param Array $data
+     * @return  self
+     */
+    public function updateObject($params, UserPasswordEncoderInterface $encoder, $profile = null) :self
+    {
+        $this->setEmail($params['email']);
+        $this->setEmailCanonical($params['email']);
+        $this->setUsername($params['username']);
+        $this->setUsernameCanonical($params['username']);
+
+        $enabled = isset($params['enabled']) ? $params['enabled'] : true;
+        $this->setEnabled($enabled );
+
+        $locked = isset($params['locked']) ? $params['locked'] : true;
+        $this->setLocked($locked);
+
+        $expired = isset($params['expired']) ? $params['expired'] : true;
+        $this->setExpired($expired);
+        $this->setCredentialsExpired($expired);
+
+        if (isset($params["password"])) {
+            $valid = false;
+            if (strlen($params["password"]) > 7) {
+                $num = preg_replace("[^0-9]", "", $params["password"]);
+                if (! empty($num)) {
+                    $min = preg_replace("[^a-z]", "", $params["password"]);
+                    if (!empty($min)) {
+                        $valid = true;
+                        $this->plainPassword = $params["password"];
+                    }
+                }
+            }
+            if (! $valid) throw new NavicuException('Password Format Invalid', 400);
+
+        } else {
+            $this->plainPassword = substr(sha1(uniqid(mt_rand(), true)),0,8);
+        }
+
+        $this->setPassword($encoder->encodePassword($this, $this->getPlainPassword()));
+        $this->setCreatedAt(new \DateTime('now'));
+        $this->setUpdatedAt(new \DateTime('now'));
 
         return $this;
     }

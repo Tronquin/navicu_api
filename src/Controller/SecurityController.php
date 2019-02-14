@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Navicu\Handler\Security\UserExistsHandler;
 use App\Navicu\Handler\Security\LoginUserHandler;
 use App\Navicu\Handler\Security\RegisterUserClientHandler;
+use App\Navicu\Handler\Security\DirectRegisterUserClientHandler;
 use App\Navicu\Handler\SocialServices\SocialServiceHandler;
 use App\Navicu\Handler\Security\LoginRedSocialClientHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,19 +55,6 @@ class SecurityController extends AbstractController
      * @Route("/register", name="register")
      */
     public function registerClientAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
-    {
-        $handler = new RegisterUserClientHandler($request);
-        $handler->setParam('encoder', $encoder);
-        $handler->setParam('generator', $JWTManager);
-        $handler->processHandler();
-
-        return $handler->getJsonResponseData();
-    }
-    
-    /**
-     * @Route("/direct_register", name="register")
-     */
-    public function directRegisterClientAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
     {
         $handler = new DirectRegisterUserClientHandler($request);
         $handler->setParam('encoder', $encoder);
