@@ -17,13 +17,14 @@ class CarnivalController extends AbstractController
     /**
      * Obtiene un listado de los paquetes de carnaval
      *
-     * @Route("/package_list", name="flight_carnival_package_list")
+     * @Route("/package_list/{currency}", name="flight_carnival_package_list")
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function packageList()
+    public function packageList(Request $request)
     {
-        $handler = new PackageListHandler();
+        $handler = new PackageListHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
