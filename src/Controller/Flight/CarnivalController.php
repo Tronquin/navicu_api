@@ -2,6 +2,7 @@
 
 namespace App\Controller\Flight;
 
+use App\Navicu\Handler\Carnival\ConfirmPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\PackageListHandler;
 use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
 use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
@@ -57,6 +58,21 @@ class CarnivalController extends AbstractController
     public function paymentList()
     {
         $handler = new PaymentPackageListHandler();
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Confirma el pago de un paquete
+     *
+     * @Route("/payment_package_confirm/{paymentId}", name="flight_carnival_payment_package_confirm", methods={"POST"})
+     *
+     * @return JsonResponse
+     */
+    public function paymentConfirm()
+    {
+        $handler = new ConfirmPaymentPackageHandler();
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
