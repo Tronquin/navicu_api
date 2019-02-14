@@ -4,6 +4,7 @@ namespace App\Navicu\Handler\Carnival;
 
 use App\Entity\PackageTemp;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\NavicuCurrencyConverter;
 
 /**
  * Obtiene un listado de los paquetes para carnaval
@@ -22,11 +23,13 @@ class PackageListHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $packages = $manager->getRepository(PackageTemp::class)->findAll();
+        $params = $this->getParams();
 
-        $packages = array_map(function (PackageTemp $package) {
+        $packages = array_map(function (PackageTemp $package) use ($params) {
 
             $p = json_decode($package->getContent(), true);
             $p['availability'] = $package->getAvailability();
+            $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $params['currency']);
 
             return $p;
 
@@ -46,6 +49,8 @@ class PackageListHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [];
+        return [
+            'currency' => 'required|regex:/^[A-Z]{3}/'
+        ];
     }
 }
