@@ -39,7 +39,7 @@ class CreateReservationHandler extends BaseHandler
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
         $token_interface = $params['ti'];
-
+		$ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
         $reservation = new FlightReservation();
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
 		$totalIncrementGuarantee = $totalIncrementGuaranteeLocal = 0;
@@ -74,7 +74,6 @@ class CreateReservationHandler extends BaseHandler
 	            $flightEntity = $this->createFlightFromData($flight, $isReturn);
 				$reservationGds->addFlight($flightEntity); 
 	    	}
-
 	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
 	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
 				$reservationGds->addFlightFareFamily($farefamilyEntity); 
@@ -133,7 +132,7 @@ class CreateReservationHandler extends BaseHandler
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'] ?? 0)
         	->setExpireDate($options['time_transf_limit'])
-	        ->setIpAddress($params['ipAddress'] ?? null)
+	        ->setIpAddress($ip ?? null)
 	        ->setOrigin('navicu web');
 
         if (is_object($token_interface->getToken()->getUser())) {
@@ -331,7 +330,6 @@ class CreateReservationHandler extends BaseHandler
 
 		$fareFamily = new FlightFareFamily();
 		$manager = $this->container->get('doctrine')->getManager(); 
-
 		$fareFamily
 				->setName($fareFamilyData['name'])
 				->setDescription($fareFamilyData['description'])
