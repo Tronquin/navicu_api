@@ -25,14 +25,7 @@ class PayHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-
-        $manager = $this->container->get('doctrine')->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($params['paymentType']);
-        $currencyInstance = $manager->getRepository(CurrencyType::class)->findOneby(['alfa3' => $params['currency'] ]);
-
-        if ($params['paymentType'] === PaymentGateway::STRIPE_TDC) {
-            $paymentGateway->setZeroDEcimalBase()->getZeroDecimalBase($currencyInstance);
-        }
 
         if (method_exists($paymentGateway, 'setCurrency')) {
             $paymentGateway->setCurrency($params['currency']);
@@ -64,7 +57,7 @@ class PayHandler extends BaseHandler
     {
         return [
             'paymentType' => 'required|numeric|between:1,8',
-            'currency' => 'required|regex:^[A-Z]{3}$',
+            'currency' => 'required|regex:/^[A-Z]{3}$/',
             'payments' => 'required'
         ];
     }

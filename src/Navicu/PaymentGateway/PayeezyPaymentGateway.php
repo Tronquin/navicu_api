@@ -1187,16 +1187,15 @@ class PayeezyPaymentGateway implements  PaymentGateway
 
     private function getPaymentError($response) {
 
-        $error = $response['Error']['messages'][0];
         $code = '99';
         $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
 
-        if ($error['code'] === 'invalid_card_number') {
+        if (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_card_number') {
 
             $code = '21';
             $messages = ['El número de tarjeta parece no estar correcto','¡Intenta colocarlo de nuevo!'];
 
-        } else if ($error['code'] === 'invalid_exp_date') {
+        } elseif (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_exp_date') {
 
             $code = '23';
             $messages = ['La fecha de vencimiento de tu tarjeta no es correcta','¡Verifica tus datos e intenta colocarla nuevamente!'];
@@ -1285,14 +1284,15 @@ class PayeezyPaymentGateway implements  PaymentGateway
      *
      * @param string $currency
      * @param string $currency
-     * @param RepositoryFactoryInterface $rf
      * @return Object
      */
-    public function setCurrency($currency,RepositoryFactoryInterface $rf = null)
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
-        $this->rf = $rf;
-        $currency = $this->rf->get('CurrencyType')->findOneBy(['alfa3'=>$currency]);
+
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
+        $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $currency]);
         $this->zeroDecimalBase = $currency->getZeroDecimalBase();
     }
 

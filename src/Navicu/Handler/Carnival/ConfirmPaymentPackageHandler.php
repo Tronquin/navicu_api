@@ -5,6 +5,7 @@ namespace App\Navicu\Handler\Carnival;
 use App\Entity\PackageTempPayment;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\EmailService;
 
 /**
  * Confirma el pago de un paquete
@@ -32,6 +33,7 @@ class ConfirmPaymentPackageHandler extends BaseHandler
             throw new NavicuException('Payment Package not found');
         }
 
+        $content = json_decode($payment->getContent(), true);
         $payment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
 
         // Descuenta la disponibilidad del paquete
@@ -40,7 +42,15 @@ class ConfirmPaymentPackageHandler extends BaseHandler
 
         $manager->flush();
 
-        // TODO send email
+        // Enviar correo al departamento comercial
+        EmailService::send(['comercial@navicu.com'],
+            'Navicu - Pago de paquete carnaval',
+            'Email/Flight/carnivalPaymentReservation.html.twig',
+            [
+                'package' => json_decode($package->getContent(), true),
+                'passengers' => $content['passengers']
+            ]
+        );
 
         return compact('payment');
     }

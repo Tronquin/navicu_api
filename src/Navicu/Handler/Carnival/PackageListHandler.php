@@ -2,6 +2,7 @@
 
 namespace App\Navicu\Handler\Carnival;
 
+use App\Entity\CurrencyType;
 use App\Entity\PackageTemp;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\NavicuCurrencyConverter;
@@ -22,14 +23,18 @@ class PackageListHandler extends BaseHandler
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $packages = $manager->getRepository(PackageTemp::class)->findAll();
+        $packages = $manager->getRepository(PackageTemp::class)->getAvailablePackages();
         $params = $this->getParams();
+        /** @var CurrencyType $currency */
+        $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $params['currency']]);
 
-        $packages = array_map(function (PackageTemp $package) use ($params) {
+        $packages = array_map(function (PackageTemp $package) use ($currency) {
 
             $p = json_decode($package->getContent(), true);
+            $p['id'] = $package->getId();
             $p['availability'] = $package->getAvailability();
-            $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $params['currency']);
+            $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $currency->getAlfa3());
+            $p['symbol'] = $currency->getSimbol();
 
             return $p;
 
