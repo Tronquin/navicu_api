@@ -39,7 +39,7 @@ class CreateReservationHandler extends BaseHandler
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
         $token_interface = $params['ti'];
-
+		$ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
         $reservation = new FlightReservation();
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;
 		$totalIncrementGuarantee = $totalIncrementGuaranteeLocal = 0;
@@ -73,12 +73,9 @@ class CreateReservationHandler extends BaseHandler
 	            $isReturn = ($itinerary['schedule'] == FlightReservation::ROUND_TRIP) && ((int)$flight['segment'] > 1);
 	            $flightEntity = $this->createFlightFromData($flight, $isReturn);
 				$reservationGds->addFlight($flightEntity); 
-	    	}
-
-	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
-	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
-				$reservationGds->addFlightFareFamily($farefamilyEntity); 
-	    	}
+			}
+			$farefamilyEntity = $this->createFareFamilyFromData($itinerary['fare_family']);
+			$reservationGds->addFlightFareFamily($farefamilyEntity);
 
 	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
@@ -133,7 +130,7 @@ class CreateReservationHandler extends BaseHandler
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'] ?? 0)
         	->setExpireDate($options['time_transf_limit'])
-	        ->setIpAddress($params['ipAddress'] ?? null)
+	        ->setIpAddress($ip ?? null)
 	        ->setOrigin('navicu web');
 
         if (is_object($token_interface->getToken()->getUser())) {
@@ -328,10 +325,8 @@ class CreateReservationHandler extends BaseHandler
      */
 	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
 	{
-
 		$fareFamily = new FlightFareFamily();
 		$manager = $this->container->get('doctrine')->getManager(); 
-
 		$fareFamily
 				->setName($fareFamilyData['name'])
 				->setDescription($fareFamilyData['description'])
