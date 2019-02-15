@@ -73,11 +73,9 @@ class CreateReservationHandler extends BaseHandler
 	            $isReturn = ($itinerary['schedule'] == FlightReservation::ROUND_TRIP) && ((int)$flight['segment'] > 1);
 	            $flightEntity = $this->createFlightFromData($flight, $isReturn);
 				$reservationGds->addFlight($flightEntity); 
-	    	}
-	    	foreach ($itinerary['fare_family'] as $key => $fareFamily) {
-	            $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
-				$reservationGds->addFlightFareFamily($farefamilyEntity); 
-	    	}
+			}
+			$farefamilyEntity = $this->createFareFamilyFromData($itinerary['fare_family']);
+			$reservationGds->addFlightFareFamily($farefamilyEntity);
 
 	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
@@ -327,7 +325,6 @@ class CreateReservationHandler extends BaseHandler
      */
 	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
 	{
-
 		$fareFamily = new FlightFareFamily();
 		$manager = $this->container->get('doctrine')->getManager(); 
 		$fareFamily
