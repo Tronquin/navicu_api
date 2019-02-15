@@ -35,8 +35,6 @@ class ConfirmPaymentPackageHandler extends BaseHandler
         $payment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
         $manager->flush();
 
-        // TODO send email
-
         return compact('payment');
     }
 

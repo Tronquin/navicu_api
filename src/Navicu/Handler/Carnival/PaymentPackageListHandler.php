@@ -27,8 +27,16 @@ class PaymentPackageListHandler extends BaseHandler
 
         $payments = array_map(function (PackageTempPayment $payment) {
 
-            $data = json_decode($payment->getContent(), true);
+            $dataPayment = json_decode($payment->getContent(), true);
+            $dataGeneral = json_decode($payment->getPackageTemp()->getContent(), true);
+
             $data['status'] = $payment->getStatus();
+            $data['title'] = $dataGeneral['title'] . '-' .$dataGeneral['subtitle'];
+            $data['name'] = $dataPayment['prefix'] . ' ' . $dataPayment['name'];
+            $data['email'] = $dataPayment['email'];
+            $data['symbol'] = $dataGeneral['symbol'] ;
+            $data['price'] = $dataGeneral['price'] ;
+            $data['id'] = $payment->getId();
 
             return $data;
 

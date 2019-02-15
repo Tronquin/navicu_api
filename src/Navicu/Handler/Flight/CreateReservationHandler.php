@@ -239,7 +239,7 @@ class CreateReservationHandler extends BaseHandler
 		$repAirTo = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['to']);
 		$airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $itinerary['flights'][0]['airline']]);
 
-		if (($repAirFrom[0]['country_code'] !== 'VE') || ($repAirTo[0]['country_code'] !== 'VE')){
+		if (($repAirFrom[0]['country_code'] !== 'VE') || ($repAirTo[0]['country_code'] !== 'VE')) {
 			$airlineCommission = $airline->getInternationalCommission();
 		} else {
 			$airlineCommission = $airline->getNationalCommission();
