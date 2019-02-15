@@ -5,10 +5,9 @@ namespace App\Navicu\Handler\Flight;
 use App\Entity\FlightPayment;
 use App\Entity\FlightReservation;
 use App\Entity\PaymentType;
-use App\Entity\CurrencyType;
-use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Handler\Main\PayHandler;
 use App\Navicu\Service\PaymentGatewayService;
 
 class PayFlightReservationHandler extends BaseHandler
@@ -32,9 +31,11 @@ class PayFlightReservationHandler extends BaseHandler
         }
 
         $reservationTotal = 0;
+        $currency = '';
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
             // Calcula el monto a pagar por toda la reservacion
             $reservationTotal += $gdsReservation->getTotal();
+            $currency = $gdsReservation->getCurrencyReservation()->getAlfa3();
         }
 
         $paymentTotal = 0;
@@ -48,11 +49,21 @@ class PayFlightReservationHandler extends BaseHandler
             return compact('reservation');
         }
 
-        if (! $this->processPayments($reservation, $params['payments'], $params['paymentType'])) {
-            throw new NavicuException('Payment fail');
+        // Procesa el pago por la paserela de pago
+        $handler = new PayHandler();
+        $handler->setParam('paymentType', $params['paymentType']);
+        $handler->setParam('currency', $currency);
+        $handler->setParam('payments', $params['payments']);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+            $this->addErrorToHandler($handler->getErrors());
+
+            throw new NavicuException('Payment fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
-        $manager->flush();
+        // Guarda el pago
+        $this->savePayment($handler->getData()['data']['responsePayments'], $reservation);
 
         return compact('reservation');
     }
@@ -76,40 +87,19 @@ class PayFlightReservationHandler extends BaseHandler
     }
 
     /**
-     * Procesa el pago por el monto indicado
+     * Guarda el pago
      *
-     * @param FlightReservation $reservation
      * @param array $payments
-     * @param int $paymentType
-     * @return bool
-     * @throws NavicuException
+     * @param FlightReservation $reservation
      */
-    private function processPayments(FlightReservation $reservation, array $payments, int $paymentType) : bool
+    private function savePayment($payments, FlightReservation $reservation)
     {
+        $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
-        $paymentGateway = PaymentGatewayService::getPaymentGateway($paymentType);
-
-        $flight_reservation_gds = $reservation->getGdsReservations();
-        $currency = $flight_reservation_gds[0]->getCurrencyReservation()->getAlfa3();
-
-        if ($paymentType === PaymentGateway::STRIPE_TDC) {
-            $paymentGateway->setZeroDEcimalBase($manager->getRepository(CurrencyType::class)->findOneby(['alfa3'=>$currency])->getZeroDecimalBase());
-        }
-
-        if (method_exists($paymentGateway, 'setCurrency')) {
-            $paymentGateway->setCurrency($currency);
-        }
-
+        $paymentGateway = PaymentGatewayService::getPaymentGateway($params['paymentType']);
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
 
-        $payments = $this->completePaymentInfo($reservation, $payments, $paymentGateway);
-        $responsePayments = $paymentGateway->processPayments($payments);
-
-        foreach ($responsePayments as $payment) {
-
-            if (!$payment['success']) {
-                throw new NavicuException('Payment fail', BaseHandler::CODE_EXCEPTION, $payment['paymentError']);
-            }
+        foreach ($payments as $payment) {
 
             $flightPayment = new FlightPayment();
             $v_code = $payment['id'] ?? $payment['code'];
@@ -137,7 +127,7 @@ class PayFlightReservationHandler extends BaseHandler
                 ->setHolder($payment['holder'])
                 ->setHolderId($holderId)
                 ->setState($status)
-                ->setType($paymentType)
+                ->setType($params['paymentType'])
                 ->setPaymentType($paymentTypeInstance)
                 ->setPaymentCommision($paymentTypeInstance->getCommision())
                 ->setResponse($payment['response'])
@@ -154,49 +144,5 @@ class PayFlightReservationHandler extends BaseHandler
             $manager->persist($flightPayment);
             $manager->flush();
         }
-
-        return true;
-    }
-
-    /**
-     * Estandariza el request sin importa el medio de pago
-     *
-     * @param FlightReservation $reservation
-     * @param array $payments
-     * @param PaymentGateway $paymentGateway
-     * @return array
-     */
-    private function completePaymentInfo(FlightReservation $reservation, array $payments, PaymentGateway $paymentGateway)
-    {
-        $response = [];
-        $totalToPay = 0;
-        //$response['complete'] = 1;
-
-        foreach ($payments as $payment) {
-
-            $payment['amount'] = str_replace(',', '.', (string)$payment['amount']);
-            $amount = number_format($payment['amount'], 2);
-            $totalToPay += $payment['amount'];
-
-            $response[] = array_merge(
-                $payment,
-                [
-                    'description' => sprintf('Pago de la compra N° %s', $reservation->getPublicId()),
-                    'ip' => $this->container->get('request_stack')->getCurrentRequest()->getClientIp(),
-                    'amount' => $amount,
-                    'date' => \date('d-m-Y'),
-                    'expirationDate' => isset($payment['expirationMonth'])? $payment['expirationMonth'] . '/' . $payment['expirationYear'] : null,
-                    'number' => isset($payment['number']) ? $payment['number'] : null ,
-                ]
-            );
-        }
-
-        $currency = $paymentGateway->getCurrency();
-        if ($currency === CurrencyType::getLocalActiveCurrency()->getAlfa3()) {
-            //$response['complete'] = (strval(round(floatval($totalToPay))) < strval(round(floatval($reservation->getTotalToPay()))) ? 0 : 1);
-        }
-        //$response['complete'] = 1;
-
-        return $response;
     }
 }

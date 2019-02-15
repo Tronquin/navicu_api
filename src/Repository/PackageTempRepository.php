@@ -19,32 +19,13 @@ class PackageTempRepository extends ServiceEntityRepository
         parent::__construct($registry, PackageTemp::class);
     }
 
-//    /**
-//     * @return PackageTemp[] Returns an array of PackageTemp objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function getAvailablePackages()
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->orderBy('p.id')
+            ->where('p.availability > :availability')
+            ->setParameter('availability', 0)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?PackageTemp
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

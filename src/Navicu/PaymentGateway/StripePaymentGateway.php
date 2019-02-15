@@ -347,7 +347,12 @@ class StripePaymentGateway implements  PaymentGateway
      */
     public function setCurrency($currency)
     {
-        $this->currency = $currency;        
+        $this->currency = $currency;
+
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
+        $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $currency]);
+        $this->zeroDecimalBase = $currency->getZeroDecimalBase();
     }
 
     public function getCurrency()

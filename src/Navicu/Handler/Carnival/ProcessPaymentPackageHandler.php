@@ -4,8 +4,11 @@ namespace App\Navicu\Handler\Carnival;
 
 use App\Entity\PackageTemp;
 use App\Entity\PackageTempPayment;
+use App\Navicu\Contract\PaymentGateway;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Handler\Main\PayHandler;
+use App\Navicu\Service\EmailService;
 
 /**
  * Procesa el pago del paquete
@@ -37,20 +40,59 @@ class ProcessPaymentPackageHandler extends BaseHandler
             throw new NavicuException('Package not available', self::CODE_NOT_AVAILABILITY);
         }
 
-        // TODO cobrar
+        // Procesa el pago
+        $handler = new PayHandler();
+        $handler->setParam('paymentType', $params['paymentType']);
+        $handler->setParam('currency', $params['currency']);
+        $handler->setParam('payments', $params['payments']);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+            $this->addErrorToHandler($handler->getErrors()['errors']);
+
+            throw new NavicuException('Payment fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
+        }
 
         // Registra el pago
         $packagePayment = new PackageTempPayment();
-        $packagePayment->setContent(json_encode($params['content']));
+        $packagePayment->setContent(json_encode([
+            'payments' => $params['payments'],
+            'passengers' => $params['passengers'],
+            'response' => $handler->getData()['data']['responsePayments']
+        ]));
         $packagePayment->setPackageTemp($package);
-        $packagePayment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
 
-        // Descuenta la disponibilidad del paquete
-        $package->addPackageTempPayment($packagePayment);
-        $package->setAvailability($package->getAvailability() - 1);
+        if (
+            PaymentGateway::INTERNATIONAL_TRANSFER === $params['paymentType'] ||
+            PaymentGateway::NATIONAL_TRANSFER === $params['paymentType']
+        ) {
+            // En caso de transferencia
+            $packagePayment->setStatus(PackageTempPayment::STATUS_IN_PROCESS);
+            $recipients = ['finanzas@navicu.com'];
+
+        } else {
+            // Pago TDC
+            $packagePayment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
+
+            // Descuenta la disponibilidad del paquete
+            $packagePayment->setPackageTemp($package);
+            $package->setAvailability($package->getAvailability() - 1);
+
+            $recipients = ['comercial@navicu.com'];
+        }
 
         $manager->persist($packagePayment);
         $manager->flush();
+
+        // Las pre-reservas se les notifican a finanzas y los pagos aprobados a comercial
+        EmailService::send($recipients,
+            'Navicu - Pago de paquete carnaval',
+            'Email/Flight/carnivalPaymentReservation.html.twig',
+            [
+                'package' => json_decode($package->getContent(), true),
+                'passengers' => $params['passengers']
+            ]
+        );
 
         return compact('package');
     }
@@ -68,9 +110,10 @@ class ProcessPaymentPackageHandler extends BaseHandler
     {
         return [
             'packageId' => 'required|numeric',
-            'content' => 'required',
             'payments' => 'required',
-            'paymentType' => 'required|numeric|between:1,8'
+            'paymentType' => 'required|numeric|between:1,8',
+            'currency' => 'required|regex:/^[A-Z]{3}$/',
+            'passengers' => 'required'
         ];
     }
 }
