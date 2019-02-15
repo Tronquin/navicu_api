@@ -33,6 +33,11 @@ class ConfirmPaymentPackageHandler extends BaseHandler
         }
 
         $payment->setStatus(PackageTempPayment::STATUS_ACCEPTED);
+
+        // Descuenta la disponibilidad del paquete
+        $package = $payment->getPackageTemp();
+        $package->setAvailability($package->getAvailability() - 1);
+
         $manager->flush();
 
         // TODO send email
