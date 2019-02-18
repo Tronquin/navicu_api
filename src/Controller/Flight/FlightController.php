@@ -219,7 +219,7 @@ class FlightController extends AbstractController
     /**
      * Obtiene listado de cuentas bancarias
      *
-     * @Route("/list_bank/{publicId}", name="list_bank_reservation", methods="GET")
+     * @Route("/list_bank/{currency}", name="list_bank_reservation", methods="GET")
      *
      * @param Request $request
      * @return JsonResponse

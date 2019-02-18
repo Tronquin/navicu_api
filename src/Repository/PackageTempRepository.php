@@ -19,6 +19,11 @@ class PackageTempRepository extends ServiceEntityRepository
         parent::__construct($registry, PackageTemp::class);
     }
 
+    /**
+     * Obtiene los paquetes disponibles
+     *
+     * @return array
+     */
     public function getAvailablePackages()
     {
         return $this->createQueryBuilder('p')

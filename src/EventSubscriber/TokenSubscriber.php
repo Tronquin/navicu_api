@@ -20,10 +20,9 @@ class TokenSubscriber implements EventSubscriberInterface
 
     public function onKernelController(FilterControllerEvent $event)
     {
-        /*
-      $request = $event->getRequest();
-    
-      if (! $request->headers->has('token')) {
+        $request = $event->getRequest();
+
+        if (! $request->headers->has('token')) {
 
             return $event->setController(function () {
                 return new JsonResponse(['code' => 400, 'errors' => ['token is required']], 400);
@@ -51,8 +50,6 @@ class TokenSubscriber implements EventSubscriberInterface
                 return new JsonResponse(['code' => 400, 'errors' => ['token expired']], 400);
             });
         }
-        */
-               
     }
 
     public static function getSubscribedEvents()

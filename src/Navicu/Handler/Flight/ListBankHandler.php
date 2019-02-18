@@ -2,8 +2,8 @@
 
 namespace App\Navicu\Handler\Flight;
 
+use App\Entity\CurrencyType;
 use App\Entity\NvcBank;
-use App\Entity\FlightReservation;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Exception\NavicuException;
 /**
@@ -23,17 +23,9 @@ class ListBankHandler extends BaseHandler
     {
         $manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
-        /** @var FlightReservation $reservation */
-        $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['publicId']);          
-        $listReservationGds = $reservation->getGdsReservations();
-        $currency = $listReservationGds[0]->getCurrencyReservation();
-        $date = new \DateTime('now'); 
 
-        if ($reservation->getExpireDate() < $date) {
-            throw new NavicuException('Expired Reservation: ', BaseHandler::EXPIRED_RESERVATION);
-        }
-
-        $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);          
+        $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $params['currency']]);
+        $nvcBankList = $manager->getRepository(NvcBank::class)->findByCurrency($currency);
 
         foreach ($nvcBankList as $nvcBank) {
             if ($nvcBank->getId() !== 2) {
@@ -52,20 +44,13 @@ class ListBankHandler extends BaseHandler
                     'name' => $nvcBank->getName(),
                 ];
             }
-        }      
+        }
 
-        $response = [];
         $response['receptors'] = $receptors ?? [];
         $response['emisors'] = $emisors ?? [];
-        $response['date_servidor'] = $date->format('Y-m-d H:i:s');
-        $response['expire_date'] = $reservation->getExpireDate()->format('Y-m-d H:i:s');
-
-        $now = new \DateTime();
-        $diff = $now->diff($reservation->getExpireDate());
-        $response['timeToExpiration'] = sprintf('%s hora(s) %s minuto(s)', $diff->h, $diff->i);
 
         return $response;
-    }    
+    }
 
     /**
      * Todas las reglas de validacion para los parametros que recibe
@@ -79,7 +64,7 @@ class ListBankHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'publicId' => 'required'
+            'currency' => 'required|regex:/^[A-Z]{3}/'
         ];
     }
 }
