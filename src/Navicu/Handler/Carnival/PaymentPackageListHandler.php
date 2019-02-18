@@ -32,8 +32,8 @@ class PaymentPackageListHandler extends BaseHandler
 
             $data['status'] = $payment->getStatus();
             $data['title'] = $dataGeneral['title'] . '-' .$dataGeneral['subtitle'];
-            $data['name'] = $dataPayment['prefix'] . ' ' . $dataPayment['name'];
-            $data['email'] = $dataPayment['email'];
+            $data['name'] = $dataPayment['passengers'][0]['title'] . ' ' . $dataPayment['passengers'][0]['fullName'];
+            $data['email'] = $dataPayment['passengers'][0]['email'];
             $data['symbol'] = $dataGeneral['symbol'] ;
             $data['price'] = $dataGeneral['price'] ;
             $data['id'] = $payment->getId();
