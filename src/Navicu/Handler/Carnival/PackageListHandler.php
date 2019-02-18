@@ -35,10 +35,13 @@ class PackageListHandler extends BaseHandler
             $p['availability'] = $package->getAvailability();
             $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $currency->getAlfa3());
             $p['symbol'] = $currency->getSimbol();
+            $p['width'] = 50;
 
             return $p;
 
         }, $packages);
+
+        $packages = $this->adjustPackageWidth($packages);
 
         return $packages;
     }
@@ -57,5 +60,26 @@ class PackageListHandler extends BaseHandler
         return [
             'currency' => 'required|regex:/^[A-Z]{3}/'
         ];
+    }
+
+    /**
+     * Ajusta el ancho de los paquetes acorde a los paquete
+     * disponibles. Si el numero de paquetes al 50% es impar
+     * se cambia uno de 100 => 50 para evitar espacios vacios
+     * en la vista
+     *
+     * @param array $packages
+     * @return array
+     */
+    public function adjustPackageWidth(array $packages) : array
+    {
+        $countPackages = count($packages);
+
+        if ($countPackages > 0 && $countPackages %2 !== 0) {
+            // Conteo de paquetes impar
+            $packages[$countPackages - 1]['width'] = 100;
+        }
+
+        return $packages;
     }
 }
