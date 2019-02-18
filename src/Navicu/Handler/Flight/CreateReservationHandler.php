@@ -125,7 +125,7 @@ class CreateReservationHandler extends BaseHandler
         	->setAdultNumber($itinerary['adt'])
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'] ?? 0)
-        	->setExpireDate($options['timeLimit'])
+        	->setExpireDate(new \DateTime($options['timeLimit']))
 	        ->setIpAddress($ip ?? null)
 	        ->setOrigin('navicu web');
 
