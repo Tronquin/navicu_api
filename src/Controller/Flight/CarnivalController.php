@@ -6,6 +6,7 @@ use App\Navicu\Handler\Carnival\ConfirmPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\PackageListHandler;
 use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
 use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
+use App\Navicu\Handler\Flight\IsTransferActiveHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,6 +74,22 @@ class CarnivalController extends AbstractController
     public function paymentConfirm()
     {
         $handler = new ConfirmPaymentPackageHandler();
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Verifica si esta activa la opcion transferencia
+     *
+     * @Route("/is_transfer_active/{provider}", name="flight_carnival_is_transfer_active", methods={"GET"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function isTransferActive(Request $request)
+    {
+        $handler = new IsTransferActiveHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

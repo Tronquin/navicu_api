@@ -3,7 +3,6 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\CurrencyType;
-use App\Entity\ExchangeRateHistory;
 use App\Entity\FlightReservation;
 use App\Entity\FlightGeneralConditions;
 use App\Entity\FlightFareFamily;
@@ -11,15 +10,12 @@ use App\Entity\Flight;
 use App\Entity\Airline;
 use App\Entity\Airport;
 use App\Entity\Gds;
-use App\Entity\Consolidator;
 use App\Entity\FlightReservationGds;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
-use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\NavicuValidator;
 use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Service\NavicuFlightConverter;
-use App\Navicu\Handler\Main\HolidayCalendarHandler;
 
 /**
  * Handler que resume las funcionalidades necesarias para crear 
@@ -129,7 +125,7 @@ class CreateReservationHandler extends BaseHandler
         	->setAdultNumber($itinerary['adt'])
         	->setInfNumber($itinerary['inf'])
         	->setInsNumber($itinerary['ins'] ?? 0)
-        	->setExpireDate($options['time_transf_limit'])
+        	->setExpireDate($options['timeLimit'])
 	        ->setIpAddress($ip ?? null)
 	        ->setOrigin('navicu web');
 
@@ -157,8 +153,8 @@ class CreateReservationHandler extends BaseHandler
     	$response = [
             'public_id' => $reservation->getPublicId(),
     		'amounts' => $amounts,
-    		'options_transf_visible' => $options['option_transf_visible'],
-    		'time_transf_limit' =>$options['time_transf_limit'],
+    		'isTransferVisible' => $options['isTransferVisible'],
+    		'timeLimit' =>$options['timeLimit'],
     		'date_servidor' => $now->format('Y-m-d H:i:s')
     	];    	
 
@@ -167,55 +163,24 @@ class CreateReservationHandler extends BaseHandler
 
 	/**
 	 * Funcion que devuelve las condiciones de visibilidad de la opcion de transferencia en boleteria
+     *
 	 * @param $provider
 	 * @throws NavicuException
 	 * @return array
 	 */
     private function getTransferOptions ($provider) : array
     {
-    	$date_now = new \DateTime('now');  
-        $handler = new HolidayCalendarHandler();
-        $handler->setParam('date', $date_now);
-        $handler->processHandler();
+    	$handler = new IsTransferActiveHandler();
+    	$handler->setParam('provider', $provider);
+    	$handler->processHandler();
 
-        if (! $handler->isSuccess()) {
-            $this->addErrorToHandler( $handler->getErrors()['errors'] );
-            throw new NavicuException('HolidayCalendarHandler fail: ', $handler->getCode());
-        } else {
-        	$responseCalendar = $handler->getData();
-    	}
+    	if (! $handler->isSuccess()) {
+    	    $this->addErrorToHandler($handler->getErrors()['errors']);
 
-        $option_transf_visible = true;
-
-        if ($provider === 'KIU') {
-            /*
-			if ((date("w") == 5) || ($responseCalendar['data']['holiday_yesterday'])) {
-               $time_limit = ($date_now->format('H:i:s') < $date_now->format('21:00:00')) ? $date_now->format('Y-m-d 21:00:00') : $date_now->modify('+1 day');    
-            } else if ($responseCalendar['data']['holiday_now']) {
-               $option_transf_visible = false;	
-               $time_limit =  $date_now->modify('+1 day');            
-            } else {
-               $time_limit = $date_now->modify('+1 day');
-            }
-            */
-            /* ************************************ */
-            $time_limit = $date_now->modify('+1 day');
-            $option_transf_visible = true;
-            /****************************************/
-            
-        } else { // si el provider es amadeus
-            if (($date_now->format('H:i:s') > $date_now->format('21:00:00')) || ($date_now->format('H:i:s') < $date_now->format('02:00:00'))) {
-            	$time_limit = $date_now;
-            	$option_transf_visible = false;
-            } else {
-            	$time_limit = $date_now;
-            } 
+    	    throw new NavicuException('IsTransferActiveHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
-        return [
-        	'option_transf_visible' => $option_transf_visible,
-        	'time_transf_limit' => $time_limit
-        ];
+        return $handler->getData()['data'];
     }
 
     /**     
