@@ -137,11 +137,26 @@
 
                                         <div class="text-p" style="font-size: 16px; padding: 0 22px;margin-right: -11px; font-family: Lato; font-weight:300;text-align: inherit;color: #62269E ;">
                                             <div>
+                                                <div class="price LatoBlack">
+                                                    <strong>Fechas:</strong>
+                                                    {{ general.start }} -
+                                                    {{ general.end }}
+                                                </div>
+                                                <div class="price LatoBlack">
+                                                    <strong>Cantidad de paquetes:</strong>
+                                                    {{ general.quantity }}
+                                                </div>
 
                                                 <div class="price LatoBlack">
-                                                    <strong>Precio:</strong>
+                                                    <strong>Precio del paquete:</strong>
                                                     {{ package.symbol }}
                                                     {{ package.price }}
+                                                </div>
+
+                                                <div class="price LatoBlack">
+                                                    <strong>Total pagado:</strong>
+                                                    {{ package.symbol }}
+                                                    {{ package.price * general.quantity }}
                                                 </div>
 
                                                 <div class="LatoBlack title">

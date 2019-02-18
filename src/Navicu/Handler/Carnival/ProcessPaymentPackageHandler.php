@@ -36,8 +36,10 @@ class ProcessPaymentPackageHandler extends BaseHandler
             throw new NavicuException('Package not found');
         }
 
-        if ($package->getAvailability() <= 0) {
-            throw new NavicuException('Package not available', self::CODE_NOT_AVAILABILITY);
+        if ($package->getAvailability() <= 0 || $params['general']['quantity'] > $package->getAvailability()) {
+            throw new NavicuException('Package not available', self::CODE_NOT_AVAILABILITY, [
+                'availability' => $package->getAvailability()
+            ]);
         }
 
         // Procesa el pago
@@ -56,6 +58,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
         // Registra el pago
         $packagePayment = new PackageTempPayment();
         $packagePayment->setContent(json_encode([
+            'general' => $params['general'],
             'payments' => $params['payments'],
             'passengers' => $params['passengers'],
             'response' => $handler->getData()['data']['responsePayments']
@@ -90,7 +93,8 @@ class ProcessPaymentPackageHandler extends BaseHandler
             'Email/Flight/carnivalPaymentReservation.html.twig',
             [
                 'package' => json_decode($package->getContent(), true),
-                'passengers' => $params['passengers']
+                'passengers' => $params['passengers'],
+                'general' => $params['general']
             ]
         );
 
@@ -113,7 +117,8 @@ class ProcessPaymentPackageHandler extends BaseHandler
             'payments' => 'required',
             'paymentType' => 'required|numeric|between:1,8',
             'currency' => 'required|regex:/^[A-Z]{3}$/',
-            'passengers' => 'required'
+            'passengers' => 'required',
+            'general' => 'required'
         ];
     }
 }

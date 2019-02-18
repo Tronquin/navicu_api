@@ -48,7 +48,8 @@ class ConfirmPaymentPackageHandler extends BaseHandler
             'Email/Flight/carnivalPaymentReservation.html.twig',
             [
                 'package' => json_decode($package->getContent(), true),
-                'passengers' => $content['passengers']
+                'passengers' => $content['passengers'],
+                'general' => $content['general']
             ]
         );
 
