@@ -3,6 +3,7 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
+use App\Entity\Notification;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 
@@ -48,6 +49,21 @@ class SetTransferHandler extends BaseHandler
         $manager->flush();
 
         return $handler->getData()['data'];
+    }
+
+
+    private function setNotification($client, $status)
+    {
+        $notification = new Notification();
+
+        $data = [
+            "message" => $status == 2 ? "reservation.accepted" : "reservation.per-confirm",
+            "reciver" => $client->getUser(),
+            "type" => 0
+        ];
+
+        $notification->updateObject($data);
+        $this->rf->get("Notification")->save($notification);
     }
 
     /**

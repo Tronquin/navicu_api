@@ -71,9 +71,9 @@ class CarnivalController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function paymentConfirm()
+    public function paymentConfirm(Request $request)
     {
-        $handler = new ConfirmPaymentPackageHandler();
+        $handler = new ConfirmPaymentPackageHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
