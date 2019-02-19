@@ -43,7 +43,7 @@ class ConfirmPaymentPackageHandler extends BaseHandler
         $manager->flush();
 
         // Enviar correo al departamento comercial
-        EmailService::send(['comercial@navicu.com'],
+        EmailService::send(['mcontreras@navicu.com', 'eblanco@navicu.com'],
             'Navicu - Pago de paquete carnaval',
             'Email/Flight/carnivalPaymentReservation.html.twig',
             [

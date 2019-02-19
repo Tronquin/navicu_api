@@ -71,7 +71,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
         ) {
             // En caso de transferencia
             $packagePayment->setStatus(PackageTempPayment::STATUS_IN_PROCESS);
-            $recipients = ['finanzas@navicu.com'];
+            $recipients = ['ocoronel@navicu.com'];
 
         } else {
             // Pago TDC
@@ -81,7 +81,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
             $packagePayment->setPackageTemp($package);
             $package->setAvailability($package->getAvailability() - 1);
 
-            $recipients = ['comercial@navicu.com'];
+            $recipients = ['mcontreras@navicu.com', 'eblanco@navicu.com'];
         }
 
         $manager->persist($packagePayment);
