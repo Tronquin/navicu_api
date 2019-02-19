@@ -105,6 +105,7 @@ class CreateReservationHandler extends BaseHandler
 	        }	        
 
 	        $reservationGds = $this->updateReservationGds($reservationGds, $itinerary, $params['userCurrency'], $localAmounts);
+	        $manager->persist($reservationGds);
 	        $reservation->addGdsReservation($reservationGds);      	
 
 	        // Incrementos en moneda del usuario
@@ -241,9 +242,6 @@ class CreateReservationHandler extends BaseHandler
    
       	$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
       	$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($userCurrency)) ? $currencyRates['buy'] : $currencyRates['sell']);
-
-      	$manager->persist($reservationGds);
-    	$manager->flush();
 
       	return $reservationGds;
 	}

@@ -191,7 +191,7 @@ class ResumeReservationHandler extends BaseHandler
 
         $flightsArray[0]['extraArrival'] =  null;
         if (substr($flightsArray[0]['departure'], 0, 2)   !== substr($flightsArray[0]['arrival'], 0, 2) ) {
-            $flightsArray[0]['extraArrival'] = ' - '.$flightsArray[0]['arrivalDate'];
+            $flightsArray[0]['extraArrival'] = ' - '.$flightsArray[0]['arrival'];
         }
 
         if (! empty($itineraryVuelta)) {
@@ -203,7 +203,7 @@ class ResumeReservationHandler extends BaseHandler
 
             $flightsArray[1]['extraArrival'] =  null;
             if (substr($flightsArray[1]['departure'], 0, 2)   !== substr($flightsArray[1]['arrival'], 0, 2) ) {
-                $flightsArray[1]['extraArrival'] = ' - '.$flightsArray[1]['arrivalDate'];
+                $flightsArray[1]['extraArrival'] = ' - '.$flightsArray[1]['arrival'];
             }
         }
 
