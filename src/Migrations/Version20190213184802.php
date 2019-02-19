@@ -25,8 +25,23 @@ final class Version20190213184802 extends AbstractMigration
 
         foreach ($packages as $package) {
             $json = json_encode($package);
-            $this->addSql("INSERT INTO package_temp VALUES (nextval('package_temp_id_seq'), :content, 1)", [
-                'content' => $json
+
+            if ($package['price'] === 420.35) {
+                $availability = 3;
+            } elseif ($package['price'] === 353.66) {
+                $availability = 1;
+            } elseif ($package['price'] === 200) {
+                $availability = 2;
+            } elseif ($package['price'] === 80) {
+                $availability = 5;
+            } elseif ($package['price'] === 18.75) {
+                $availability = 1;
+            }
+
+
+            $this->addSql("INSERT INTO package_temp VALUES (nextval('package_temp_id_seq'), :content, :availability)", [
+                'content' => $json,
+                'availability' => $availability
             ]);
         }
 
