@@ -33,4 +33,17 @@ class PackageTempRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Obtiene todos los paquetes
+     *
+     * @return array
+     */
+    public function getPackages()
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.id')
+            ->getQuery()
+            ->getResult();
+    }
 }

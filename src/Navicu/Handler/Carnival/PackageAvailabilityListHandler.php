@@ -21,7 +21,7 @@ class PackageAvailabilityListHandler extends BaseHandler
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $packages = $manager->getRepository(PackageTemp::class)->findAll();
+        $packages = $manager->getRepository(PackageTemp::class)->getPackages();
 
         $packages = array_map(function (PackageTemp $package) {
 
