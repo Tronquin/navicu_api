@@ -115,7 +115,7 @@ class CompleteReservationHandler extends BaseHandler
         EmailService::sendFromEmailRecipients(
             'flightResume',
             'Fallo correo confirmacion de ticket - navicu.com',
-            'Email:Flight/emailTicketFail.html.twig',
+            'Email/Flight/emailTicketFail.html.twig',
             compact('publicId')
         );
     }

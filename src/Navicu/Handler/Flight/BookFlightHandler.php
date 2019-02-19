@@ -3,7 +3,6 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\CurrencyType;
-use App\Entity\Airport;
 use App\Entity\FlightReservationPassenger;
 use App\Entity\FlightReservation;
 use App\Entity\FlightReservationGds;

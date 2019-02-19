@@ -244,7 +244,7 @@ class ConsolidatorService
         EmailService::sendFromEmailRecipients(
             'consolidator_balance_notification',
             'Notificacion de venta no concretada - navicu.com',
-            'Email:Flight/incompleteSellNotificationConsolidator.html.twig',
+            'Email/Flight/incompleteSellNotificationConsolidator.html.twig',
             compact('reservation')
         );
 
@@ -262,7 +262,7 @@ class ConsolidatorService
         EmailService::sendFromEmailRecipients(
           'consolidator_balance_notification',
           'Notificacion de credito casi agotado - navicu.com',
-          'Email:Flight/balanceNotificationConsolidator.html.twig',
+          'Email/Flight/balanceNotificationConsolidator.html.twig',
           compact('consolidator')
         );
 
