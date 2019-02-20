@@ -6,8 +6,8 @@ use App\Entity\FosUser;
 use App\Entity\ClientProfile;
 use App\ClassEfect\ValueObject\Email;
 use App\ClassEfect\ValueObject\Phone;
+use App\Entity\Location;
 use App\Navicu\Handler\BaseHandler;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\EmailService;
 /**
@@ -19,23 +19,27 @@ use App\Navicu\Service\EmailService;
 class DirectRegisterUserClientHandler extends BaseHandler
 {
     /**
+     * Aqui va la logica
+     *
      * @return array
+     * @throws NavicuException
      */
     protected function handler() : array
     {
         $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
-
-
-        $username = isset($params['username']) ? $params['username'] : null;
-        $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['email'], 'username' => $username ]);
+        $username = $params['username'] ?? null;
+        $user = $manager->getRepository(FosUser::class)->findOneByCredentials([
+            'email' => $params['email'],
+            'username' => $username
+        ]);
 
         if (! empty($user)) {
             throw new NavicuException('User Exist', 400, ['email' => $params['email'], 'username' => $username]);
         }
        
-        $encoder = $params['encoder'];
-        $generator = $params['generator'];
+        $encoder = $this->container->get('security.password_encoder');;
+        $generator = $test = $this->container->get('lexik_jwt_authentication.jwt_manager');
        
         $user = new FosUser();
 
@@ -84,6 +88,7 @@ class DirectRegisterUserClientHandler extends BaseHandler
             $client->setTypeIdentity($params["typeIdentity"]);
 
         if (isset($params['state'])) {
+            /** @var Location $location */
             $location = $manager->getRepository(Location::class)->findOneBy(['id' => $params['state']]);
             if ($location)
                 $client->setLocation($location);
@@ -116,6 +121,12 @@ class DirectRegisterUserClientHandler extends BaseHandler
         return ['token' => $token];
     }
 
+    /**
+     * Envia correo al usuario
+     *
+     * @param ClientProfile $client
+     * @param FosUser $user
+     */
     public function sendEmailData(ClientProfile $client, FosUser $user)
     {
         $dataEmail['user'] = $client->getUser();

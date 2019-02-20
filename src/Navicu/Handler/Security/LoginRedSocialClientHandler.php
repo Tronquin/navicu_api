@@ -22,9 +22,9 @@ class LoginRedSocialClientHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $params = $this->getParams(); 
-        $encoder = $params['encoder'];
-        $generator = $params['generator'];  
+        $params = $this->getParams();
+        $encoder = $this->container->get('security.password_encoder');;
+        $generator = $test = $this->container->get('lexik_jwt_authentication.jwt_manager');
         
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../../.env');

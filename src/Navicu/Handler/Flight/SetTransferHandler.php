@@ -3,9 +3,10 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
-use App\Entity\Notification;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Handler\Main\NotificationHandler;
+use App\Navicu\Handler\Security\DirectRegisterUserClientHandler;
 
 /**
  * Indica que una reserva se paga por transferencia
@@ -48,22 +49,23 @@ class SetTransferHandler extends BaseHandler
         $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
         $manager->flush();
 
+        // Registra al usuario
+        $handler = new DirectRegisterUserClientHandler();
+        $handler->setParam('email', $params['email']);
+        $handler->processHandler();
+
+        // Genera notificacion
+        $message = $reservation->getStatus() === FlightReservation::STATE_ACCEPTED ?
+            'reservation.accepted' :
+            'reservation.per-confirm';
+
+        $handler = new NotificationHandler();
+        $handler->setParam('message', $message);
+        $handler->setParam('email', $params['email']);
+        $handler->setParam('type', 0);
+        $handler->processHandler();
+
         return $handler->getData()['data'];
-    }
-
-
-    private function setNotification($client, $status)
-    {
-        $notification = new Notification();
-
-        $data = [
-            "message" => $status == 2 ? "reservation.accepted" : "reservation.per-confirm",
-            "reciver" => $client->getUser(),
-            "type" => 0
-        ];
-
-        $notification->updateObject($data);
-        $this->rf->get("Notification")->save($notification);
     }
 
     /**
@@ -79,7 +81,8 @@ class SetTransferHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'passengers' => 'required'
+            'passengers' => 'required',
+            'email' => 'required|email'
         ];
     }
 }

@@ -8,12 +8,9 @@ use App\Navicu\Handler\Security\DirectRegisterUserClientHandler;
 use App\Navicu\Handler\SocialServices\SocialServiceHandler;
 use App\Navicu\Handler\Security\LoginRedSocialClientHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 /**
  * @Route("/security")
@@ -21,12 +18,18 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 class SecurityController extends AbstractController
 {
     /**
+     * Valida que usuario existe
+     *
      * @Route("/user_exists/{email}", name="user_exists")
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function userExists(Request $request)
     {
         $handler = new UserExistsHandler($request);
         $handler->processHandler();
+
         return $handler->getJsonResponseData();
     }
 
@@ -38,26 +41,32 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * Autenticacion de usuario
+     *
      * @Route("/login", name="login")
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function getLoginAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    public function getLoginAction(Request $request)
     {
         $handler = new LoginUserHandler($request);
-        $handler->setParam('encoder', $encoder);
-        $handler->setParam('generator', $JWTManager);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
     }
 
     /**
+     * Registro de usuario
+     *
      * @Route("/register", name="register")
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function registerClientAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    public function registerClientAction(Request $request)
     {
         $handler = new DirectRegisterUserClientHandler($request);
-        $handler->setParam('encoder', $encoder);
-        $handler->setParam('generator', $JWTManager);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
@@ -75,18 +84,21 @@ class SecurityController extends AbstractController
     {
         $handler = new SocialServiceHandler($request);
         $handler->processHandler();
+
         return $handler->getJsonResponseData();
     }
 
-
     /**
+     * Login red social
+     *
      * @Route("/register_red_social", name="registerRedSocial")
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function loginRedSociaClientlAction(Request $request, UserPasswordEncoderInterface $encoder, JWTTokenManagerInterface $JWTManager)
+    public function loginRedSocialClientAction(Request $request)
     {
         $handler = new LoginRedSocialClientHandler($request);
-        $handler->setParam('encoder', $encoder);
-        $handler->setParam('generator', $JWTManager);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
