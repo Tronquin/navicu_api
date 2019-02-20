@@ -165,10 +165,7 @@ class NavicuCurrencyConverter
 
         $rateToCurrency = $rateSell ? $lastRateToCurrency['sell'] : $lastRateToCurrency['buy'];
 
-        if (self::CURRENCY_EURO === $toCurrency) {            
-            if ($currency !== self::CURRENT_CURRENCY_VE) {
-                $amount = self::convert($dollarAmount, self::CURRENCY_DOLLAR, CurrencyType::getLocalActiveCurrency()->getAlfa3(), $dateString, $rateSell);                
-            }
+        if (self::CURRENCY_EURO === $toCurrency) {
             return ($amount / $rateToCurrency); 
         }
 
@@ -203,7 +200,12 @@ class NavicuCurrencyConverter
         if ($currency !== self::CURRENCY_DOLLAR) {
             // Si el monto es distinto a dolar, convierto a dolar
 
-            $dollarAmount = $amount / $rateCurrency;
+            if ($currency === self::CURRENCY_EURO) {
+                // Si la moneda es euro la tasa esta en bolivares, llevo a bolivares y luego a la moneda solicitada
+                $dollarAmount = ($amount * $rateCurrency) / $rateToCurrency;
+            } else {
+                $dollarAmount = $amount / $rateCurrency;
+            }
         }
 
         if ($toCurrency === self::CURRENCY_DOLLAR) {
@@ -249,9 +251,18 @@ class NavicuCurrencyConverter
         $exchangeRateRepository = $manager->getRepository(ExchangeRateHistory::class);
         $bs = self::getCurrency($currency);
 
-        $buy = $exchangeRateRepository->getLastRateNavicuInBs($date->format('Y-m-d'), $bs->getId());
-        $sell = $exchangeRateRepository->getLastRateNavicuSell($date->format('Y-m-d'), $bs->getId());
         $rate = $exchangeRateRepository->findByLastDateCurrency($bs->getAlfa3());
+
+        if (in_array($currency, [self::CURRENT_CURRENCY_VE, self::CURRENCY_DOLLAR, self::CURRENCY_EURO])) {
+
+            // Para bolivares, dolares y euro toma la tasa navicu
+            $buy = $exchangeRateRepository->getLastRateNavicuInBs($date->format('Y-m-d'), $bs->getId());
+            $sell = $exchangeRateRepository->getLastRateNavicuSell($date->format('Y-m-d'), $bs->getId());
+        } else {
+            // El resto de las moneda el monto de la api
+            $buy = [0 => ['new_rate_navicu' => $rate[0]->getRateApi()]];
+            $sell = [0 => ['new_rate_navicu' => $rate[0]->getRateApi()]];
+        }
 
         self::$lastRate[$currency][$date->format('Y-m-d')] = [
             'buy' => (float) $buy[0]['new_rate_navicu'],
