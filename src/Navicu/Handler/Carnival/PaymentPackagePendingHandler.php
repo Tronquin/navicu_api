@@ -6,11 +6,11 @@ use App\Entity\PackageTempPayment;
 use App\Navicu\Handler\BaseHandler;
 
 /**
- * Lista todos los pagos de paquetes
+ * Lista todos los pagos pendientes de aprobación
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
-class PaymentPackageListHandler extends BaseHandler
+class PaymentPackagePendingHandler extends BaseHandler
 {
 
     /**
@@ -21,7 +21,9 @@ class PaymentPackageListHandler extends BaseHandler
     protected function handler() : array
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $payments = $manager->getRepository(PackageTempPayment::class)->findAll();
+        $payments = $manager->getRepository(PackageTempPayment::class)->findBy([
+            'status' => PackageTempPayment::STATUS_IN_PROCESS
+        ]);
 
         $payments = array_map(function (PackageTempPayment $payment) {
 
