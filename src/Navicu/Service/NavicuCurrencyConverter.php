@@ -202,7 +202,12 @@ class NavicuCurrencyConverter
 
             if ($currency === self::CURRENCY_EURO) {
                 // Si la moneda es euro la tasa esta en bolivares, llevo a bolivares y luego a la moneda solicitada
-                $dollarAmount = ($amount * $rateCurrency) / $rateToCurrency;
+                $amountInBs = $amount * $rateCurrency;
+                $activeCurrencyIso = CurrencyType::getLocalActiveCurrency()->getAlfa3();
+                $dateString = $date->format('Y-m-d');
+
+                $dollarAmount = self::convert($amountInBs, $activeCurrencyIso, self::CURRENCY_DOLLAR, $dateString, $rateSell);
+
             } else {
                 $dollarAmount = $amount / $rateCurrency;
             }
