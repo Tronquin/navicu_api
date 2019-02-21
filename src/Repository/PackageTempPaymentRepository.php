@@ -19,32 +19,20 @@ class PackageTempPaymentRepository extends ServiceEntityRepository
         parent::__construct($registry, PackageTempPayment::class);
     }
 
-//    /**
-//     * @return PackageTempPayment[] Returns an array of PackageTempPayment objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Obtiene todos los paquetes para un estatus
+     *
+     * @param int $status
+     * @return PackageTempPayment[]
+     */
+    public function findByStatus($status = null)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('ptp')->orderBy('ptp.id', 'DESC');
 
-    /*
-    public function findOneBySomeField($value): ?PackageTempPayment
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if ($status) {
+            $qb->where('ptp.status = :status')->setParameter('status', $status);
+        }
+
+        return $qb->getQuery()->getResult();
     }
-    */
 }

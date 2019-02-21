@@ -84,30 +84,16 @@ class CarnivalController extends AbstractController
     }
 
     /**
-     * Lista de pagos pendientes
-     *
-     * @Route("/payment_package_pending", name="flight_carnival_payment_package_pending", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-    public function paymentPackagePending()
-    {
-        $handler = new PaymentPackagePendingHandler();
-        $handler->processHandler();
-
-        return $handler->getJsonResponseData();
-    }
-
-    /**
-     * Lista de todos los pagos de paquetes
+     * Lista de todos los pagos de paquetes, filtra por estatus
      *
      * @Route("/payment_package_list", name="flight_carnival_payment_package_list", methods={"GET"})
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function paymentPackageList()
+    public function paymentPackageList(Request $request)
     {
-        $handler = new PaymentPackageListHandler();
+        $handler = new PaymentPackageListHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

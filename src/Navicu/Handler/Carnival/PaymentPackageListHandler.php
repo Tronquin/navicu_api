@@ -6,7 +6,7 @@ use App\Entity\PackageTempPayment;
 use App\Navicu\Handler\BaseHandler;
 
 /**
- * Lista todos los pagos de paquetes
+ * Lista todos los pagos de paquetes para un estatus
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
@@ -20,8 +20,10 @@ class PaymentPackageListHandler extends BaseHandler
      */
     protected function handler() : array
     {
+        $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
-        $payments = $manager->getRepository(PackageTempPayment::class)->findAll();
+        $status = $params['status'] ?? null;
+        $payments = $manager->getRepository(PackageTempPayment::class)->findByStatus($status);
 
         $payments = array_map(function (PackageTempPayment $payment) {
 
@@ -32,8 +34,8 @@ class PaymentPackageListHandler extends BaseHandler
             $data['title'] = $dataGeneral['title'] . '-' .$dataGeneral['subtitle'];
             $data['name'] = $dataPayment['passengers'][0]['title'] . ' ' . $dataPayment['passengers'][0]['fullName'];
             $data['email'] = $dataPayment['passengers'][0]['email'];
-            $data['symbol'] = $dataGeneral['symbol'] ;
-            $data['price'] = $dataGeneral['price'] ;
+            $data['symbol'] = $dataGeneral['symbol'];
+            $data['price'] = $dataGeneral['price'];
             $data['id'] = $payment->getId();
 
             return $data;
@@ -54,6 +56,8 @@ class PaymentPackageListHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [];
+        return [
+            'status' => 'in:1,2,3,4'
+        ];
     }
 }
