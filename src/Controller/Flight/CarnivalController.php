@@ -6,6 +6,7 @@ use App\Navicu\Handler\Carnival\ConfirmPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\MarkReservedInNavicuHandler;
 use App\Navicu\Handler\Carnival\PackageAvailabilityListHandler;
 use App\Navicu\Handler\Carnival\PackageListHandler;
+use App\Navicu\Handler\Carnival\PaymentPackageDetailHandler;
 use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
 use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\UpdatePackageAvailabilityHandler;
@@ -94,6 +95,22 @@ class CarnivalController extends AbstractController
     public function paymentPackageList(Request $request)
     {
         $handler = new PaymentPackageListHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Obtiene el detalle de un pago de paquete
+     *
+     * @Route("/payment_package/{paymentPackageId}", name="flight_carnival_payment_package_detail", methods={"GET"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function paymentPackageDetail(Request $request)
+    {
+        $handler = new PaymentPackageDetailHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
