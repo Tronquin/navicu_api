@@ -49,6 +49,7 @@ class PaymentPackageListHandler extends BaseHandler
             $data['confirmationId'] = $dataPayment['payments'][0]['confirmationId'] ?? null;
             $data['bank'] = $dataPayment['payments'][0]['bank'] ?? null;
             $data['receivingBank'] = $dataPayment['payments'][0]['receivingBank'] ?? null;
+            $data['publicId'] = $dataPayment['publicId'];
             $data['id'] = $payment->getId();
 
             return $data;
