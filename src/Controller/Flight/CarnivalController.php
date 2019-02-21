@@ -3,6 +3,7 @@
 namespace App\Controller\Flight;
 
 use App\Navicu\Handler\Carnival\ConfirmPaymentPackageHandler;
+use App\Navicu\Handler\Carnival\MarkReservedInNavicuHandler;
 use App\Navicu\Handler\Carnival\PackageAvailabilityListHandler;
 use App\Navicu\Handler\Carnival\PackageListHandler;
 use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
@@ -125,6 +126,23 @@ class CarnivalController extends AbstractController
     public function isTransferActive(Request $request)
     {
         $handler = new IsTransferActiveHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+    /**
+     * Indica que ya se hizo una reserva en navicu con las caracteristicas
+     * de un paquete
+     *
+     * @Route("/mark_reserved_navicu/{paymentId}", name="flight_carnival_mark_reserved_navicu", methods={"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function markReservedInNavicu(Request $request)
+    {
+        $handler = new MarkReservedInNavicuHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

@@ -14,6 +14,7 @@ class PackageTempPayment
     const STATUS_IN_PROCESS = 1;
     const STATUS_ACCEPTED = 2;
     const STATUS_CANCEL = 3;
+    const STATUS_RESERVED_IN_NAVICU = 4;
 
     /**
      * @ORM\Id()
