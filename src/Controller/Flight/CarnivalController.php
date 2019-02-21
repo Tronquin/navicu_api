@@ -6,7 +6,6 @@ use App\Navicu\Handler\Carnival\ConfirmPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\PackageAvailabilityListHandler;
 use App\Navicu\Handler\Carnival\PackageListHandler;
 use App\Navicu\Handler\Carnival\PaymentPackageListHandler;
-use App\Navicu\Handler\Carnival\PaymentPackagePendingHandler;
 use App\Navicu\Handler\Carnival\ProcessPaymentPackageHandler;
 use App\Navicu\Handler\Carnival\UpdatePackageAvailabilityHandler;
 use App\Navicu\Handler\Flight\IsTransferActiveHandler;
