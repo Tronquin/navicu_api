@@ -7,17 +7,18 @@ use App\Navicu\Handler\Main\ListCurrencyHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Entity\FosUser;
+
 /**
  * @Route("/navicu")
  */ 
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * Prueba a la api debe retornar "navicu is ok"
+     *
+     * @Route("/", name="index_api")
+     *
+     * @return JsonResponse
      */
     public function index()
     {
@@ -26,10 +27,14 @@ class IndexController extends AbstractController
 
         return $handler->getJsonResponseData();
     }
-   
-   /**
-     * @Route("/list_currency", name="listcurrency")
-     */ 
+
+    /**
+     * Obtiene listado de monedas
+     *
+     * @Route("/list_currency", name="listcurrency", methods={"GET"})
+     *
+     * @return JsonResponse
+     */
    public function listCurrency()
    {
       $handler = new ListCurrencyHandler();
@@ -37,6 +42,4 @@ class IndexController extends AbstractController
 
         return $handler->getJsonResponseData();
    }
-
-
 }

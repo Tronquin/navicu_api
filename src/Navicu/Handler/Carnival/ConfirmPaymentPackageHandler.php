@@ -45,11 +45,20 @@ class ConfirmPaymentPackageHandler extends BaseHandler
         // Enviar correo al departamento comercial
         EmailService::send(['mcontreras@navicu.com', 'eblanco@navicu.com'],
             'Navicu - Pago de paquete carnaval',
-            'Email/Flight/carnivalPaymentReservation.html.twig',
+            'Email/Carnival/reservation.html.twig',
             [
                 'package' => json_decode($package->getContent(), true),
-                'passengers' => $content['passengers'],
-                'general' => $content['general']
+                'packagePayment' => json_decode($payment->getContent(), true)
+            ]
+        );
+
+        // Correo al cliente
+        EmailService::send([$content['passengers'][0]['email']],
+            'Navicu - Pago de paquete carnaval',
+            'Email/Carnival/reservation.html.twig',
+            [
+                'package' => json_decode($package->getContent(), true),
+                'packagePayment' => json_decode($payment->getContent(), true)
             ]
         );
 

@@ -55,9 +55,14 @@ class ProcessPaymentPackageHandler extends BaseHandler
             throw new NavicuException('Payment fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
+        $countPayments = $manager->getRepository(PackageTempPayment::class)->count([]);
+
         // Registra el pago
+        $params['payments'][0]['currency'] = $params['currency'];
+        $params['payments'][0]['paymentType'] = $params['paymentType'];
         $packagePayment = new PackageTempPayment();
         $packagePayment->setContent(json_encode([
+            'publicId' => 'PC-00' . ($countPayments + 1),
             'general' => $params['general'],
             'payments' => $params['payments'],
             'passengers' => $params['passengers'],
@@ -72,6 +77,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
             // En caso de transferencia
             $packagePayment->setStatus(PackageTempPayment::STATUS_IN_PROCESS);
             $recipients = ['ocoronel@navicu.com'];
+            $template = 'Email/Carnival/preReservation.html.twig';
 
         } else {
             // Pago TDC
@@ -82,6 +88,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
             $package->setAvailability($package->getAvailability() - 1);
 
             $recipients = ['mcontreras@navicu.com', 'eblanco@navicu.com'];
+            $template = 'Email/Carnival/reservation.html.twig';
         }
 
         $manager->persist($packagePayment);
@@ -90,11 +97,20 @@ class ProcessPaymentPackageHandler extends BaseHandler
         // Las pre-reservas se les notifican a finanzas y los pagos aprobados a comercial
         EmailService::send($recipients,
             'Navicu - Pago de paquete carnaval',
-            'Email/Flight/carnivalPaymentReservation.html.twig',
+            $template,
             [
                 'package' => json_decode($package->getContent(), true),
-                'passengers' => $params['passengers'],
-                'general' => $params['general']
+                'packagePayment' => json_decode($packagePayment->getContent(), true)
+            ]
+        );
+
+        // Correo al cliente
+        EmailService::send([$params['passengers'][0]['email']],
+            'Navicu - Pago de paquete carnaval',
+            $template,
+            [
+                'package' => json_decode($package->getContent(), true),
+                'packagePayment' => json_decode($packagePayment->getContent(), true)
             ]
         );
 
