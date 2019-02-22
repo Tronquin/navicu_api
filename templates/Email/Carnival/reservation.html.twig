@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-    <title>Correo Pre-reserva</title>
+    <title>Correo Reserva</title>
     <!--[if !mso]><!-- -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!--<![endif]-->
@@ -319,7 +319,7 @@
                                                    color:{% if customize is defined %}#808080{% else %} #54284E;{% endif %};
                                                    font-size:14px;
                                                    font-weight:300">
-                                            ID pre-reserva
+                                            ID Reserva
                                         </p>
                                         <p class="id-text2"
                                            style="margin-top: 0px;
@@ -378,7 +378,7 @@
                                 <td style="word-wrap:break-word;font-size:0px;padding:10px 9px;" align="left">
                                     <div style="cursor:auto;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">
                                         <p style="margin-left:2px;display:inline;font-family:'Lato';color:{% if customize is defined %}#808080{% else %} #54284E;{% endif %};
-                                                font-size:14px;font-weight:400">Detalle de pre-reserva</p>
+                                                font-size:14px;font-weight:400">Detalle de reserva</p>
                                     </div>
                                 </td>
                             </tr>
@@ -435,7 +435,7 @@ background:#FBF8FC;">
                                             <div style="background-color:#F0F0F0;padding:1px 20px">
                                                 <p style="font-family:'Lato';color:{% if customize is defined %}#808080{% else %} #54284E;{% endif %};
                                                         font-size:14px;font-weight:400">
-                                                    Pasajero
+                                                    Huesped
                                                     <strong> {{ loop.index }}</strong>
                                                 </p>
                                             </div>
@@ -560,8 +560,7 @@ background:#FBF8FC;">
                         margin-top: 0;
                         width:45%;
                         display:inline-block">
-                                                    {{ passenger.codePhone }}
-                                                    {{ passenger.phone }}
+                                                    {{ passenger.birthDate }}
                                                 </p>
                                             </div>
 
@@ -570,7 +569,7 @@ background:#FBF8FC;">
 
                                     <div style="background-color:#F0F0F0;padding:1px 20px">
                                         <p style="font-family:'Lato';color:{% if customize is defined %}#808080{% else %} #54284E;{% endif %};
-                                                font-size:14px;font-weight:400">Datos de la pre-reserva: <strong>N° de paquetes {{ packagePayment.general.quantity }}</strong></p>
+                                                font-size:14px;font-weight:400">Datos de la reserva: <strong>N° de paquetes {{ packagePayment.general.quantity }}</strong></p>
                                     </div>
 
 
