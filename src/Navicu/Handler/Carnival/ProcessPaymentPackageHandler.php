@@ -104,8 +104,12 @@ class ProcessPaymentPackageHandler extends BaseHandler
             ]
         );
 
+        $recipients = array_map(function ($p) {
+            return $p['email'];
+        }, $params['passengers']);
+
         // Correo al cliente
-        EmailService::send([$params['passengers'][0]['email']],
+        EmailService::send($recipients,
             'Navicu - Pago de paquete carnaval',
             $template,
             [

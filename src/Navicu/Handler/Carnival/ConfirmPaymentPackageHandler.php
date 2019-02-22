@@ -52,8 +52,12 @@ class ConfirmPaymentPackageHandler extends BaseHandler
             ]
         );
 
+        $recipients = array_map(function ($p) {
+            return $p['email'];
+        }, $content['passengers']);
+
         // Correo al cliente
-        EmailService::send([$content['passengers'][0]['email']],
+        EmailService::send($recipients,
             'Navicu - Pago de paquete carnaval',
             'Email/Carnival/reservation.html.twig',
             [
