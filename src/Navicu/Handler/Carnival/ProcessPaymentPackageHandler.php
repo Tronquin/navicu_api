@@ -76,8 +76,8 @@ class ProcessPaymentPackageHandler extends BaseHandler
         ) {
             // En caso de transferencia
             $packagePayment->setStatus(PackageTempPayment::STATUS_IN_PROCESS);
-            $recipients = ['ocoronel@navicu.com'];
             $template = 'Email/Carnival/preReservation.html.twig';
+            $subject = 'Navicu - Pre-reserva de paquete';
 
         } else {
             // Pago TDC
@@ -86,17 +86,16 @@ class ProcessPaymentPackageHandler extends BaseHandler
             // Descuenta la disponibilidad del paquete
             $packagePayment->setPackageTemp($package);
             $package->setAvailability($package->getAvailability() - 1);
-
-            $recipients = ['mcontreras@navicu.com', 'eblanco@navicu.com'];
             $template = 'Email/Carnival/reservation.html.twig';
+            $subject = 'Navicu - Confirmación de pago de paquete';
         }
 
         $manager->persist($packagePayment);
         $manager->flush();
 
-        // Las pre-reservas se les notifican a finanzas y los pagos aprobados a comercial
-        EmailService::send($recipients,
-            'Navicu - Pago de paquete carnaval',
+        // Envia correo a navicu
+        EmailService::send(['landing@navicu.com'],
+            $subject,
             $template,
             [
                 'package' => json_decode($package->getContent(), true),
@@ -110,7 +109,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
 
         // Correo al cliente
         EmailService::send($recipients,
-            'Navicu - Pago de paquete carnaval',
+            $subject,
             $template,
             [
                 'package' => json_decode($package->getContent(), true),
