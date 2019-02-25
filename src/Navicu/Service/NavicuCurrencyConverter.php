@@ -272,7 +272,7 @@ class NavicuCurrencyConverter
         self::$lastRate[$currency][$date->format('Y-m-d')] = [
             'buy' => (float) $buy[0]['new_rate_navicu'],
             'sell' => (float) $sell[0]['new_rate_navicu'],
-            'api' => (float) $rate[0]->getRateApi()
+            'api' => (float) $rate[0]['rate_api']
         ];
 
         return self::$lastRate[$currency][$date->format('Y-m-d')];

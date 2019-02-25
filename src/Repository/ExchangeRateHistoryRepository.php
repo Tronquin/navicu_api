@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Airport;
+use App\Entity\CurrencyType;
 use App\Entity\ExchangeRateHistory;
 use App\Entity\OAuthUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -30,10 +31,12 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
      */
     public function getLastRateNavicuInBs(string $dateToLookUp, int $coinId) : array
     {
+        global $kernel;
+        $conn = $kernel->getContainer()->get('doctrine')->getConnection('navicu_v1');
         $today = (new \DateTime())->format('Y-m-d');
 
         $query = "
-            select  
+            select  consult_1.id as id, 
                 case 
                 when ( consult_1.date = '{$today}' and consult_1.rate_api is not null and consult_1.percentage_navicu is not null and consult_1.currency_type = ct.id)
                     then              
@@ -45,7 +48,7 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
                     end           
                 /* Cuando la fecha ingresada es mayor al ultimo registro donde existio el rate_api*/
                 else 
-                    (select
+                    (select 
                         case 
                         when '{$dateToLookUp}' > consult_1.date
                             then ( 
@@ -71,10 +74,10 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
             order by consult_1.date desc
             limit 1";
 
-        return $this->getEntityManager()
-            ->getConnection()
-            ->query($query)
-            ->fetchAll();
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
     /**
@@ -86,7 +89,9 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
      */
     public function getLastRateNavicuSell(string $dateToLookUp, int $coinId)
     {
+        global $kernel;
         $today = (new \DateTime())->format('Y-m-d');
+        $conn = $kernel->getContainer()->get('doctrine')->getConnection('navicu_v1');
 
         $query = "
             select
@@ -129,10 +134,10 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
             order by consult_1.date desc
             limit 1";
 
-        return $this->getEntityManager()
-            ->getConnection()
-            ->query($query)
-            ->fetchAll();
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
     /**
@@ -143,12 +148,16 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
      */
     public function findByLastDateCurrency(string $currency) : array
     {
+        global $kernel;
         $today = (new \DateTime())->format('Y-m-d');
+        $conn = $kernel->getContainer()->get('doctrine')->getConnection();
 
-        return $this->createQueryBuilder('e')
-            ->leftJoin('e.currencyType','ct')
+        return $conn->createQueryBuilder()
+            ->select('e.*')
+            ->from('exchange_rate_history', 'e')
+            ->join('e','currency_type','ct', 'e.currency_type=ct.id')
             ->where('ct.active = true and
-                e.date <= :today and ct.alfa3 = :currency and e.rateApi is not null
+                e.date <= :today and ct.alfa3 = :currency and e.rate_api is not null
             ')
             ->setParameters(array(
                 'today' => $today,
@@ -156,7 +165,6 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
             ))
             ->orderBy('e.date',"desc")
             ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
+            ->execute()->fetchAll();
     }
 }
