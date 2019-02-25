@@ -27,13 +27,14 @@ class PackageListHandler extends BaseHandler
         $params = $this->getParams();
         /** @var CurrencyType $currency */
         $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $params['currency']]);
+        $date = (new \DateTime())->format('Y-m-d');
 
-        $packages = array_map(function (PackageTemp $package) use ($currency) {
+        $packages = array_map(function (PackageTemp $package) use ($currency, $date) {
 
             $p = json_decode($package->getContent(), true);
             $p['id'] = $package->getId();
             $p['availability'] = $package->getAvailability();
-            $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $currency->getAlfa3());
+            $p['price'] = NavicuCurrencyConverter::convert($p['price'], 'USD', $currency->getAlfa3(), $date, true);
             $p['symbol'] = $currency->getSimbol();
             $p['width'] = 50;
 
