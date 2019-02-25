@@ -64,14 +64,14 @@ class Hobbies
     }
 
     /**
-     * @return Collection|ClienteProfile[]
+     * @return Collection|ClientProfile[]
      */
     public function getClient(): Collection
     {
         return $this->client;
     }
 
-    public function addClient(ClienteProfile $client): self
+    public function addClient(ClientProfile $client): self
     {
         if (!$this->client->contains($client)) {
             $this->client[] = $client;
@@ -81,7 +81,7 @@ class Hobbies
         return $this;
     }
 
-    public function removeClient(ClienteProfile $client): self
+    public function removeClient(ClientProfile $client): self
     {
         if ($this->client->contains($client)) {
             $this->client->removeElement($client);

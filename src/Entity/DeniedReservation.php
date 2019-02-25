@@ -135,7 +135,7 @@ class DeniedReservation
     private $description;
 
     /**
-     * @var \ClienteProfile
+     * @var \ClientProfile
      *
      * @ORM\ManyToOne(targetEntity="ClientProfile")
      * @ORM\JoinColumns({
@@ -351,12 +351,12 @@ class DeniedReservation
         return $this;
     }
 
-    public function getClient(): ?ClienteProfile
+    public function getClient(): ?ClientProfile
     {
         return $this->client;
     }
 
-    public function setClient(?ClienteProfile $client): self
+    public function setClient(?ClientProfile $client): self
     {
         $this->client = $client;
 
