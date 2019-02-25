@@ -92,7 +92,7 @@ class Airport
     private $location;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(name="agency_type", type="string", length=30)
      */
     private $agencyType;
 
