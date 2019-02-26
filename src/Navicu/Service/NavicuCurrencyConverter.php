@@ -265,8 +265,8 @@ class NavicuCurrencyConverter
             $sell = $exchangeRateRepository->getLastRateNavicuSell($date->format('Y-m-d'), $bs->getId());
         } else {
             // El resto de las moneda el monto de la api
-            $buy = [0 => ['new_rate_navicu' => $rate[0]->getRateApi()]];
-            $sell = [0 => ['new_rate_navicu' => $rate[0]->getRateApi()]];
+            $buy = [0 => ['new_rate_navicu' => $rate[0]['rate_api']]];
+            $sell = [0 => ['new_rate_navicu' => $rate[0]['rate_api']]];
         }
 
         self::$lastRate[$currency][$date->format('Y-m-d')] = [
