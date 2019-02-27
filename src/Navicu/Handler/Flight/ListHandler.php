@@ -62,27 +62,27 @@ class ListHandler extends BaseHandler
 
         $params['source'] = $sourceAirports;
         $params['dest'] = $destAirports;
+        $resp = $params['searchType'];
 
         if ($params['searchType'] == 'oneWay') {
-            $resp = 'oneWay';
             $response = OtaService::oneWay($params);
         }    
         elseif ($params['searchType'] == 'roundTrip') {
-            $resp = 'roundTrip';
             $response = OtaService::roundTrip($params);
         }
         elseif ($params['searchType'] == 'twiceOneWay') {
-            $resp = 'twiceOneWay';
             $response = OtaService::twiceOneWay($params);
-        } else {
-            $resp = 'calendar';
+        }
+        elseif ($params['searchType'] == 'multiple') {
+            $response = OtaService::multiple($params);
+        }
+        else {
             $response = OtaService::calendar($params);
         } 
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
         } 
-
 
         $pricesLock = 0;
         $responseFinal = [];
