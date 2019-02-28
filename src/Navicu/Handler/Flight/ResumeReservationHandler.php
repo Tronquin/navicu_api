@@ -16,6 +16,9 @@ use App\Navicu\Service\NavicuCurrencyConverter;
 
 class ResumeReservationHandler extends BaseHandler
 {
+
+    /** Alpha3 de las monedas */
+    const CURRENCY_DOLLAR = 'USD';
     /**
      * @return array
      * @throws NavicuException
@@ -35,14 +38,15 @@ class ResumeReservationHandler extends BaseHandler
             throw new NavicuException(\get_class($this) . ': reservation no exist');
         }
 
-        $incrementExpenses = $incrementExpensesLocal = 0;
-        $incrementGuarantee = $incrementGuaranteeLocal = 0;
-        $discount = $discountLocal = 0;
-        $subTotal = $subTotalLocal = 0;
-        $tax = $taxLocal = 0;
+        $incrementExpenses =  $incrementExpensesUSD = $incrementExpensesLocal = 0;
+        $incrementGuarantee = $incrementGuaranteeUSD = $incrementGuaranteeLocal = 0;
+        $discount = $discountUSD = $discountLocal = 0;
+        $subTotal = $subTotalLocal = $subTotalUSD = 0;
+        $markupIncrementAmount = $incrementConsolidator = $markupIncrementAmountUSD = $incrementConsolidatorUSD = 0;
+        $tax = $taxLocal =  $taxUSD = 0;
         $round = $roundLocal = 2;
         $passengers = [];
-
+        $providers = [];
         foreach ($reservation->getGdsReservations() as $reservationGds) {
 
             $currencyReservation = $reservationGds->getCurrencyReservation();
@@ -60,11 +64,41 @@ class ResumeReservationHandler extends BaseHandler
                 $reservationGds->getCurrencyReservation()->getAlfa3(), 
                 $reservationGds->getDollarRateConvertion(),
                 $currencyRateConvertion);
-
             $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
             $incrementGuarantee += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
             $discount += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
             $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $markupIncrementAmount += NavicuCurrencyConverter::convertToRate($reservationGds->getMarkupIncrementAmount(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $incrementConsolidator += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementConsolidator(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            
+            $SubtotalOriginalCurrencyReservation =NavicuCurrencyConverter::convertToRate(
+                $reservationGds->getSubtotalOriginal(), 
+                $reservationGds->getCurrencyGds()->getAlfa3(), 
+                $reservationGds->getCurrencyReservation()->getAlfa3(), 
+                $reservationGds->getDollarRateConvertion(),
+                $currencyRateConvertion);
+
+
+            /** Montos convertidos en USD para efectos de información al correo que le llega a navicu **/
+            $subTotalUSD += NavicuCurrencyConverter::convertToRate(
+                $reservationGds->getSubtotal(), 
+                CurrencyType::getLocalActiveCurrency()->getAlfa3(), 
+                self::CURRENCY_DOLLAR, 
+                $reservationGds->getDollarRateConvertion(),
+                $currencyRateConvertion);
+            $incrementExpensesUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $incrementGuaranteeUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $discountUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $taxUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $markupIncrementAmountUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getMarkupIncrementAmount(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            $incrementConsolidatorUSD += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementConsolidator(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), self::CURRENCY_DOLLAR, $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+            
+            $SubtotalOriginalUSD =NavicuCurrencyConverter::convertToRate(
+                $reservationGds->getSubtotalOriginal(), 
+                $reservationGds->getCurrencyGds()->getAlfa3(), 
+                self::CURRENCY_DOLLAR, 
+                $reservationGds->getDollarRateConvertion(),
+                $currencyRateConvertion);
 
             /** Montos en moneda local**/
             $subTotalLocal += $reservationGds->getSubtotal();
@@ -72,6 +106,16 @@ class ResumeReservationHandler extends BaseHandler
             $incrementGuaranteeLocal += $reservationGds->getIncrementGuarantee();
             $discountLocal += $reservationGds->getDiscount();
             $taxLocal +=$reservationGds->getTax();
+            
+            $providers[] = [
+                'provider' => $reservationGds->getGds()->getName(),
+                'subtotalOriginal' => round($reservationGds->getSubtotalOriginal(), $round),
+                'SubtotalOriginalUSD' => round($SubtotalOriginalUSD, $round),
+                'SubtotalOriginalCurrencyReservation' => round($SubtotalOriginalCurrencyReservation, $round),
+                'Alfa3'=> $reservationGds->getCurrencyGds()->getAlfa3(),
+                'simbol'=> $reservationGds->getCurrencyGds()->getSimbol()
+                
+            ];
 
             $j = $l =0;
             foreach( $reservationGds->getFlights() as $key=>$flight) {
@@ -138,7 +182,7 @@ class ResumeReservationHandler extends BaseHandler
         foreach ($passengers as $key => $passenger) {
             unset($passengers[$key]['id']);
         }
-
+        
         $subTotal = round($subTotal,$round) ;
         $tax = round($tax, $round);
         $incrementExpenses = round($incrementExpenses, $round);
@@ -146,13 +190,25 @@ class ResumeReservationHandler extends BaseHandler
         $discount = round($discount, $round);
         $total = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $round);
         $subTotalPdf = round($subTotal + $incrementExpenses + $incrementGuarantee - $discount , $round);
+        $markupIncrementAmount= round($markupIncrementAmount, $round);
+        $incrementConsolidator = round($incrementConsolidator, $round);
 
-        $subTotalLocal = round($subTotal, $roundLocal) ;
-        $taxLocal = round($tax, $roundLocal);
-        $incrementExpensesLocal = round($incrementExpenses, $roundLocal);
-        $incrementGuaranteeLocal = round($incrementGuarantee, $roundLocal);
-        $discountLocal = round($discount, $roundLocal);
-        $totalLocal = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $roundLocal);
+        //Redondeo a calculos en dolares
+        $subTotalUSD =  round($subTotalUSD,$round);
+        $taxUSD = round($taxUSD,$round);
+        $incrementExpensesUSD = round($incrementExpensesUSD,$round);
+        $incrementGuaranteeUSD = round($incrementGuaranteeUSD,$round);
+        $discountUSD = round($discountUSD,$round);
+        $totalUSD = round($subTotalUSD + $taxUSD + $incrementExpensesUSD + $incrementGuaranteeUSD - $discountUSD,$round);
+        $markupIncrementAmountUSD= round($markupIncrementAmountUSD,$round);
+        $incrementConsolidatorUSD = round($incrementConsolidatorUSD,$round);
+
+        $subTotalLocal = round($subTotalLocal, $roundLocal) ;
+        $taxLocal = round($taxLocal, $roundLocal);
+        $incrementExpensesLocal = round($incrementExpensesLocal, $roundLocal);
+        $incrementGuaranteeLocal = round($incrementGuaranteeLocal, $roundLocal);
+        $discountLocal = round($discountLocal, $roundLocal);
+        $totalLocal = round($subTotalLocal + $taxLocal + $incrementExpensesLocal + $incrementGuaranteeLocal - $discountLocal , $roundLocal);
 
         $structure = [
             'currencyLocalAlfa3' => CurrencyType::getLocalActiveCurrency()->getAlfa3(),
@@ -168,6 +224,8 @@ class ResumeReservationHandler extends BaseHandler
             'incrementExpenses' => $incrementExpenses,
             'incrementGuarantee' => $incrementGuarantee,
             'discount' => $discount,
+            'markupIncrementAmount' => $markupIncrementAmount,
+            'incrementConsolidator' => $incrementConsolidator,
             'subTotalLocal' => $subTotalLocal,
             'taxLocal' => $taxLocal,
             'totalToPayLocal' => $totalLocal,
@@ -179,9 +237,21 @@ class ResumeReservationHandler extends BaseHandler
             'confirmationStatus' => $reservation->getConfirmationStatus(),
             'flights' => [],
             'payments' => [],
-            'passengers' => $passengers
+            'passengers' => $passengers,
+            'ipAddress' => $reservation->getIpAddress(),
+            'origin' => $reservation->getOrigin(),
+            'providers' => $providers,
+            'subTotalUSD' => $subTotalUSD,
+            'taxUSD' => $taxUSD,
+            'totalToPayUSD' => $totalUSD,
+            'incrementExpensesUSD' => $incrementExpensesUSD,
+            'incrementGuaranteeUSD' => $incrementGuaranteeUSD,
+            'discountUSD' => $discountUSD,
+            'markupIncrementAmountUSD' => $markupIncrementAmountUSD,
+            'incrementConsolidatorUSD' => $incrementConsolidatorUSD,
+            'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
+            'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion()
         ];
-
         $flightsArray = [];
         $flightsArray[0] = $itineraryIda[0];
         $flightsArray[0]['destinationCity'] = $itineraryIda[sizeof($itineraryIda)-1]['destinationCity'];

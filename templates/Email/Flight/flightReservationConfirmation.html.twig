@@ -16,6 +16,36 @@
         table, td { border-collapse:collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
         p { display: block; margin: 13px 0; }
+        .section-reserve-details{
+            width:100%!important; 
+            
+        }
+        .section-reserve--content{
+            width:48% !important; 
+            display: inline-block;
+        }
+        .section-reserve--content-flight{
+              width:100%!important; 
+              display: inline-block;
+        }
+        .section-reserve--title{
+            color:#858585; 
+            font-size:14px !important;
+            margin-top: 0; 
+            margin-bottom: 0;
+            padding-left: 18px;
+            font-family: 'Lato';
+            font-weight:600;
+        }
+        .section-reserve--description{
+            padding-left: 18px;
+            color:#858585; 
+            font-size:14px !important;
+            margin-top: 0; 
+            font-family: 'Lato';
+            font-weight:300;
+            padding-bottom: 14px;
+        }
     </style>
     <!--[if !mso]><!-->
     <style type="text/css">
@@ -313,6 +343,7 @@
 
 
                                         {% if amountsInLocalCurrency %}
+                                            
                                             <tr style="border-top: solid 2px #F0F0F0;">
                                                 <td style="color: #b1b1b1;background-color: #ffffff;font-size: 14px;padding-left: 10px;">
                                                     <p style="
@@ -388,7 +419,7 @@
                         font-weight:400;
                         color:#808080;
                         font-size:14px">
-                                                        IVA {{ currencyLocalSimbol ~ " " ~ tax |number_format(0, ',', '.') }}</p>
+                                                        IVA {{ currencyLocalSimbol ~ " " ~ taxLocal |number_format(0, ',', '.') }}</p>
                                                     <p style="
                         padding-bottom:0px;
                         margin:3px;
@@ -396,7 +427,7 @@
                         font-weight:700;
                         color:#391860;
                         font-size:14px">
-                                                        TOTAL {{ currencyLocalSimbol ~ " " ~ totalToPay |number_format(0, ',', '.') }}
+                                                        TOTAL {{ currencyLocalSimbol ~ " " ~ totalToPayLocal |number_format(0, ',', '.') }}
                                                     </p>
 
                                                     {% if isLocalActiveCurrency(currencyLocalAlfa3) %}
@@ -545,6 +576,139 @@
                     <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
     </td></tr></table>
     <![endif]--></div>
+    {% if (sendNavicu) %}
+    <div class="section-reserve-details" style="margin:0px auto;max-width:600px;background: #fbf8fc;">
+       <!-- Información Origen de la reserva !-->
+      <p style="width:95%; border-bottom: 1px solid #54284e; margin-left: 3%;"> </p>
+      <h4 style="width:100%; color:#54284e;font-family:Lato;font-size:17px;font-weight:400;line-height:18px;margin-left: 16px;"> Información de origen de reserva: </h4>
+       
+      <div class="section-reserve--content" style = "width:40%; display: inline-block;" > 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Dirección IP origen </p> <br>
+        <p  class="section-reserve--description"  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; "> {{ipAddress}} </p>
+      </div>
+
+      <div class="section-reserve--content" style = "width:40%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;" > Origen de reserva </p> <br>
+         <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description" > {{ origin }} </p>
+      </div>
+      <div class="section-reserve--content-flight" style = "width:100%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Canal de distribución </p> <br>
+        {% for provider  in providers %}
+        
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> GDS: </strong> {{provider.provider}}</p>
+            <p style="color:#858585; width:20%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">  <strong> Moneda: </strong> {{provider.Alfa3}}</p>
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> Precio: </strong> {{provider.simbol}} {{provider.subtotalOriginal  | number_format(2, ',', '.') }}</p>
+        
+        {% endfor %}
+     </div>
+      
+      <!-- Información pago cliente reserva !-->
+      <p style="width:95%; border-bottom: 1px solid #54284e; margin-left: 3%;"> </p>
+      <h4 style="width:100%; color:#54284e;font-family:Lato;font-size:17px;font-weight:400;line-height:18px;margin-left: 16px;"> Información de pago de reserva: </h4>
+       
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Moneda pago del cliente </p>
+        <p  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> {{currencyReservationAlfa3}} </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Importe pago del cliente </p>
+        <p  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> {{CurrencyReservationSimbol}} {{totalToPay |number_format(2, ',', '.') }} </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Incremento Markup</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description" > {{CurrencyReservationSimbol}} {{markupIncrementAmount |number_format(2, ',', '.') }} </p>
+      </div>
+
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;" > Incremento Consolidador </p>
+         <p  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description" > {{CurrencyReservationSimbol}}  {{incrementConsolidator |number_format(2, ',', '.') }} </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Garantia de Compra </p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> 
+          {{CurrencyReservationSimbol}} {{incrementGuarantee  | number_format(2, ',', '.')}}
+          </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Gastos de emisión</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">{{CurrencyReservationSimbol}}  {{incrementExpenses |number_format(2, ',', '.') }}</p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Descuento Navicu</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">{{CurrencyReservationSimbol}}  {{discount |number_format(2, ',', '.') }}</p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Impuestos</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">{{CurrencyReservationSimbol}}  {{tax  |number_format(2, ',', '.')}}</p>
+      </div>
+      <div class="section-reserve--content-flight" style = "width:100%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Canal de distribución </p> <br>
+        {% for provider  in providers %}
+        
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> GDS: </strong> {{provider.provider}}</p>
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> Precio: </strong> {{CurrencyReservationSimbol}} {{provider.SubtotalOriginalCurrencyReservation  |number_format(2, ',', '.')}}</p>
+        
+        {% endfor %}
+     </div>
+
+      <!-- Información pago reserva  USD!-->
+      <p style="width:95%; border-bottom: 1px solid #54284e; margin-left: 3%;"> </p>
+      <h4 style="width:100%; color:#54284e;font-family:Lato;font-size:17px;font-weight:400;line-height:18px;margin-left: 16px;"> Información de pago de reserva USD: </h4>
+    
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Importe pago del cliente </p>
+        <p  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> $ {{totalToPayUSD }} </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Incremento Markup</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description" > $ {{markupIncrementAmountUSD }} </p>
+      </div>
+
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p  class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;" > Incremento Consolidador </p>
+         <p  style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description" > $  {{incrementConsolidatorUSD  }} </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Garantia de Compra </p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> 
+          $ {{incrementGuaranteeUSD  }}
+          </p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Gastos de emisión</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">$  {{incrementExpensesUSD }}</p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Descuento Navicu</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">  $  {{discountUSD  }}</p>
+      </div>
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Impuestos</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description">  $ {{taxUSD }}</p>
+      </div>
+
+      <div class="section-reserve--content" style = "width:98%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Tasa de conversión</p>
+        <p style="color:#858585;  padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0;          padding-bottom: 14px; " class="section-reserve--description">  $ 1 =  {{ dollar_rate_convertion  }} <br>
+         {% if not ( isLocalActiveCurrency(currencyReservationAlfa3) ) and  not ( currencyReservationAlfa3 == 'USD' )%}
+         {{CurrencyReservationSimbol}} 1 =  {{ Currency_rate_convertion }}
+          {% endif %} 
+        </p>
+      </div>
+      <div class="section-reserve--content-flight" style = "width:100%; display: inline-block;"> 
+        <p class="section-reserve--title" style = "color:#858585;  font-size:16px; margin-top: 0;  margin-bottom: 0; padding-left: 18px; font-family: 'Lato'; font-weight:600;"> Canal de distribución </p> <br>
+        {% for provider  in providers %}
+        
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> GDS: </strong> {{provider.provider}}</p>
+            <p style="color:#858585; width:30%; display: inline-block; padding-left: 18px; font-family: 'Lato'; font-weight:300; font-size:16px; margin-top: 0; padding-bottom: 14px; " class="section-reserve--description"> <strong> Precio: </strong> $ {{provider.SubtotalOriginalUSD  }}</p>
+        
+        {% endfor %}
+     </div>
+    
+    </div> 
+
+     
+ {% endif %} 
 </body>
 </html>
 

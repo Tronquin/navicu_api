@@ -26,6 +26,7 @@ use App\Navicu\Service\NavicuFlightConverter;
 
 class CreateReservationHandler extends BaseHandler
 { 
+	const CURRENCY_EURO = 'EUR';
  	/** 
      * @return array
      * @throws NavicuException
@@ -239,9 +240,14 @@ class CreateReservationHandler extends BaseHandler
 
 		$dollarRates = NavicuCurrencyConverter::getLastRate('USD', new \DateTime('now'));
 		$currencyRates = NavicuCurrencyConverter::getLastRate($userCurrency, new \DateTime('now'));
-   
-      	$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
-      	$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($userCurrency)) ? $currencyRates['buy'] : $currencyRates['sell']);
+
+		$reservationGds->setDollarRateConvertion((CurrencyType::isLocalCurrency($itinerary['currency'])) ? $dollarRates['buy'] : $dollarRates['sell']);
+		
+		if(CurrencyType::isLocalCurrency($itinerary['currency']) && $userCurrency == self::CURRENCY_EURO){
+			$reservationGds->setCurrencyRateConvertion($currencyRates['buy']);
+		}else{
+			$reservationGds->setCurrencyRateConvertion((CurrencyType::isLocalCurrency($userCurrency)) ? $currencyRates['buy'] : $currencyRates['sell']);
+		} 
 
       	return $reservationGds;
 	}

@@ -40,7 +40,7 @@ class SendFlightReservationEmailHandler extends BaseHandler
             }
             break;
         }
-
+       
         $handler = new ResumeReservationHandler();
         $handler->setParam('public_id', $params['publicId']);
         $handler->processHandler();
@@ -53,6 +53,7 @@ class SendFlightReservationEmailHandler extends BaseHandler
 
         // Envia correo a los pasajeros
         $data['amountsInLocalCurrency'] = false;
+        $data['sendNavicu'] = false;
         EmailService::send(
             $recipients,
             'Confirmación de la Reserva - navicu.com',
@@ -62,6 +63,7 @@ class SendFlightReservationEmailHandler extends BaseHandler
 
         // Envia correo a navicu
         $data['amountsInLocalCurrency'] = true;
+        $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
             'Confirmación de la Reserva - navicu.com',
