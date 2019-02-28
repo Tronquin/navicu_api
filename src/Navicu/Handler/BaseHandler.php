@@ -103,7 +103,6 @@ abstract class BaseHandler
         $this->code = self::CODE_UNDEFINED;
         $this->errors = [];
         $this->data = [];
-        $this->rules = $this->validationRules();
         $this->processed = false;
         $this->params = [];
 
@@ -114,6 +113,8 @@ abstract class BaseHandler
         if ($request) {
             $this->setParamsFromRequest($request);
         }
+
+        $this->rules = $this->validationRules();
     }
 
     /**
@@ -171,7 +172,6 @@ abstract class BaseHandler
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
         }
-
     }
 
     /**
