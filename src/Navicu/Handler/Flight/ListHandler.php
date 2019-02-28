@@ -33,56 +33,35 @@ class ListHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
 
-        $sourceAirports = [];
-
-        $airportSource = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['source']]);
-
-        if ($params['sourceSearchType'] == 'group') {            
-            $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportSource->getCityName()]);
-
-            foreach ($objectAirports  as $key => $airportSource) {
-                $sourceAirports[] = $airportSource->getIata();
-            } 
-
-        } else {
-            $sourceAirports[] = $airportSource->getIata();
+        if (isset($params['source'])) {
+            $params['source'] = $this->getAirportsByCity($params['source'], $params['sourceSearchType']);
         }
 
-        $airportDest = $manager->getRepository(Airport::class)->findOneBy(['iata' => $params['dest']]);
-        if ($params['sourceSearchType'] == 'group') {            
-            $objectAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $airportDest->getCityName()]);
-
-            foreach ($objectAirports  as $key => $airportDest) {
-                $destAirports[] = $airportDest->getIata();
-            } 
-
-        } else {
-            $destAirports[] = $airportDest->getIata();
+        if (isset($params['dest'])) {
+            $params['dest'] = $this->getAirportsByCity($params['dest'], $params['destSearchType']);
         }
 
-        $params['source'] = $sourceAirports;
-        $params['dest'] = $destAirports;
-
+        $resp = $params['searchType'];
         if ($params['searchType'] == 'oneWay') {
-            $resp = 'oneWay';
             $response = OtaService::oneWay($params);
         }    
         elseif ($params['searchType'] == 'roundTrip') {
-            $resp = 'roundTrip';
             $response = OtaService::roundTrip($params);
         }
         elseif ($params['searchType'] == 'twiceOneWay') {
-            $resp = 'twiceOneWay';
             $response = OtaService::twiceOneWay($params);
-        } else {
-            $resp = 'calendar';
+        }
+        elseif ($params['searchType'] == 'multiple') {
+            $resp = 'oneWay';
+            $response = OtaService::multiple($params);
+        }
+        else {
             $response = OtaService::calendar($params);
         } 
 
         if ($response['code'] !== OtaService::CODE_SUCCESS) {
             throw new OtaException($response['errors']);
         } 
-
 
         $pricesLock = 0;
         $responseFinal = [];
@@ -110,7 +89,7 @@ class ListHandler extends BaseHandler
 
                     $airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flight['airline']]);
                     if (is_null($airline)) {
-                        $airline = $this->createAirline($flight);
+                        $this->createAirline($flight);
                     }
 
                     /** @var $flightLock, un bloqueo predefinido, de existir se debe tomar
@@ -162,6 +141,46 @@ class ListHandler extends BaseHandler
         return $responseFinal;
     }
 
+    /**
+     * Todas las reglas de validacion para los parametros que recibe
+     * el Handler
+     *
+     * Las reglas de validacion estan definidas en:
+     * @see \App\Navicu\Service\NavicuValidator
+     *
+     * @return array
+     */
+    protected function validationRules() : array
+    {
+        $validations = [
+            'searchType' => 'required|string',
+            'country' => 'required|in:VE,US',
+            'currency' => 'required|in:VES,USD',
+            'adt' => 'required|numeric|min:1',
+            'cnn' => 'required|numeric',
+            'inf' => 'required|numeric',
+            'ins' => 'required|numeric',
+            'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'cabin' => 'required',
+            'scale' => 'required|numeric',
+            'baggage' => 'required|numeric',
+            'sourceSearchType' => 'required',
+            'destSearchType' => 'required',
+            'roundTrip' => 'in:1,0'
+        ];
+
+        $params = $this->getParams();
+        if (isset($params['searchType']) && $params['searchType'] !== 'multiple') {
+            $validations = array_merge($validations, [
+                'startDate' => 'required',
+                'endDate' => 'required',
+                'source' => 'required',
+                'dest' => 'required',
+            ]);
+        }
+
+        return $validations;
+    }
 
     /**
      * Verifica si existe el logo de las aerolineas
@@ -180,14 +199,13 @@ class ListHandler extends BaseHandler
                     foreach ($itinerary['flights'] as $i => $flight) {
 
                         $data[$k]['groupItinerary']['itineraries'][$j]['flights'][$i]['logo_exists'] = file_exists($dir . $flight['airline'] . '.png');
-                    }    
-                }                
+                    }
+                }
             }
-        }        
+        }
 
         return $data;
     }
-
 
     /**
      * Registra una aerolinea
@@ -197,7 +215,7 @@ class ListHandler extends BaseHandler
      */
     private function createAirline(array $data)
     {
-        $manager = $this->container->get('doctrine')->getManager(); 
+        $manager = $this->container->get('doctrine')->getManager();
 
         $airline = new Airline();
 
@@ -218,38 +236,33 @@ class ListHandler extends BaseHandler
         return $airline;
     }
 
-
     /**
-     * Todas las reglas de validacion para los parametros que recibe
-     * el Handler
+     * Obtiene un arreglo de aeropuertos en base a la ubicacion. Si la busqueda
+     * es para New York por ejemplo, retorna todos los aeropuertos de esa ciudad
      *
-     * Las reglas de validacion estan definidas en:
-     * @see \App\Navicu\Service\NavicuValidator
-     *
+     * @param string $iata
+     * @param string $searchType
      * @return array
      */
-    protected function validationRules() : array
+    private function getAirportsByCity(string $iata, string $searchType) : array
     {
-        return [
-            'searchType' => 'required|string',
-            'country' => 'required|in:VE,US',
-            'currency' => 'required|in:VES,USD',
-            'adt' => 'required|numeric|min:1',
-            'cnn' => 'required|numeric',
-            'inf' => 'required|numeric',
-            'ins' => 'required|numeric',
-            'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'source' => 'required',
-            'dest' => 'required',
-            'cabin' => 'required',
-            'scale' => 'required|numeric',
-            'startDate' => 'required',
-            'endDate' => 'required',
-            'baggage' => 'required|numeric',
-            'sourceSearchType' => 'required',
-            'destSearchType' => 'required',
-            'roundTrip' => 'in:1,0'
-        ];
-    }
+        $manager = $this->container->get('doctrine')->getManager();
+        $mainAirport = $manager->getRepository(Airport::class)->findOneBy(['iata' => $iata]);
+        $airports = [];
 
+        if ($searchType == 'group') {
+
+            // Se busco una ciudad, agrego todos los aeropuertos de la misma
+            $cityAirports = $manager->getRepository(Airport::class)->findBy(['cityName' => $mainAirport->getCityName()]);
+            foreach ($cityAirports  as $key => $airport) {
+                $airports[] = $airport->getIata();
+            }
+
+        } else {
+            // Es aeropuerto, se hace busqueda solo para este
+            $airports[] = $mainAirport->getIata();
+        }
+
+        return $airports;
+    }
 }

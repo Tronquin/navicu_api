@@ -35,7 +35,7 @@ class CreateReservationHandler extends BaseHandler
     {
     	$manager = $this->container->get('doctrine')->getManager();
         $params = $this->getParams();
-        $token_interface = $params['ti'];
+        $token_interface = $this->container->get('security.token_storage');
 		$ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
         $reservation = new FlightReservation();
         $totalIncrementExpenses = $totalIncrementExpensesLocal = 0;

@@ -58,12 +58,12 @@ class FlightController extends AbstractController
      /**
      * Obtiene listado de vuelos 
      *
-     * @Route("/list", name="flight_list", methods="GET")
+     * @Route("/list", name="flight_list", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function list(Request $request)
+    public function flightList(Request $request)
     {
         $handler = new ListHandler($request);
         $handler->processHandler();
@@ -71,34 +71,17 @@ class FlightController extends AbstractController
         return $handler->getJsonResponseData();
     }
 
-     /**
-     * Obtiene calendario de vuelos
-     *
-     * @Route("/calendar", name="flight_calendar", methods="GET")
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function calendar(Request $request)
-    {
-        $handler = new CalendarHandler($request);
-        $handler->processHandler();
-
-        return $handler->getJsonResponseData();
-    }
-
     /**
-     * Obtiene calendario de vuelos
+     * Crea una reserva
      *
      * @Route("/create_reservation", name="flight_reservation", methods="POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function createReservation(Request $request, TokenStorageInterface $ti)    {
+    public function createReservation(Request $request)    {
 
         $handler = new CreateReservationHandler($request);
-        $handler->setParam('ti', $ti);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();

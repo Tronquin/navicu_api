@@ -41,7 +41,6 @@ class ProcessFlightReservationHandler extends BaseHandler
         $handler->setParam('passengers', $params['passengers']);
         $handler->setParam('payments', $params['payments']);
         $handler->processHandler();
-        $response = $handler->getData()['data'];
 
         if (! $handler->isSuccess()) {
             $this->addErrorToHandler( $handler->getErrors()['errors'] );
