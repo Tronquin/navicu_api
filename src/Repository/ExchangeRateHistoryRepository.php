@@ -32,7 +32,7 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
     public function getLastRateNavicuInBs(string $dateToLookUp, int $coinId) : array
     {
         global $kernel;
-        $conn = $kernel->getContainer()->get('doctrine')->getConnection('navicu_v1');
+        $conn = $kernel->getContainer()->get('doctrine')->getConnection();
         $today = (new \DateTime())->format('Y-m-d');
 
         $query = "
@@ -91,7 +91,7 @@ class ExchangeRateHistoryRepository extends ServiceEntityRepository
     {
         global $kernel;
         $today = (new \DateTime())->format('Y-m-d');
-        $conn = $kernel->getContainer()->get('doctrine')->getConnection('navicu_v1');
+        $conn = $kernel->getContainer()->get('doctrine')->getConnection();
 
         $query = "
             select
