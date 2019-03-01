@@ -55,7 +55,6 @@ class NavicuCurrencyConverter
     {
         //$currency = self::getCurrency($currency);
         //$toCurrency = self::getCurrency($toCurrency);
-
         if (! $currency || ! $toCurrency) {
             throw new NavicuException('Currency not found');
         }
@@ -67,17 +66,38 @@ class NavicuCurrencyConverter
         if (($currency) === ($toCurrency)) {
             return $amount;
         }
-
-        if ($currency !== self::CURRENCY_DOLLAR) {
-            // Si el monto es en bolivares, convierto a dolar
-            $amount = $amount / $dollarRate;
+        // si convierto de dolares a bolivares
+        if($currency  == self::CURRENCY_DOLLAR && $toCurrency == self::CURRENT_CURRENCY_VE){
+            $amount = $amount * $dollarRate;
+            return $amount;
+        }
+        // si convierto de dolares a bolivares
+        if($currency  == self::CURRENCY_EURO && $toCurrency == self::CURRENT_CURRENCY_VE){
+            $amount = $amount * $currencyRate;
+            return $amount;
         }
 
-        if ($toCurrency !== self::CURRENCY_DOLLAR) {
+        if ($currency !== self::CURRENCY_DOLLAR) {
+            // Si el monto es en bolivares veo si tengo que convertir a dolar o a euro
+            if($toCurrency == self::CURRENCY_EURO){
+               
+                $amount = $amount / $currencyRate ;
+            }else{
+                $amount = $amount / $dollarRate;
+            }
+            
+        }
+
+        if ($currency == self::CURRENCY_DOLLAR && $toCurrency == self::CURRENCY_EURO) {
+            // Si el monto es en bolivares veo si tengo que convertir a dolar o a euro
+                $amount = $amount * $dollarRate ;
+                $amount = $amount / $currencyRate; 
+        }
+
+        if ($toCurrency !== self::CURRENCY_DOLLAR && $toCurrency !== self::CURRENCY_EURO ) {
             // Si el monto es en bolivares, convierto a dolar
             $amount = $amount * $currencyRate;
         }    
-
         return $amount;
     }
 
@@ -255,12 +275,10 @@ class NavicuCurrencyConverter
         $manager = $container->get('doctrine')->getManager();
         $exchangeRateRepository = $manager->getRepository(ExchangeRateHistory::class);
         $bs = self::getCurrency($currency);
-
-        $rate = $exchangeRateRepository->findByLastDateCurrency($bs->getAlfa3());
-
+        $rate = $exchangeRateRepository->findByLastDateCurrency($bs->getAlfa3());        
         if (in_array($currency, [self::CURRENT_CURRENCY_VE, self::CURRENCY_DOLLAR, self::CURRENCY_EURO])) {
-
             // Para bolivares, dolares y euro toma la tasa navicu
+
             $buy = $exchangeRateRepository->getLastRateNavicuInBs($date->format('Y-m-d'), $bs->getId());
             $sell = $exchangeRateRepository->getLastRateNavicuSell($date->format('Y-m-d'), $bs->getId());
         } else {
@@ -268,7 +286,6 @@ class NavicuCurrencyConverter
             $buy = [0 => ['new_rate_navicu' => $rate[0]['rate_api']]];
             $sell = [0 => ['new_rate_navicu' => $rate[0]['rate_api']]];
         }
-
         self::$lastRate[$currency][$date->format('Y-m-d')] = [
             'buy' => (float) $buy[0]['new_rate_navicu'],
             'sell' => (float) $sell[0]['new_rate_navicu'],
