@@ -56,7 +56,7 @@ final class Version20190117180738 extends AbstractMigration
                   WHERE fres.id = fp.flight_reservation) AS mp,
             ct.simbol AS moneda,
             ct.alfa3,
-            fres.status AS estado,
+            fr.status AS estado,
             (subtotal + tax) AS importe,
             
             ((setweight(to_tsvector(COALESCE(fr.public_id, ''::character varying)::text), 'A'::\"char\") || ''::tsvector) || setweight(to_tsvector(COALESCE(fres.book_code, ''::character varying)::text), 'A'::\"char\")) || ''::tsvector AS search_vector
