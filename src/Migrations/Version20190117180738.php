@@ -43,17 +43,17 @@ final class Version20190117180738 extends AbstractMigration
                 fts.name AS tipo_de_vuelo,
             ( SELECT
                         CASE
-                            WHEN max(fp.type) = 1 THEN 'TDC Instapago'::text
-                            WHEN max(fp.type) = 2 THEN 'Transferencia Nacional'::text
-                            WHEN max(fp.type) = 3 THEN 'TDC Stripe'::text
-                            WHEN max(fp.type) = 4 THEN 'Transferencia Internacional'::text
-                            WHEN max(fp.type) = 5 THEN 'AAVV'::text
-                            WHEN max(fp.type) = 6 THEN 'TDC Payeezy'::text
-                            WHEN max(fp.type) = 8 THEN 'PYP PayPal'::text
+                            WHEN max(fp.payment_type) = 1 THEN 'TDC Instapago'::text
+                            WHEN max(fp.payment_type) = 2 THEN 'Transferencia Nacional'::text
+                            WHEN max(fp.payment_type) = 3 THEN 'TDC Stripe'::text
+                            WHEN max(fp.payment_type) = 4 THEN 'Transferencia Internacional'::text
+                            WHEN max(fp.payment_type) = 5 THEN 'AAVV'::text
+                            WHEN max(fp.payment_type) = 6 THEN 'TDC Payeezy'::text
+                            WHEN max(fp.payment_type) = 8 THEN 'PYP PayPal'::text
                             ELSE NULL::text
                         END AS \"case\"
                    FROM flight_payment fp
-                  WHERE fres.id = fp.flight_reservation) AS mp,
+                  WHERE fr.id = fp.flight_reservation) AS mp,
             ct.simbol AS moneda,
             ct.alfa3,
             fr.status AS estado,
