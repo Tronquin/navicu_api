@@ -2,10 +2,9 @@
 
 namespace App\Navicu\Handler\Ota;
 
-use App\Entity\Airport;
 use App\Navicu\Exception\NavicuException;
-use App\Navicu\Exception\OtaException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\NavicuFlightConverter;
 use App\Navicu\Service\OtaService;
 
 /**
@@ -24,13 +23,55 @@ class FareFamilyHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $response = OtaService::fareFamily($this->getParams());
+        $params = $this->getParams();
+        $response = OtaService::fareFamily($params);
 
-        if ($response['code'] !== OtaService::CODE_SUCCESS) {
-            throw new OtaException($response['errors']);
+        foreach ($response['fareFamily'] as $i => $fareFamily) {
+            // Se calcula los nuevos montos de la reserva en base
+            // a la informacion obtenida en el fare family
+
+            $price = 0;
+
+            if (isset($fareFamily['prices']['ADT'])) {
+                // precio por adultos
+                $price += ($fareFamily['prices']['ADT'] * $params['adt']);
+            }
+
+            if (isset($fareFamily['prices']['CNN'])) {
+                // precio por niños
+                $price += ($fareFamily['prices']['CNN'] * $params['cnn']);
+            }
+
+            if (isset($fareFamily['prices']['INF'])) {
+                // precio por infantes
+                $price += ($fareFamily['prices']['INF'] * $params['inf']);
+            }
+
+            if (isset($fareFamily['prices']['INS'])) {
+                // precio por infantes con asientos
+                $price += ($fareFamily['prices']['INS'] * $params['ins']);
+            }
+
+            $lockData = [
+                'iso' => $fareFamily['itinerary'][0]['airline'],
+                'rate' => $fareFamily['itinerary'][0]['rate'],
+                'from' => $fareFamily['itinerary'][0]['origin'],
+                'to' => $fareFamily['itinerary'][0]['destination'],
+                'departureDate' => new \DateTime($fareFamily['itinerary'][0]['departure'])
+            ];
+
+            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($price, 'USD',  $lockData,
+                $params['userCurrency'],
+                [
+                    'provider' => $params['provider'],
+                    'negotiatedRate' =>  $fareFamily['itinerary'][0]['negotiated_rate'],
+                ]
+            );
+
+            $response['fareFamily'][$i]['price'] = $convertedAmounts['subTotal'];
         }
 
-        return $response;
+        return $response['fareFamily'];
     }
 
     /**
@@ -53,6 +94,7 @@ class FareFamilyHandler extends BaseHandler
             'ins' => 'required|numeric',
             'itinerary' => 'required',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
+            'userCurrency' => 'required|regex:/^[A-Z]{3}$/',
         ];
     }
 }
