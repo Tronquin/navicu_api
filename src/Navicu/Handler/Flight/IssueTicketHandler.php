@@ -7,6 +7,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\NotificationService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -96,6 +97,9 @@ class IssueTicketHandler extends BaseHandler
         // Movimientos en los creditos de aerolinea y consolidador
         ConsolidatorService::setMovementFromReservation($reservation);
         AirlineService::setMovementFromReservation($reservation, '-');
+
+        // Notificacion
+        NotificationService::notifyConfirm('reservation.accepted');
 
         return $response;
     }

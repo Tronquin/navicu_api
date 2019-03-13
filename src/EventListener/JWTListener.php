@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Navicu\Service\AuthService;
 use Psr\Container\ContainerInterface;
 use App\Entity\FosUser;
 use App\Entity\ClientProfile;
@@ -35,7 +36,8 @@ class JWTListener {
 	public function onJWTCreated(JWTCreatedEvent $event)
 	{
 	   $request = $this->requestStack->getCurrentRequest();
-	    
+
+	   /** @var FosUser $user */
 	    $user = $event->getUser();
 
 	    $manager = $this->container->get('doctrine')->getManager();
@@ -45,7 +47,10 @@ class JWTListener {
 		    $payload       = $event->getData();
 			$payload['name'] = $clientProfile->getFullName();
 		   	$payload['email'] = $user->getEmail();
-		    $event->setData($payload);	  
+		    $event->setData($payload);
+
+		    // Guarda el usuario autenticado
+		    AuthService::setUser($user);
 	    }  
 	    //$header        = $event->getHeader();
 	    //$header['cty'] = 'JWT';
