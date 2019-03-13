@@ -70,8 +70,8 @@ class IssueTicketHandler extends BaseHandler
                     $lastName = $flightReservationPassenger->getPassenger()->getLastname();
 
                     if (
-                        $name === $data['GivenName'] &&
-                        $lastName === $data['Surname'] &&
+                        strtolower($name) === strtolower($data['GivenName']) &&
+                        strtolower($lastName) === strtolower($data['Surname']) &&
                         ! $flightReservationPassenger->hasTicket()
                     ) {
 
@@ -81,6 +81,8 @@ class IssueTicketHandler extends BaseHandler
                             ->setTicket($data['Ticket'])
                             ->setDate(new \DateTime())
                         ;
+
+                        $manager->flush();
 
                         break;
                     }

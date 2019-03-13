@@ -24,7 +24,7 @@ class LoginRedSocialClientHandler extends BaseHandler
     {
         $params = $this->getParams();
         $encoder = $this->container->get('security.password_encoder');;
-        $generator = $test = $this->container->get('lexik_jwt_authentication.jwt_manager');
+        $generator = $this->container->get('lexik_jwt_authentication.jwt_manager');
         
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../../.env');
