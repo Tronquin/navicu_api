@@ -48,9 +48,6 @@ class JWTListener {
 			$payload['name'] = $clientProfile->getFullName();
 		   	$payload['email'] = $user->getEmail();
 		    $event->setData($payload);
-
-		    // Guarda el usuario autenticado
-		    AuthService::setUser($user);
 	    }  
 	    //$header        = $event->getHeader();
 	    //$header['cty'] = 'JWT';
