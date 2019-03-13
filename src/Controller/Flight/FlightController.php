@@ -13,6 +13,7 @@ use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use App\Navicu\Handler\Flight\CreateReservationHandler;
 use App\Navicu\Handler\Flight\SetTransferHandler;
 use App\Navicu\Handler\Flight\TransferPaymentHandler;
+use App\Navicu\Handler\Flight\ChangeFlightReservationStatusHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -210,6 +211,23 @@ class FlightController extends AbstractController
     public function listBank(Request $request)
     {
         $handler = new ListBankHandler($request);
+        $handler->processHandler();
+
+        return $handler->getJsonResponseData();
+    }
+
+
+    /**
+     * Cambia el estatus de la reservación por transferencia
+     *
+     * @Route("/change_flight_reservation_status", name="change_flight_reservation_status", methods="POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeFlightReservationStatus(Request $request)
+    {
+        $handler = new ChangeFlightReservationStatusHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
