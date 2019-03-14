@@ -43,20 +43,4 @@ class IndexController extends AbstractController
 
         return $handler->getJsonResponseData();
    }
-
-    /**
-     * Obtiene el listado de notificaciones sin leer
-     * para un usuario
-     *
-     * @Route("/notifications", name="notifications", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-   public function notifications()
-   {
-       $handler = new GetNotificationHandler();
-       $handler->processHandler();
-
-       return $handler->getJsonResponseData();
-   }
 }

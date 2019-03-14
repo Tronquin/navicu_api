@@ -2,7 +2,9 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\FosUser;
 use App\Entity\OauthUser;
+use App\Navicu\Service\AuthService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -49,6 +51,15 @@ class TokenSubscriber implements EventSubscriberInterface
             return $event->setController(function () {
                 return new JsonResponse(['code' => 400, 'errors' => ['token expired']], 400);
             });
+        }
+
+        if ($request->headers->has('session')) {
+            // Si envia un token de session guardo el usuario autenticado para usar en la api
+            $tokenStorage = $this->container->get('security.token_storage');
+            /** @var FosUser $user */
+            $user = $tokenStorage->getToken()->getUser();
+
+            AuthService::setUser($user);
         }
     }
 
