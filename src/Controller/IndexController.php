@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Navicu\Handler\Main\GetNotificationHandler;
 use App\Navicu\Handler\TestHandler;
 use App\Navicu\Handler\Main\ListCurrencyHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,5 +42,21 @@ class IndexController extends AbstractController
       $handler->processHandler();
 
         return $handler->getJsonResponseData();
+   }
+
+    /**
+     * Obtiene el listado de notificaciones sin leer
+     * para un usuario
+     *
+     * @Route("/notifications", name="notifications", methods={"GET"})
+     *
+     * @return JsonResponse
+     */
+   public function notifications()
+   {
+       $handler = new GetNotificationHandler();
+       $handler->processHandler();
+
+       return $handler->getJsonResponseData();
    }
 }

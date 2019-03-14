@@ -1,0 +1,4 @@
+reservation:
+  accepted: Reserva confirmada
+  per-confirm: Pre-reserva
+  cancel: Reserva cancelada

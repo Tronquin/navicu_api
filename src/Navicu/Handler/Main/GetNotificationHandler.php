@@ -2,17 +2,18 @@
 
 namespace App\Navicu\Handler\Main;
 
-use App\Entity\FosUser;
 use App\Entity\Notification;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
+use App\Navicu\Service\AuthService;
+use App\Navicu\Service\Translator;
 
 /**
- * Genera una notificacion al usuario
+ * Obtiene las notificaciones sin leer de un usuario
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
-class NotificationHandler extends BaseHandler
+class GetNotificationHandler extends BaseHandler
 {
 
     /**
@@ -23,24 +24,25 @@ class NotificationHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $params = $this->getParams();
         $manager = $this->container->get('doctrine')->getManager();
-        /** @var FosUser $user */
-        $user = $manager->getRepository(FosUser::class)->findOneBy(['email' => $params['email']]);
 
-        if (! $user) {
+        if (! AuthService::isAuth()) {
             throw new NavicuException('User not found');
         }
 
-        $notification = new Notification();
-        $notification->setMessage($params['message']);
-        $notification->setReciver($user);
-        $notification->setType($params['type']);
+        $user = AuthService::getUser();
+        $notifications = $manager->getRepository(Notification::class)->findBy(['view' => false, 'receiver' => $user]);
+        $response = [];
 
-        $manager->persist($notification);
-        $manager->flush();
+        /** @var Notification $notification */
+        foreach ($notifications as $notification) {
+            $response[] = [
+                'type' => $notification->getType(),
+                'message' => Translator::trans($notification->getMessage()),
+            ];
+        }
 
-        return compact('notification');
+        return $response;
     }
 
     /**
@@ -54,10 +56,6 @@ class NotificationHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [
-            'message' => 'required',
-            'email' => 'required|email',
-            'type' => 'required|numeric'
-        ];
+        return [];
     }
 }

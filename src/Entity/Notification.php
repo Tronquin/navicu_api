@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Notification
 {
+    /** Tipos de notificacion */
+    const TYPE_CONFIRM = 0;
+    const TYPE_PRE = 1;
+    const TYPE_CANCEL = 2;
+
     /**
      * @var int
      *

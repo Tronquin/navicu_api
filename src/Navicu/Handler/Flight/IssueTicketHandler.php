@@ -7,6 +7,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\NotificationService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -69,8 +70,8 @@ class IssueTicketHandler extends BaseHandler
                     $lastName = $flightReservationPassenger->getPassenger()->getLastname();
 
                     if (
-                        $name === $data['GivenName'] &&
-                        $lastName === $data['Surname'] &&
+                        strtolower($name) === strtolower($data['GivenName']) &&
+                        strtolower($lastName) === strtolower($data['Surname']) &&
                         ! $flightReservationPassenger->hasTicket()
                     ) {
 
@@ -80,6 +81,8 @@ class IssueTicketHandler extends BaseHandler
                             ->setTicket($data['Ticket'])
                             ->setDate(new \DateTime())
                         ;
+
+                        $manager->flush();
 
                         break;
                     }
@@ -96,6 +99,9 @@ class IssueTicketHandler extends BaseHandler
         // Movimientos en los creditos de aerolinea y consolidador
         ConsolidatorService::setMovementFromReservation($reservation);
         AirlineService::setMovementFromReservation($reservation, '-');
+
+        // Notificacion
+        NotificationService::notifyConfirm('reservation.accepted');
 
         return $response;
     }
