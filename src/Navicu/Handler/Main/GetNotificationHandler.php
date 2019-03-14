@@ -31,7 +31,10 @@ class GetNotificationHandler extends BaseHandler
         }
 
         $user = AuthService::getUser();
-        $notifications = $manager->getRepository(Notification::class)->findBy(['view' => false, 'receiver' => $user]);
+        $notifications = $manager->getRepository(Notification::class)->findBy([
+            'view' => false,
+            'reciver' => $user->getId()
+        ]);
         $response = [];
 
         /** @var Notification $notification */

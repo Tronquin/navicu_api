@@ -42,11 +42,15 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                     $currencyRateConvertion = $currencyRateConvertion ?? 0.0;
                     $totalReservation += NavicuCurrencyConverter::convertToRate($reservationGds->getTotal(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
                 }
-                //Verifico si el pago concuerda con el total de la reservación y guardo el monto Transferido
+                 /*| **********************************************************************
+                    *| Paso 1:
+                    *| - Verifica si el pago del cliente es igual o mayor al monto de la reserva
+                    * .......................................................................
+                    */
                 if( $this->paymentComplete($reservation->getId(),$amountTransferred, $totalReservation)){
 
                     /*| **********************************************************************
-                    *| Paso 3:
+                    *| Paso 2:
                     *| - Genera el ticket en OTA
                     *| - Registra los ticket en DB y los asocia a la reserva
                     * .......................................................................
@@ -63,7 +67,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                     $responseData = $handler->getData()['data'];
 
                     /*| **********************************************************************
-                    *| Paso 4:
+                    *| Paso 3:
                     *| - Envia correo de confirmacion a los pasajeros y a navicu
                     * .......................................................................
                     */
@@ -94,9 +98,6 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 }
                 $reservation->setStatus(FlightReservation::STATE_CANCEL);
                 $manager->flush();
-                // TODO CAMBIAR ESTATUS DE LA RESERVACION A CANCELADA
-                //ENVIAR CORREO CANCELADO *NOSE*
-
                 return [
                     "code"=> 200
                 ];
