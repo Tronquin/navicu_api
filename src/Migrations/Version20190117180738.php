@@ -49,6 +49,7 @@ final class Version20190117180738 extends AbstractMigration
                             WHEN max(fp.payment_type) = 4 THEN 'Transferencia Internacional'::text
                             WHEN max(fp.payment_type) = 5 THEN 'AAVV'::text
                             WHEN max(fp.payment_type) = 6 THEN 'TDC Payeezy'::text
+                            WHEN max(fp.payment_type) = 7 THEN 'PCO mPandco'::text
                             WHEN max(fp.payment_type) = 8 THEN 'PYP PayPal'::text
                             ELSE NULL::text
                         END AS \"case\"
