@@ -30,10 +30,13 @@ class AirportRepository extends BaseRepository
 
         //$tsQuery = $this->getTsQuery($separatedWords['tsQuery'], "vector");
 
-        $tsQuery = "(REPLACE(LOWER(name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
+        /*$tsQuery = "(REPLACE(LOWER(name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or
                     REPLACE(LOWER(city_name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
                     REPLACE(LOWER(iata), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
-                    REPLACE(LOWER(location_name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%')";
+                    REPLACE(LOWER(location_name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%')";*/
+
+        $tsQuery = "(REPLACE(REPLACE(LOWER(tags), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
+                    REPLACE(REPLACE(LOWER(iata), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%')";
 
         $result = $this->getEntityManager()
             ->getConnection()
@@ -59,7 +62,7 @@ class AirportRepository extends BaseRepository
 
     public function findAllByAirport(string $airport) : array
     {
-        $additionalCriteria = (($airport === null) ? 'visible = true' : 'iata= '."'".$airport."'");
+        $additionalCriteria = (($airport === '') ? 'visible = true' : 'iata= '."'".$airport."'");
         
         return $this->getEntityManager()
             ->getConnection()
@@ -73,12 +76,15 @@ class AirportRepository extends BaseRepository
                     location_code,
                     country_name,
                     country_code,
+                    city_name,
                     vector
                 from web_fligths_autocompleted_view 
                 where " . $additionalCriteria . " order by location_name asc")
             
             ->fetchAll();
     }
+
+
 
 
 
