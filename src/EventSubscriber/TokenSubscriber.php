@@ -56,10 +56,12 @@ class TokenSubscriber implements EventSubscriberInterface
         if ($request->headers->has('session')) {
             // Si envia un token de session guardo el usuario autenticado para usar en la api
             $tokenStorage = $this->container->get('security.token_storage');
-            /** @var FosUser $user */
-            $user = $tokenStorage->getToken()->getUser();
+            $token = $tokenStorage->getToken();
 
-            AuthService::setUser($user);
+            /** @var FosUser $user */
+            if ($token && ($user = $token->getUser())) {
+                AuthService::setUser($user);
+            }
         }
     }
 
