@@ -35,7 +35,8 @@ class AirportRepository extends BaseRepository
                     REPLACE(LOWER(iata), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
                     REPLACE(LOWER(location_name), ' ', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%')";*/
 
-        $tsQuery = "(REPLACE(REPLACE(LOWER(tags), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or 
+        $tsQuery = "(REPLACE(REPLACE(LOWER(tags), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or
+                    REPLACE(REPLACE(LOWER(country_name), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%' or
                     REPLACE(REPLACE(LOWER(iata), ' ', ''), ',', '') like "."'%'||"."REPLACE(LOWER('".$words."'), ' ', '')"."||'%')";
 
         $result = $this->getEntityManager()
