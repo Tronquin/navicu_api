@@ -96,6 +96,11 @@ class Airport
      */
     private $agencyType;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $tags;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -217,6 +222,18 @@ class Airport
     public function setAgencyType(string $agencyType): self
     {
         $this->agencyType = $agencyType;
+
+        return $this;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(string $tags): self
+    {
+        $this->tags = $tags;
 
         return $this;
     }

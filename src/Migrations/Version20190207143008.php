@@ -77,7 +77,6 @@ final class Version20190207143008 extends AbstractMigration
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'STB'");
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'PDZ'");
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'OMZ'");
-        $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'MYC'");
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'NOV'");
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'AZZ'");
         $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = 'ANL'");
