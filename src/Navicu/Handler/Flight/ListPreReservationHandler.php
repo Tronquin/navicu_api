@@ -34,7 +34,8 @@ class ListPreReservationHandler extends BaseHandler
 
         $response = [];
         $reservations = $manager->getRepository(FlightReservation::class)->findBy([
-            'status' => FlightReservation::STATE_IN_PROCESS
+            'status' => FlightReservation::STATE_IN_PROCESS,
+            'clientProfile' => $user->getClientProfile()[0]
         ]);
 
         /** @var FlightReservation $reservation */
