@@ -4,6 +4,7 @@ namespace App\Navicu\Service;
 
 use App\Entity\FosUser;
 use App\Entity\Notification;
+use App\Navicu\Exception\NavicuException;
 
 /**
  * Crea notificaciones en el sistema
@@ -18,6 +19,7 @@ class NotificationService
      * @param string $message
      * @param int $type
      * @param FosUSer $user
+     * @throws NavicuException
      */
     public static function notify(string $message, int $type, ?FosUser $user = null)
     {
@@ -32,8 +34,12 @@ class NotificationService
         $notification->setDate(new \DateTime());
         $notification->setView(false);
 
+        if (! $user && ! AuthService::isAuth()) {
+            throw new NavicuException('Receiver user not defined');
+        }
+
         if (! $user && AuthService::isAuth()) {
-            // En caso que no indicar usuario, se verifica si existe alguna sesion iniciada
+            // En caso que no indicar usuario, se obtiene de la sesion
             $user = AuthService::getUser();
         }
 
