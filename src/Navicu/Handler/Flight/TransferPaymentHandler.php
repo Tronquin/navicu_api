@@ -66,7 +66,7 @@ class TransferPaymentHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'paymentType' => 'required|in:4,6',
+            'paymentType' => 'required|in:2,4',
             'publicId' => 'required',
             'payments' => 'required'
         ];

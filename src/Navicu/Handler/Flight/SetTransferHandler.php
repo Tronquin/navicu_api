@@ -3,6 +3,7 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
+use App\Entity\FosUser;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Handler\Security\DirectRegisterUserClientHandler;
@@ -46,16 +47,20 @@ class SetTransferHandler extends BaseHandler
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
-        $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
-        $manager->flush();
-
         // Registra al usuario
         $handler = new DirectRegisterUserClientHandler();
         $handler->setParam('email', $params['email']);
         $handler->processHandler();
 
+        /** @var FosUser $user */
+        $user = $manager->getRepository(FosUser::class)->findOneBy(['email' => $params['email']]);
+
+        $reservation->setClientProfile($user->getClientProfile()[0]);
+        $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
+        $manager->flush();
+
         // Notificacion
-        NotificationService::notifyPre('reservation.per-confirm');
+        NotificationService::notifyPre('reservation.per-confirm', $user);
 
         return $handler->getData()['data'];
     }

@@ -120,7 +120,7 @@ class ProcessFlightReservationHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'paymentType' => 'required|numeric|between:1,3',
+            'paymentType' => 'required|numeric|in:1,3,6',
             'payments' => 'required',
             'passengers' => 'required'
         ];
