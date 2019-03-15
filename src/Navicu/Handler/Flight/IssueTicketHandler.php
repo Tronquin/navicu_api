@@ -100,9 +100,6 @@ class IssueTicketHandler extends BaseHandler
         ConsolidatorService::setMovementFromReservation($reservation);
         AirlineService::setMovementFromReservation($reservation, '-');
 
-        // Notificacion
-        NotificationService::notifyConfirm('reservation.accepted');
-
         return $response;
     }
 
