@@ -235,7 +235,7 @@ class FlightController extends AbstractController
     }
 
     /**
-     * Listar reservas pendientes de confirmacion
+     * Listar reservas pendientes de pago
      *
      * @Route("/list_pre_reservation/{email}", name="list_reservation_in_process", methods="GET")
      *
