@@ -13,11 +13,11 @@ use App\Navicu\Handler\BaseHandler;
 
 
 /**
- * Lista las reservas pendientes de pago
+ * Lista las reservas por usuario y estatus
  *
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
-class ListPreReservationHandler extends BaseHandler
+class ListClientReservationHandler extends BaseHandler
 {
 
     /**
@@ -32,14 +32,14 @@ class ListPreReservationHandler extends BaseHandler
         $manager = $this->container->get('doctrine')->getManager();
         /** @var FosUser $user */
         $user = $manager->getRepository(FosUser::class)->findOneBy(['email' => $params['email']]);
-       
+        $status = $params['status'];
         if (! $user) {
             throw new NavicuException('User not found');
         }
 
         $response = [];
         $reservations = $manager->getRepository(FlightReservation::class)->findBy([
-            'status' => FlightReservation::STATE_PRE_RESERVATION,
+            'status' => $status,
             'clientProfile' => $user->getClientProfile()[0]->getId()
         ]);
  
@@ -54,7 +54,7 @@ class ListPreReservationHandler extends BaseHandler
             $discount = 0;
             $symbol = '';
             $flightsArray = [];
-
+            $bankList = '';
             foreach ($reservation->getGdsReservations() as $gdsReservation) {
                  
                 $symbol = $gdsReservation->getCurrencyReservation()->getSimbol();
@@ -106,10 +106,11 @@ class ListPreReservationHandler extends BaseHandler
 
                 throw new NavicuException('ListBankHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
             }
+            //si es una reserva pendiente de pago envio los bancos para que el cliente realice el pago
+            if($status == FlightReservation::STATE_PRE_RESERVATION)
+                $bankList = $handler->getData()['data'];
 
-            $bankList = $handler->getData()['data'];
             //Convirtiendo el monto en la moneda de la reservación
-              
             $response[] = [
                 'publicId' => $reservation->getPublicId(),
                 'date' => $reservation->getReservationDate()->format('Y-m-d H:i:s'),
@@ -146,7 +147,8 @@ class ListPreReservationHandler extends BaseHandler
     protected function validationRules() : array
     {
         return [
-            'email' => 'required'
+            'email' => 'required',
+            'status' => 'reqired  | in: 0,1,2,3' 
         ];
     }
 }
