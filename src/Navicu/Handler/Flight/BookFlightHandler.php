@@ -180,6 +180,7 @@ class BookFlightHandler extends BaseHandler
      */
     private function getBook(FlightReservationGds $reservationGds) : string
     {
+
         $params = $this->getParams();
         $country = ($alpha3 = $reservationGds->getCurrencyGds()->getAlfa3()) === 'USD' ? 'US' : 'VE';
 

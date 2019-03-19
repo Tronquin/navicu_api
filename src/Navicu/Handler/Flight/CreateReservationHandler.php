@@ -71,8 +71,11 @@ class CreateReservationHandler extends BaseHandler
 	            $flightEntity = $this->createFlightFromData($flight, $isReturn);
 				$reservationGds->addFlight($flightEntity); 
 			}
-			$farefamilyEntity = $this->createFareFamilyFromData($itinerary['fare_family']);
-			$reservationGds->addFlightFareFamily($farefamilyEntity);
+
+            foreach ($itinerary['fare_family'] as $fareFamily) {
+                $farefamilyEntity = $this->createFareFamilyFromData($fareFamily);
+                $reservationGds->addFlightFareFamily($farefamilyEntity);
+            }
 
 	    	$flightLockDate = new \DateTime($itinerary['flights'][0]['departure']);
 	        $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($itinerary['original_price'], $itinerary['currency'],
@@ -295,14 +298,13 @@ class CreateReservationHandler extends BaseHandler
 	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
 	{
 		$fareFamily = new FlightFareFamily();
-		$manager = $this->container->get('doctrine')->getManager(); 
+		$manager = $this->container->get('doctrine')->getManager();
 		$fareFamily
-				->setName($fareFamilyData['name'])
-				->setDescription($fareFamilyData['description'])
+				->setName($fareFamilyData['fareFamilyName'])
+				->setDescription($fareFamilyData['fareFamilyDescription'])
 				->setServices(json_encode($fareFamilyData['services']))
 				->setPrices(json_encode($fareFamilyData['prices']))
-				->setSelected($fareFamilyData['selected'])
-		;
+				->setSelected($fareFamilyData['selected']??false);
 
 		$manager->persist($fareFamily);
 
