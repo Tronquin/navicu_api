@@ -48,14 +48,12 @@ final class Version20190313144045 extends AbstractMigration
         END);");
 
 
-        $this->addSql("UPDATE airport SET agency_type = 'unknown'");
-
         $fh = fopen('src/Migrations/airport.txt','r');
         while ($line = fgets($fh)) {
             $arrLine = explode(':', $line);
 
             if ($arrLine[1] !== 'N/A') {
-                $this->addSql("UPDATE airport SET agency_type = 'airport' where iata = ?", array($arrLine[1]));
+                $this->addSql("UPDATE airport SET agency_type = 'airport' WHERE iata = ? AND agency_type = 'unknown'", array($arrLine[1]));
             }
         }
         fclose($fh);
@@ -96,6 +94,15 @@ final class Version20190313144045 extends AbstractMigration
             ELSE rl.alfa2
         END);");
 
+        /*$fh = fopen('src/Migrations/airport.txt','r');
+        while ($line = fgets($fh)) {
+            $arrLine = explode(':', $line);
+
+            if ($arrLine[1] !== 'N/A') {
+                $this->addSql("UPDATE airport SET agency_type = 'unknown' WHERE iata = ? AND agency_type = 'airport'", array($arrLine[1]));
+            }
+        }
+        fclose($fh);*/
 
     }
 }
