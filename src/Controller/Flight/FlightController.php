@@ -8,7 +8,7 @@ use App\Navicu\Handler\Flight\CompleteReservationHandler;
 use App\Navicu\Handler\Flight\ListBankHandler;
 use App\Navicu\Handler\Flight\CabinHandler;
 use App\Navicu\Handler\Flight\ListHandler;
-use App\Navicu\Handler\Flight\ListPreReservationHandler;
+use App\Navicu\Handler\Flight\ListClientReservationHandler;
 use App\Navicu\Handler\Flight\ProcessFlightReservationHandler;
 use App\Navicu\Handler\Flight\ResumeReservationHandler;
 use App\Navicu\Handler\Flight\CreateReservationHandler;
@@ -235,16 +235,16 @@ class FlightController extends AbstractController
     }
 
     /**
-     * Listar reservas pendientes de confirmacion
+     * Listar reservas por cliente y estatus
      *
-     * @Route("/list_pre_reservation/{email}", name="list_reservation_in_process", methods="GET")
+     * @Route("/list_client_reservation/{email}/{status}", name="list_client_reservation", methods="GET")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function listPreReservation(Request $request)
+    public function ListClientReservation(Request $request)
     {
-        $handler = new ListPreReservationHandler($request);
+        $handler = new ListClientReservationHandler($request);
         $handler->processHandler();
 
         return $handler->getJsonResponseData();
