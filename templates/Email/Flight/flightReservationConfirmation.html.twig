@@ -221,7 +221,7 @@
                                                     <td>
                                                         <!-- Equipaje -->
                                                     </td>
-
+            
                                                     {% if passenger.tickets|length < 2 %}
                                                         <td style="padding: 0px 0px 0px 20px" colspan="3">
                                                             <p style="float:left!important;padding:0px 10px;
@@ -300,10 +300,27 @@
                             <td style="vertical-align:top;width:600px;">
                     <![endif]-->
                     <div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-wrap:break-word;font-size:0px;padding:5px 15px;" align="left"><table cellpadding="0" cellspacing="0" style="cellspacing:0px;color:#000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;" width="100%" border="0">
-
+                                    <!-- Isreturn es en caso de usar dobleOneWay!-->
                                             {% for flight in flights %}
-
-                                                <tr style="background-color:#F0F0F0">
+                                                 {% if flight['return'] or flight['isReturn'] %}
+                                                         <tr style="background-color:#F0F0F0">
+                                                    <td style="padding:10px 30px 10px 10px;">
+                                                      <span style="text-align:right;
+                                                                  font-family:Lato,sans-serif;
+                                                                  color:#54284E;font-weight:300;
+                                                                  font-size:16px">Vuelta
+                                                          <span class="maxi" style="font-size:14px;font-weight:900"> {{ flight['departure']|date('d-m-Y H:i') }}</span>
+                                                              <br>
+                                                              <span class="mini" style="font-size:14px;font-weight:900"> {{ flight['departure']|date('d-m-Y H:i') }}</span>
+                                                      </span>
+                                                    </td>
+                                                    <td style="padding:10px 30px 10px 10px;">
+                                                    </td>
+                                                    <td style="padding:10px 30px 10px 5px;">
+                                                    </td>
+                                                </tr>
+                                                  {% else %}
+                                                     <tr style="background-color:#F0F0F0">
                                                     <td style="padding:10px 30px 10px 10px;">
                                                       <span style="text-align:right;
                                                                   font-family:Lato,sans-serif;
@@ -319,6 +336,8 @@
                                                     <td style="padding:10px 30px 10px 5px;">
                                                     </td>
                                                 </tr>
+                                                  {% endif %}
+                                               
                                                 <tr style="background-color:#FFF">
                                                     <td style="padding-left:10px;">
                                                         <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['departure']|date('d-m-Y H:i') }}</p>
