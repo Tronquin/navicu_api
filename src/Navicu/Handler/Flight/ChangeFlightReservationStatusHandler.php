@@ -149,7 +149,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
     {
         return [
             'publicId' => 'required',
-            'status' =>'required | in: (1,2,3)',
+            'status' =>'required | in: 1,2,3',
             'amountTransferred' => 'required'
         ];
     }

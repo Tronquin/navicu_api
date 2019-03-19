@@ -7,6 +7,7 @@ use App\Entity\ClientProfile;
 use App\ClassEfect\ValueObject\Email;
 use App\ClassEfect\ValueObject\Phone;
 use App\Entity\Location;
+use App\Entity\Role;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\EmailService;
@@ -59,6 +60,11 @@ class DirectRegisterUserClientHandler extends BaseHandler
             $params['username'] = $username;
         }
         $user->updateObject($params, $encoder);
+
+        /** @var Role $role */
+        // Asocio el role por compatibilidad con Navicu V1
+        $role = $manager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_WEB']);
+        $user->addRole($role);
 
         $client = new ClientProfile();
 
