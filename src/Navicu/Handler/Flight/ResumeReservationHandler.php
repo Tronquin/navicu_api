@@ -117,6 +117,7 @@ class ResumeReservationHandler extends BaseHandler
                 'simbol'=> $reservationGds->getCurrencyGds()->getSimbol()
                 
             ];
+            $bookCode[] = ['bookCode' => $reservationGds->getBookCode()];
 
             //es un viaje doble one way
             if($key >=1){
@@ -147,7 +148,8 @@ class ResumeReservationHandler extends BaseHandler
                     'airlineName' => $flight->getAirline()->getName(),
                     'return' => $flight->getReturnFlight(),
                     'isReturn' => $isReturn,
-                    'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png')
+                    'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png'),
+                    
                 ];
 
                 if ($flight->getReturnFlight()) {
@@ -261,7 +263,8 @@ class ResumeReservationHandler extends BaseHandler
             'markupIncrementAmountUSD' => $markupIncrementAmountUSD,
             'incrementConsolidatorUSD' => $incrementConsolidatorUSD,
             'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
-            'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion()
+            'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion(),
+            'bookCode' => $bookCode
         ];
        /* $flightsArray = [];
         $flightsArray[0] = $itineraryIda[0];
