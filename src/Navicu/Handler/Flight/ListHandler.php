@@ -30,7 +30,7 @@ class ListHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $consolidator = $manager->getRepository(Consolidator::class)->getFirstConsolidator();
 
         if (isset($params['source'])) {
@@ -215,7 +215,7 @@ class ListHandler extends BaseHandler
      */
     private function createAirline(array $data)
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         $airline = new Airline();
 
@@ -246,7 +246,7 @@ class ListHandler extends BaseHandler
      */
     private function getAirportsByCity(string $iata, string $searchType) : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $mainAirport = $manager->getRepository(Airport::class)->findOneBy(['iata' => $iata]);
         $airports = [];
 

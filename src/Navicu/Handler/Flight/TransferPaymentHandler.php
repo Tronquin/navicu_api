@@ -23,7 +23,7 @@ class TransferPaymentHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId'] ]);
         $date = new \DateTime('now');

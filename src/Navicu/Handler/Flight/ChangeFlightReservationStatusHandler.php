@@ -25,7 +25,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
         $publicId = $params['publicId'];
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $publicId ]);
@@ -121,7 +121,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
     private function paymentComplete($reservationId,$TotalTransferred, $totalReservation) : bool
     {
         $paymentComplete = false;
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         $flightPayment = $manager->getRepository(FlightPayment::class)->findOneBy(['flightReservation' => $reservationId ]);
         if ($TotalTransferred >= $totalReservation ) {

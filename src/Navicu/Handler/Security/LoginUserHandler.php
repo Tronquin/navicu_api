@@ -24,7 +24,7 @@ class LoginUserHandler extends BaseHandler
         $params = $this->getParams();
         $encoder = $this->container->get('security.password_encoder');;
         $generator = $this->container->get('lexik_jwt_authentication.jwt_manager');
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['username'], 'username' => $params['username'] ]);
 

@@ -22,7 +22,7 @@ class PaymentPackageDetailHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $currencyRepository = $manager->getRepository(CurrencyType::class);
         $payment = $manager->getRepository(PackageTempPayment::class)->find($params['paymentPackageId']);
 

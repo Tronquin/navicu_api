@@ -24,7 +24,7 @@ class GetNotificationHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         if (! AuthService::isAuth()) {
             throw new NavicuException('User not found');

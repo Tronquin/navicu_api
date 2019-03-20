@@ -19,7 +19,7 @@ class AutocompleteHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
 
         $airports = $manager->getRepository(Airport::class)->findByWords($params['words']);

@@ -24,7 +24,7 @@ class ConfirmPaymentPackageHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         /** @var PackageTempPayment $payment */
         $payment = $manager->getRepository(PackageTempPayment::class)->find($params['paymentId']);

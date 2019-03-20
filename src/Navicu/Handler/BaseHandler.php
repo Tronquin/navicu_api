@@ -4,6 +4,7 @@ namespace App\Navicu\Handler;
 
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\NavicuValidator;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -317,6 +318,16 @@ abstract class BaseHandler
         foreach ($errors as $error) {
             $this->addError($error);
         }
+    }
+
+    /**
+     * Get Doctrine
+     *
+     * @return ManagerRegistry
+     */
+    protected function getDoctrine(): ManagerRegistry
+    {
+        return $this->container->get('doctrine');
     }
 
     /**

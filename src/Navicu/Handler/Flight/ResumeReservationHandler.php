@@ -25,7 +25,7 @@ class ResumeReservationHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
 
         $flightsArray = [];
@@ -47,10 +47,11 @@ class ResumeReservationHandler extends BaseHandler
         $round = $roundLocal = 2;
         $passengers = [];
         $providers = [];
-        foreach ($reservation->getGdsReservations() as $reservationGds) {
-
+      
+  
+        foreach ($reservation->getGdsReservations() as $key => $reservationGds) {
+           
             $currencyReservation = $reservationGds->getCurrencyReservation();
-
             if (CurrencyType::isLocalPreviousCurrency($reservationGds->getCurrencyReservation()->getAlfa3())) {
                 $roundLocal = 0;
             }
@@ -116,9 +117,19 @@ class ResumeReservationHandler extends BaseHandler
                 'simbol'=> $reservationGds->getCurrencyGds()->getSimbol()
                 
             ];
+            $bookCode[] = ['bookCode' => $reservationGds->getBookCode()];
 
+            //es un viaje doble one way
+            if($key >=1){
+                //variable para mostrar ida y vuelta en email
+                $isReturn = true;
+            }else{
+                $isReturn = false;
+            }
             $j = $l =0;
+          
             foreach( $reservationGds->getFlights() as $key=>$flight) {
+                
                 $flightsArray[] = [   
                     'time' => $flight->getDepartureTime()->getTimestamp(),                 
                     'departure' => $flight->getDepartureTime()->format('d-m-Y H:i:s'),
@@ -136,7 +147,9 @@ class ResumeReservationHandler extends BaseHandler
                     'airlineCode' => $flight->getAirline()->getIso(),
                     'airlineName' => $flight->getAirline()->getName(),
                     'return' => $flight->getReturnFlight(),
-                    'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png')
+                    'isReturn' => $isReturn,
+                    'logo_exists' => file_exists($dir . $flight->getAirline()->getIso() . '.png'),
+                    
                 ];
 
                 if ($flight->getReturnFlight()) {
@@ -147,7 +160,6 @@ class ResumeReservationHandler extends BaseHandler
                     $l++;
                 }
             }
-
             foreach( $reservationGds->getFlightReservationPassengers() as $key => $passengerReservation) {
 
                 $passenger = $passengerReservation->getPassenger();
@@ -210,6 +222,7 @@ class ResumeReservationHandler extends BaseHandler
         $discountLocal = round($discountLocal, $roundLocal);
         $totalLocal = round($subTotalLocal + $taxLocal + $incrementExpensesLocal + $incrementGuaranteeLocal - $discountLocal , $roundLocal);
 
+        
         $structure = [
             'currencyLocalAlfa3' => CurrencyType::getLocalActiveCurrency()->getAlfa3(),
             'currencyLocalSimbol' => CurrencyType::getLocalActiveCurrency()->getSimbol(),
@@ -235,7 +248,7 @@ class ResumeReservationHandler extends BaseHandler
             'numberAdults' => $reservation->getAdultNumber(),
             'numberKids' =>  $reservation->getChildNumber(),
             'confirmationStatus' => $reservation->getConfirmationStatus(),
-            'flights' => [],
+            'flights' => $flightsArray,
             'payments' => [],
             'passengers' => $passengers,
             'ipAddress' => $reservation->getIpAddress(),
@@ -250,9 +263,10 @@ class ResumeReservationHandler extends BaseHandler
             'markupIncrementAmountUSD' => $markupIncrementAmountUSD,
             'incrementConsolidatorUSD' => $incrementConsolidatorUSD,
             'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
-            'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion()
+            'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion(),
+            'bookCode' => $bookCode
         ];
-        $flightsArray = [];
+       /* $flightsArray = [];
         $flightsArray[0] = $itineraryIda[0];
         $flightsArray[0]['destinationCity'] = $itineraryIda[sizeof($itineraryIda)-1]['destinationCity'];
         $flightsArray[0]['destinationName'] = $itineraryIda[sizeof($itineraryIda)-1]['destinationName'];
@@ -282,7 +296,7 @@ class ResumeReservationHandler extends BaseHandler
             $orderArray[$clave] = $fila['time'];
         }
         \array_multisort($orderArray, SORT_ASC, $flightsArray);
-        $structure['flights'] = $flightsArray;
+       // $structure['flights'] = $flightsArray;*/
 
         $payments = [];
         foreach ($reservation->getPayments() as $key => $currentPayment) {
@@ -296,8 +310,6 @@ class ResumeReservationHandler extends BaseHandler
         }       
 
         $structure['payments'] = $payments;
-
-
         return $structure;
     }
 
