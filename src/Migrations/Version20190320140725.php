@@ -8,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190314153305 extends AbstractMigration
+final class Version20190320140725 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
@@ -20,7 +20,7 @@ final class Version20190314153305 extends AbstractMigration
         $this->addSql('ALTER TABLE airport ADD tags VARCHAR(255)');
 
         foreach ($jsonTags as $airports => $airport) {
-            $this->addSql("UPDATE airport SET tags = ? WHERE iata = ?", [$airport['tags'],$airport['iata']]);
+            $this->addSql("UPDATE airport SET tags = ? WHERE iata = ? AND agency_type = 'airport'", [$airport['tags'],$airport['iata']]);
         }
 
         $this->addSql("DROP VIEW public.web_fligths_autocompleted_view");
@@ -87,7 +87,6 @@ final class Version20190314153305 extends AbstractMigration
                  LEFT JOIN location pl ON l.parent_id = pl.id
                  LEFT JOIN location cl ON l.city_id = cl.id
                  LEFT JOIN location rl ON l.root_id = rl.id
-              WHERE a.agency_type = 'airport'
               ORDER BY (
         CASE
             WHEN rl.id IS NULL THEN l.alfa2
