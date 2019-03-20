@@ -28,7 +28,7 @@ class DirectRegisterUserClientHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $username = $params['username'] ?? null;
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([
             'email' => $params['email'],
@@ -39,8 +39,8 @@ class DirectRegisterUserClientHandler extends BaseHandler
             throw new NavicuException('User Exist', 400, ['email' => $params['email'], 'username' => $username]);
         }
        
-        $encoder = $this->container->get('security.password_encoder');;
-        $generator = $test = $this->container->get('lexik_jwt_authentication.jwt_manager');
+        $encoder = $this->container->get('security.password_encoder');
+        $generator = $this->container->get('lexik_jwt_authentication.jwt_manager');
        
         $user = new FosUser();
 

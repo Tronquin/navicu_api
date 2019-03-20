@@ -24,7 +24,7 @@ class RegisterUserClientHandler extends BaseHandler
 
         $params = $this->getParams();   
 
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['email'], 'username' => $params['username'] ]);
 
         if (! empty($user)) {

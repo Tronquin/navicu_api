@@ -21,7 +21,7 @@ class ListBankHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
 
         $currency = $manager->getRepository(CurrencyType::class)->findOneBy(['alfa3' => $params['currency']]);

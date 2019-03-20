@@ -22,7 +22,7 @@ class HolidayCalendarHandler extends BaseHandler
     protected function handler() : array
     {
     	
-    	$manager = $this->container->get('doctrine')->getManager();
+    	$manager = $this->getDoctrine()->getManager();
         $holidayCalendar = $manager->getRepository(HolidayCalendar::class)->findAll();
         $params = $this->getParams();
         $date_now = $params['date'];

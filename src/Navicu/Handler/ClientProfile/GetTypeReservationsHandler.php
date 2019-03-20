@@ -22,7 +22,7 @@ class GetTypeReservationsHandler extends BaseHandler
     {
         $params = $this->getParams();
         $token_interface = $params['ti'];
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         $flightReservations = $reservations = [];
         if (is_object($token_interface->getToken()->getUser())) {

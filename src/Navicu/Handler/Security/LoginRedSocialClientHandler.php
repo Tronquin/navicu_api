@@ -29,7 +29,7 @@ class LoginRedSocialClientHandler extends BaseHandler
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../../.env');
 
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['email'], 'username' => null ]);
 
         $token = null;

@@ -20,7 +20,7 @@ class CabinHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $cabins = $manager->getRepository(FlightCabin::class)->findAll();
 
         $response = [];

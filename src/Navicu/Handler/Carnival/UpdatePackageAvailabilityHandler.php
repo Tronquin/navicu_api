@@ -23,7 +23,7 @@ class UpdatePackageAvailabilityHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         foreach ($params['packages'] as $i => $p) {
 

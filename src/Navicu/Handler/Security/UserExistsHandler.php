@@ -18,7 +18,7 @@ class UserExistsHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $user = $manager->getRepository(FosUser::class)->findOneBy([ 'email' => $params['email'] ]);
 
         return [

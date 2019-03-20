@@ -20,7 +20,7 @@ class PayFlightReservationHandler extends BaseHandler
      */
     protected function handler(): array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
 
         /** @var FlightReservation $reservation */
@@ -95,7 +95,7 @@ class PayFlightReservationHandler extends BaseHandler
     private function savePayment($payments, FlightReservation $reservation)
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $paymentGateway = PaymentGatewayService::getPaymentGateway($params['paymentType']);
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
 

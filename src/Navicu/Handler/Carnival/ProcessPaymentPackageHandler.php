@@ -27,7 +27,7 @@ class ProcessPaymentPackageHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
 
         /** @var PackageTemp $package */
         $package = $manager->getRepository(PackageTemp::class)->find($params['packageId']);

@@ -33,7 +33,7 @@ class CreateReservationHandler extends BaseHandler
      */
     protected function handler(): array
     {
-    	$manager = $this->container->get('doctrine')->getManager();
+    	$manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
         $token_interface = $this->container->get('security.token_storage');
 		$ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
@@ -200,7 +200,7 @@ class CreateReservationHandler extends BaseHandler
      */
     private function updateReservationGds(FlightReservationGds $reservationGds, $itinerary, $userCurrency, $convertedAmounts) : ?FlightReservationGds
 	{
-		$manager = $this->container->get('doctrine')->getManager();
+		$manager = $this->getDoctrine()->getManager();
 
 		$repAirFrom = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['from']);
 		$repAirTo = $manager->getRepository(Airport::class)->findAllByAirport($itinerary['to']);
@@ -265,7 +265,7 @@ class CreateReservationHandler extends BaseHandler
     private function createFlightFromData(array $flightData, $isReturn) : ?Flight
 	{
 		$flight = new Flight();	
-		$manager = $this->container->get('doctrine')->getManager();        
+		$manager = $this->getDoctrine()->getManager();
 
 		$airline = $manager->getRepository(Airline::class)->findOneBy(['iso' => $flightData['airline']]);
 		$from = $manager->getRepository(Airport::class)->findOneBy(['iata' => $flightData['origin']]);
@@ -298,7 +298,7 @@ class CreateReservationHandler extends BaseHandler
 	private function createFareFamilyFromData($fareFamilyData) : ?FlightFareFamily
 	{
 		$fareFamily = new FlightFareFamily();
-		$manager = $this->container->get('doctrine')->getManager();
+		$manager = $this->getDoctrine()->getManager();
 		$fareFamily
 				->setName($fareFamilyData['fareFamilyName'])
 				->setDescription($fareFamilyData['fareFamilyDescription'])

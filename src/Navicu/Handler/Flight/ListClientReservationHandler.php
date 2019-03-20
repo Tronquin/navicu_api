@@ -29,7 +29,7 @@ class ListClientReservationHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         /** @var FosUser $user */
         $user = $manager->getRepository(FosUser::class)->findOneBy(['email' => $params['email']]);
         $status = $params['status'];

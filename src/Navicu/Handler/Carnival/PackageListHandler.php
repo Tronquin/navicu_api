@@ -22,7 +22,7 @@ class PackageListHandler extends BaseHandler
      */
     protected function handler() : array
     {
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $packages = $manager->getRepository(PackageTemp::class)->getAvailablePackages();
         $params = $this->getParams();
         /** @var CurrencyType $currency */

@@ -21,7 +21,7 @@ class ListCurrencyHandler extends BaseHandler
     protected function handler() : array
     {
 		
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         $currency = $manager->getRepository(CurrencyType::class)->findBy(['active'=>true]);
 
         $response = [];

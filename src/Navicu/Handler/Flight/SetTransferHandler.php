@@ -27,7 +27,7 @@ class SetTransferHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $manager = $this->container->get('doctrine')->getManager();
+        $manager = $this->getDoctrine()->getManager();
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId'] ]);
 
@@ -55,8 +55,8 @@ class SetTransferHandler extends BaseHandler
 
         /** @var FosUser $user */
         $user = $manager->getRepository(FosUser::class)->findOneBy(['email' => $params['email']]);
-        $clienteProfile = $manager->getRepository(ClientProfile::class)->findOneBy(['user' => $user]);
-        $reservation->setClientProfile($clienteProfile);
+        $clientProfile = $manager->getRepository(ClientProfile::class)->findOneBy(['user' => $user]);
+        $reservation->setClientProfile($clientProfile);
         $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
         $manager->flush();
 
