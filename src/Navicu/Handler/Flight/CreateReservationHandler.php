@@ -27,6 +27,7 @@ use App\Navicu\Service\NavicuFlightConverter;
 class CreateReservationHandler extends BaseHandler
 { 
 	const CURRENCY_EURO = 'EUR';
+
  	/** 
      * @return array
      * @throws NavicuException

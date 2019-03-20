@@ -3,14 +3,11 @@
 namespace App\Navicu\Handler\Flight;
 
 use App\Entity\FlightReservation;
-use App\Entity\Flight;
 use App\Entity\FosUser;
-use App\Entity\ListBank;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Handler\BaseHandler;
-
 
 /**
  * Lista las reservas por usuario y estatus

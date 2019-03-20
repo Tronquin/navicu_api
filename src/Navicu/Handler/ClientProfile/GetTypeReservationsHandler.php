@@ -17,23 +17,26 @@ class GetTypeReservationsHandler extends BaseHandler
 {
     /**
      * @return array
+     * @throws NavicuException
      */
     protected function handler() : array
     {
-        $params = $this->getParams();
-        $token_interface = $params['ti'];
+        $token_interface = $this->container->get('security.token_storage');
         $manager = $this->getDoctrine()->getManager();
 
-        $flightReservations = $reservations = [];
-        if (is_object($token_interface->getToken()->getUser())) {
+        if (! is_object($token_interface->getToken()->getUser())) {
+            throw new NavicuException('invalid token');
+        }
 
-            if (null !== $token_interface->getToken()->getUser()->getClientProfile() && $token_interface->getToken()->getUser()->getClientProfile()[0]) {
-                $flightReservations = $manager->getRepository(FlightReservation::class)->findBy(['clientProfile' => $token_interface->getToken()->getUser()->getClientProfile()[0]]);
-                $reservations = $manager->getRepository(Reservation::class)->findBy(['client' => $token_interface->getToken()->getUser()->getClientProfile()[0]]);
-            }
+        $flightReservations = [];
+        $reservations = [];
 
-        } else {
-            throw new NavicuException('invalid token' );
+        if (
+            null !== $token_interface->getToken()->getUser()->getClientProfile() &&
+            ($clientProfile = $token_interface->getToken()->getUser()->getClientProfile()[0])
+        ) {
+            $flightReservations = $manager->getRepository(FlightReservation::class)->findBy(compact('clientProfile'));
+            $reservations = $manager->getRepository(Reservation::class)->findBy(['client' => $clientProfile]);
         }
 
         return [
@@ -41,7 +44,6 @@ class GetTypeReservationsHandler extends BaseHandler
             'flightReservations' => count($flightReservations)
         ];
     }
-
 
     /**
      * Todas las reglas de validacion para los parametros que recibe
@@ -54,7 +56,6 @@ class GetTypeReservationsHandler extends BaseHandler
      */
     protected function validationRules() : array
     {
-        return [
-        ];
+        return [];
     }
 }

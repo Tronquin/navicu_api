@@ -24,7 +24,7 @@ class CabinHandler extends BaseHandler
         $cabins = $manager->getRepository(FlightCabin::class)->findAll();
 
         $response = [];
-        /** @var FlightClass $cabin */
+        /** @var FlightCabin $cabin */
         foreach ($cabins as $cabin) {
             $response[] = [
                 'name' => $cabin->getName(),

@@ -30,9 +30,9 @@ abstract class BaseHandler
 
     /* codigos respuesta boleteria*/
     const CODE_NOT_AVAILABILITY = 11;
-    const CODE_REPEATED_BOOK = 12;
-    const CODE_REPEATED_TICKET = 13;
-    const CODE_ERROR_ISSUE = 20;
+    const CODE_REPEATED_BOOK = 112;
+    const CODE_REPEATED_TICKET = 113;
+    const CODE_ERROR_ISSUE = 120;
 
 
     /* codigos respuesta holeteria*/

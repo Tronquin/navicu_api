@@ -160,7 +160,6 @@ class OtaService
         return self::send(self::URL_TWICE_ONE_WAY, $params);
     }
 
-
     /**
      * Hace una busqueda calendar en OTA
      *
