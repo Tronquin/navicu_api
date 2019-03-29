@@ -33,11 +33,12 @@ class PaymentPackageListHandler extends BaseHandler
             $dataGeneral = json_decode($payment->getPackageTemp()->getContent(), true);
             /** @var CurrencyType $currency */
             $currency = $currencyRepository->findOneBy(['alfa3' => $dataPayment['payments'][0]['currency']]);
-
             $data['status'] = $payment->getStatus();
             $data['title'] = $dataGeneral['title'] . '-' .$dataGeneral['subtitle'];
             $data['name'] = $dataPayment['passengers'][0]['title'] . ' ' . $dataPayment['passengers'][0]['fullName'];
             $data['email'] = $dataPayment['passengers'][0]['email'];
+            $data['documentNumber'] = $dataPayment['passengers'][0]['documentNumber'];
+            $data['phone'] = $dataPayment['passengers'][0]['phone'];
             $data['currency'] = $currency->getAlfa3();
             $data['symbol'] = $currency->getSimbol();
             $data['price'] = $dataPayment['payments'][0]['amount'];
