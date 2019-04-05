@@ -26,7 +26,7 @@ class FareFamilyHandler extends BaseHandler
         $params = $this->getParams();
         $response = OtaService::fareFamily($params);
 
-        // Se eliminan las tarifas menores a la que tiene el vuelo seleccionado
+        /* Se eliminan las tarifas menores a la que tiene el vuelo seleccionado
         $ready = false;
         $count = 0;
         foreach ($response['fareFamily'] as $i => $fareFamily) {
@@ -36,7 +36,7 @@ class FareFamilyHandler extends BaseHandler
             } else {
                 $ready = true;
             }
-        }
+        }*/
 
         // Se calcula los nuevos montos de la reserva en base
         // a la informacion obtenida en el fare family
