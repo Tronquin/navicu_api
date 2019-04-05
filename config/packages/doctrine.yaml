@@ -17,6 +17,14 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                 url: '%env(resolve:DATABASE_URL)%'
+            navicu_v1:
+                driver: 'pdo_pgsql'
+                server_version: '9.6'
+                charset: utf8
+                default_table_options:
+                    charset: utf8mb4
+                    collate: utf8mb4_unicode_ci
+                url: '%env(resolve:DATABASE_V1_URL)%'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
