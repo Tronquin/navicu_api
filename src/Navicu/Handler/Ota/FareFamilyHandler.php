@@ -26,49 +26,60 @@ class FareFamilyHandler extends BaseHandler
         $params = $this->getParams();
         $response = OtaService::fareFamily($params);
 
+        $ready = false;
         foreach ($response['fareFamily'] as $i => $fareFamily) {
-            // Se calcula los nuevos montos de la reserva en base
-            // a la informacion obtenida en el fare family
 
-            $price = 0;
+            // Se eliminan las tarifas menores a la que tiene el vuelo seleccionado
+            if ($fareFamily['itinerary'][0]['rate'] !== $params['itinerary'][0]['rate'] && !$ready) {
 
-            if (isset($fareFamily['prices']['ADT'])) {
-                // precio por adultos
-                $price += ($fareFamily['prices']['ADT'] * $params['adt']);
+                array_splice($response['fareFamily'], $i, 1);
+                $ready = true;
+
+            } else {
+
+                // Se calcula los nuevos montos de la reserva en base
+                // a la informacion obtenida en el fare family
+                $price = 0;
+
+                if (isset($fareFamily['prices']['ADT'])) {
+                    // precio por adultos
+                    $price += ($fareFamily['prices']['ADT'] * $params['adt']);
+                }
+
+                if (isset($fareFamily['prices']['CNN'])) {
+                    // precio por niños
+                    $price += ($fareFamily['prices']['CNN'] * $params['cnn']);
+                }
+
+                if (isset($fareFamily['prices']['INF'])) {
+                    // precio por infantes
+                    $price += ($fareFamily['prices']['INF'] * $params['inf']);
+                }
+
+                if (isset($fareFamily['prices']['INS'])) {
+                    // precio por infantes con asientos
+                    $price += ($fareFamily['prices']['INS'] * $params['ins']);
+                }
+
+                $lockData = [
+                    'iso' => $fareFamily['itinerary'][0]['airline'],
+                    'rate' => $fareFamily['itinerary'][0]['rate'],
+                    'from' => $fareFamily['itinerary'][0]['origin'],
+                    'to' => $fareFamily['itinerary'][0]['destination'],
+                    'departureDate' => new \DateTime($fareFamily['itinerary'][0]['departure'])
+                ];
+
+                $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($price, 'USD',  $lockData,
+                    $params['userCurrency'],
+                    [
+                        'provider' => $params['provider'],
+                        'negotiatedRate' =>  $fareFamily['itinerary'][0]['negotiated_rate'],
+                    ]
+                );
+
+                $response['fareFamily'][$i]['price'] = $convertedAmounts['subTotal'];
             }
 
-            if (isset($fareFamily['prices']['CNN'])) {
-                // precio por niños
-                $price += ($fareFamily['prices']['CNN'] * $params['cnn']);
-            }
-
-            if (isset($fareFamily['prices']['INF'])) {
-                // precio por infantes
-                $price += ($fareFamily['prices']['INF'] * $params['inf']);
-            }
-
-            if (isset($fareFamily['prices']['INS'])) {
-                // precio por infantes con asientos
-                $price += ($fareFamily['prices']['INS'] * $params['ins']);
-            }
-
-            $lockData = [
-                'iso' => $fareFamily['itinerary'][0]['airline'],
-                'rate' => $fareFamily['itinerary'][0]['rate'],
-                'from' => $fareFamily['itinerary'][0]['origin'],
-                'to' => $fareFamily['itinerary'][0]['destination'],
-                'departureDate' => new \DateTime($fareFamily['itinerary'][0]['departure'])
-            ];
-
-            $convertedAmounts = NavicuFlightConverter::calculateFlightAmount($price, 'USD',  $lockData,
-                $params['userCurrency'],
-                [
-                    'provider' => $params['provider'],
-                    'negotiatedRate' =>  $fareFamily['itinerary'][0]['negotiated_rate'],
-                ]
-            );
-
-            $response['fareFamily'][$i]['price'] = $convertedAmounts['subTotal'];
         }
 
         return $response['fareFamily'];
