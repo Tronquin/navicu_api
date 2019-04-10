@@ -26,19 +26,21 @@ class FareFamilyHandler extends BaseHandler
         $params = $this->getParams();
         $response = OtaService::fareFamily($params);
 
+        // Se eliminan las tarifas menores a la que tiene el vuelo seleccionado
         $ready = false;
+        $count = 0;
         foreach ($response['fareFamily'] as $i => $fareFamily) {
-
-            // Se eliminan las tarifas menores a la que tiene el vuelo seleccionado
-            if ($fareFamily['itinerary'][0]['rate'] !== $params['itinerary'][0]['rate'] && !$ready) {
-
-                array_splice($response['fareFamily'], $i, 1);
-                $ready = true;
-
+            if ($fareFamily['fareFamilyDescription'] !== $params['fareFamilyName'] && !$ready) {
+                array_splice($response['fareFamily'], $i - $count, 1);
+                $count++;
             } else {
+                $ready = true;
+            }
+        }
 
-                // Se calcula los nuevos montos de la reserva en base
-                // a la informacion obtenida en el fare family
+        // Se calcula los nuevos montos de la reserva en base
+        // a la informacion obtenida en el fare family
+        foreach ($response['fareFamily'] as $i => $fareFamily) {
                 $price = 0;
 
                 if (isset($fareFamily['prices']['ADT'])) {
@@ -79,8 +81,6 @@ class FareFamilyHandler extends BaseHandler
 
                 $response['fareFamily'][$i]['price'] = $convertedAmounts['subTotal'];
             }
-
-        }
 
         return $response['fareFamily'];
     }
