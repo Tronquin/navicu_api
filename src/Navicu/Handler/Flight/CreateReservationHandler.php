@@ -145,15 +145,15 @@ class CreateReservationHandler extends BaseHandler
     	/** @var CurrencyType $userCurrency */
     	$userCurrency = $manager->getRepository(CurrencyType::class)->findOneBy([ 'alfa3' => $params['userCurrency'] ]);
 
-        $amounts['incrementAmount'] = $totalIncrementAmount;
-        $amounts['incrementLock'] = $totalIncrementLock;
-        $amounts['incrementMarkup'] = $totalIncrementMarkup;
+        $amounts['incrementAmount'] = round($totalIncrementAmount,2);
+        $amounts['incrementLock'] = round($totalIncrementLock,2);
+        $amounts['incrementMarkup'] =  round($totalIncrementMarkup,2);
 		$amounts['currencySymbol'] = $userCurrency->getSimbol();
-		$amounts['subtotal'] = $subTotal;
-		$amounts['tax'] = $tax;
-		$amounts['incrementExpenses'] = $totalIncrementExpenses;
-		$amounts['incrementGuarantee'] = $totalIncrementGuarantee;
-		$amounts['discount'] = $totalDiscount;
+		$amounts['subtotal'] = round($subTotal,2);
+		$amounts['tax'] = round($tax,2);
+		$amounts['incrementExpenses'] = round($totalIncrementExpenses,2);
+		$amounts['incrementGuarantee'] = round($totalIncrementGuarantee,2);
+		$amounts['discount'] = round($totalDiscount,2);
 		$now = new \DateTime('now');
 
     	$response = [
