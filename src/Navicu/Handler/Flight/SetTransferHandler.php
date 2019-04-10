@@ -34,12 +34,12 @@ class SetTransferHandler extends BaseHandler
         if (! $reservation) {
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
-
         // Genera el book para apartar la disponibilidad durante el dia
         $handler = new BookFlightHandler();
         $handler->setParam('publicId', $params['publicId']);
         $handler->setParam('passengers', $params['passengers']);
         $handler->setParam('payments', $params['payments'] ?? []);
+        
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
@@ -47,6 +47,12 @@ class SetTransferHandler extends BaseHandler
 
             throw new NavicuException('BookFlightHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
+        
+        //Envia correo de pre-reservación
+        $handler = new SendFlightPreReservationEmailHandler();
+        $handler->setParam('publicId',  $params['publicId']);
+        $handler->setParam('paymentType',  $params['publicId']);
+        $handler->processHandler();
 
         // Registra al usuario
         $handler = new DirectRegisterUserClientHandler();
@@ -59,6 +65,10 @@ class SetTransferHandler extends BaseHandler
         $reservation->setClientProfile($clientProfile);
         $reservation->setStatus(FlightReservation::STATE_PRE_RESERVATION);
         $manager->flush();
+
+         
+       
+        
 
         // Notificacion
         NotificationService::notifyPre('reservation.per-confirm', $user);

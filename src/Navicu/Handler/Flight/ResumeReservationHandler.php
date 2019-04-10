@@ -264,8 +264,10 @@ class ResumeReservationHandler extends BaseHandler
             'incrementConsolidatorUSD' => $incrementConsolidatorUSD,
             'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
             'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion(),
-            'bookCode' => $bookCode
+            'bookCode' => $bookCode,
+            'dateExpire' =>  $reservation->getExpireDate()->format('Y-m-d H:i:s')
         ];
+
        /* $flightsArray = [];
         $flightsArray[0] = $itineraryIda[0];
         $flightsArray[0]['destinationCity'] = $itineraryIda[sizeof($itineraryIda)-1]['destinationCity'];
