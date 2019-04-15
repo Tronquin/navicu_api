@@ -305,18 +305,34 @@
                        <span></span>
                        </td>
                      
-                       <td width="39%" align="left">
+                       <td width="30%" align="left">
                         <span class="text-details-col1">Nombres </span> 
                          <span class="text-details-col2">Juan Perez</span>   
                       </td>
                       <td  width="25%" align="left" class="text-regular-12">
                       1 bulto/2 piezas en bodega
                       </td>
-                      <td align="right"  width="32%" >
-                              <span class="space-15-right">
-                                <span class="text-td-1">Nº TKT </span>
-                                <span class="text-td-2">4913604691</span>
+                      <td align="right"  width="41%" >
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - IDA </span>
+                                <span class="text-td-2">2563245789652</span>
                               </span>
+                              </td>
+                            </tr>
+                             <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - Vuelta </span>
+                                <span class="text-td-2">2563245789652</span>
+                              </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                        </td>                 
                     </tr>
 
@@ -325,18 +341,34 @@
                        <span></span>
                        </td>
                      
-                       <td width="39%" align="left">
+                       <td width="30%" align="left">
                         <span class="text-details-col1">Nombres </span> 
                          <span class="text-details-col2">Manuel Perez</span>   
                       </td>
                       <td  width="25%" align="left" class="text-regular-12">
                       1 bulto/2 piezas en bodega
                       </td>
-                      <td align="right"  width="32%" >
-                              <span class="space-15-right">
-                                <span class="text-td-1">Nº TKT </span>
-                                <span class="text-td-2">4913604692</span>
+                      <td align="right"  width="41%" >
+                         <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - IDA </span>
+                                <span class="text-td-2">2563245789652</span>
                               </span>
+                              </td>
+                            </tr>
+                             <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - Vuelta </span>
+                                <span class="text-td-2">2563245789652</span>
+                              </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                        </td>                 
                     </tr>
                     <tr bgcolor="#FDFBFE" height="35px">
@@ -344,18 +376,34 @@
                        <span></span>
                        </td>
                      
-                       <td width="39%" align="left">
+                       <td width="30%" align="left">
                         <span class="text-details-col1">Nombres </span> 
                          <span class="text-details-col2">Ricardo Rodriguez</span>   
                       </td>
                       <td  width="25%" align="left" class="text-regular-12">
                       1 bulto/1 piezas en bodega
                       </td>
-                      <td align="right"  width="32%" >
-                              <span class="space-15-right">
-                                <span class="text-td-1">Nº TKT </span>
-                                <span class="text-td-2">4913604693</span>
+                      <td align="right"  width="41%" >
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - IDA </span>
+                                <span class="text-td-2">2563245789652</span>
                               </span>
+                              </td>
+                            </tr>
+                             <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - Vuelta </span>
+                                <span class="text-td-2">2563245789652</span>
+                              </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                        </td>                 
                     </tr>
                     <tr bgcolor="#F0F0F0" height="35px">
@@ -363,18 +411,34 @@
                        <span></span>
                        </td>
                      
-                       <td width="39%" align="left">
+                       <td width="30%" align="left">
                         <span class="text-details-col1">Nombres </span> 
                          <span class="text-details-col2">María Pérez</span>   
                       </td>
                       <td  width="25%" align="left" class="text-regular-12">
                       1 bulto
                       </td>
-                      <td align="right"  width="32%" >
-                              <span class="space-15-right">
-                                <span class="text-td-1">Nº TKT </span>
-                                <span class="text-td-2">4913604694</span>
+                      <td align="right"  width="41%" >
+                         <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - IDA </span>
+                                <span class="text-td-2">2563245789652</span>
                               </span>
+                              </td>
+                            </tr>
+                             <tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-td-1">N° TKT - Vuelta </span>
+                                <span class="text-td-2">2563245789652</span>
+                              </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                        </td>                 
                     </tr>
                   </tbody>
@@ -400,29 +464,29 @@
                 </table>
       </mj-raw>
       <mj-raw > 
-              <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
-                  <tbody>
-                    <tr height="35px">
+            <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="35px">
                        <td width="4%">
                        <span></span>
                       </td>
                       
-                      <td width="30%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
+                      <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
                             <div class="margin-left">
-                            <span class="text-td-1">Ida </span>
-                            <span class="text-td-2">23 Mayo</span> 
+                            <span class="text-td-1">Ida  </span>
+                            <span class="text-td-2">20-04-2019 05:15</span> 
                           </div>
                       </td>
-                      <td  bgcolor="#F0F0F0" width="32" align="left" class="text-cel2-col1">
-                            
-                      </td>
-                      <td  bgcolor="#F0F0F0" width="30" align="left" class="text-cel2-col1">
-                            
-                      </td>
+                    
                       <td width="4%">
                        <span></span>
                       </td>
                     </tr>
+                
+              </tbody>
+            </table>
+              <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+                  <tbody>
                     <tr height="35px">
                        <td width="4%">
                        <span></span>
@@ -462,28 +526,31 @@
                        <span></span>
                       </td>
                     </tr>
-                     <tr height="35px">
+                  </tbody>
+                </table>
+                <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                <tr height="35px">
                        <td width="4%">
                        <span></span>
                       </td>
                       
-                      <td width="30%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
-                           <div class="margin-left">
-                            <span class="text-td-1">Vuelta </span>
-                            <span class="text-td-2">31 Mayo</span> 
+                      <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
+                            <div class="margin-left">
+                            <span class="text-td-1">Vuelta  </span>
+                            <span class="text-td-2">20-04-2019 05:15</span> 
                           </div>
                       </td>
-                      <td  bgcolor="#F0F0F0" width="32" align="left" class="text-cel2-col1">
-                            
-                      </td>
-                      <td  bgcolor="#F0F0F0" width="30" align="left" class="text-cel2-col1">
-                            
-                      </td>
+                    
                       <td width="4%">
                        <span></span>
                       </td>
                     </tr>
-                    <tr height="35px">
+                
+              </tbody>
+              <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                       <tr height="35px">
                        <td width="4%">
                        <span></span>
                       </td>
@@ -1405,7 +1472,8 @@
                     <tr height="20px" >
                       <td >
                         <span class="class-footer-2">
-                        preguntas@navicu.com
+                          <a  class="class-footer-2" style="text-decoration: none; " href="mailto:preguntas@navicu.com" target="_blank">preguntas@navicu.com</a>
+                       
                       </span>
                       </td>
                     </tr>
@@ -1432,7 +1500,7 @@
                       <td>
                         <span class="class-footer-5">
                         Este e-mail ha sido enviado por  <a href="https://www.navicu.com" target="_blank" style="text-decoration: none; color:#FFFFFF; font-family:Lato,sans-serif; font-weight:300;">navicu.com</a>
-                         -2014 · 2017 navicu.com - Todos los derechos reservados
+                         -2014 · 2017 <a href="https://www.navicu.com" target="_blank" style="text-decoration: none; color:#FFFFFF; font-family:Lato,sans-serif; font-weight:300;">navicu.com</a> - Todos los derechos reservados
                       </span>
                       </td>
                     </tr>       
