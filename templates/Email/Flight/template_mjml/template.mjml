@@ -12,7 +12,7 @@
        .text-cel {
        font-size:14px;
        font-family:Lato; 
-       font-style=:bold;
+       font-style:bold;
        color:#60D08C;
         
       }
@@ -597,7 +597,7 @@
                        <td width="4%" >
                             <span></span>
                        </td>                      
-                       <td width="43%" align="left" class="text-cel2-col1 padding-top-23" >
+                       <td width="43%" align="left" class="text-cel2-col1 padding-top-23" valign="bottom" >
                           <div class="margin-left">
                           <span class="text-regular-14"> <br>
                           Política de cancelación no reembolsable</span>
@@ -609,6 +609,34 @@
                        <td width="32%" align="right" class="text-cel2-col1" >
                          <table>
                           <tbody>
+                            <tr>
+                              <td align="right">
+                                  <div class="margin-right">
+                                     <span class="text-regular-14">Subtotal 108.000.000</span>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="right">
+                                  <div class="margin-right">
+                                     <span class="text-regular-14">Subtotal 108.000.000</span>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="right">
+                                  <div class="margin-right">
+                                     <span class="text-regular-14">Subtotal 108.000.000</span>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="right">
+                                  <div class="margin-right">
+                                     <span class="text-regular-14">Subtotal 108.000.000</span>
+                                  </div>
+                              </td>
+                            </tr>
                             <tr>
                               <td align="right">
                                   <div class="margin-right">
@@ -636,7 +664,8 @@
                        <td width="4%" rowspan="3">
                          <span></span>
                        </td>
-                    </tr>       
+                    </tr>
+
             </tbody>
          </table>
       </mj-raw>
