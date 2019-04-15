@@ -1,7 +1,7 @@
 <mjml>
   <mj-head>
     <mj-attributes>
-        <mj-font href="https://fonts.googleapis.com/css?family=lato">
+        <mj-font href="https://fonts.googleapis.com/css?family=Lato">
     </mj-attributes>
    
       <mj-style inline="inline">
@@ -11,21 +11,21 @@
       }
        .text-cel {
        font-size:14px;
-       font-family:lato; 
+       font-family:Lato; 
        font-style=:bold;
        color:#60D08C;
         
       }
       .text-cel2-col1 {
        font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: normal;
         color:#54284E;
         
       }
       .text-cel2-col2 {
        font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: lighter;
         color:#54284E;
         
@@ -33,14 +33,14 @@
 
       .text-details-col1 {
        font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: normal;
         color:#808080;
         
       }
        .text-details-col2 {
        font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: bold;
         color:#808080;
         
@@ -52,7 +52,7 @@
         padding-bottom: 15px;
         background:#783CBC;
         color:#ffffff;
-        font-family:lato;
+        font-family:Lato;
         font-size:12px;
         font-weight:normal;
         line-height:120%;
@@ -66,14 +66,14 @@
 
         .text-td-1  {
         font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: lighter;
         color:#54284E;
 
         }
         .text-td-2  {
         font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: bold;
         color:#54284E;
         }
@@ -83,40 +83,40 @@
         }
         .text-regular-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: lighter;
         color:#808080;
         }
 
         .text-regular-14  {
         font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: lighter;
         color:#808080;
         }
 
         .text-regular-total  {
         font-size:14px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: bold;
         color:#391860;
         }
          .text-regular-979797-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: normal;
         color:#979797;
         }
         .text-bold-979797-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: bold;
         color:#979797;
         }
 
         .text-bold-54284E-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: bold;
         color:#54284E;
         }
@@ -124,14 +124,14 @@
 
         .text-ligth-783CBD-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: lighter;
         color:#783CBD;
         }
 
         .text-regular-783CBD-12  {
         font-size:12px;
-        font-family:lato;
+        font-family:Lato;
         font-weight: normal;
         color:#783CBD;
         text-decoration: none; 
@@ -224,7 +224,7 @@
         
         text-align:center;
         
-        font-family:laton;
+        font-family:Lato;
 
 
         }
@@ -252,7 +252,7 @@
                       <img width="15px" align="left" src="despiece/check.png">   
                       </td>
                       <td width="62%" align="left" class="text-cel">
-                          La compra de boleto fue exitosa     
+                          <span class="text-cel"> La compra de boleto fue exitosa </span>    
                       </td>
                       <td  width="10%"  align="center" class="button-td">
                         <a class="button-a" href="#" target="_blank">
@@ -464,7 +464,7 @@
                 </table>
       </mj-raw>
       <mj-raw > 
-            <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+            <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
               <tbody>
                 <tr height="35px">
                        <td width="4%">
@@ -485,7 +485,7 @@
                 
               </tbody>
             </table>
-              <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+              <table  class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
                   <tbody>
                     <tr height="35px">
                        <td width="4%">
@@ -494,14 +494,14 @@
                       
                       <td width="30%" align="left" class="text-cel2-col1 ">
                          <div class="margin-left">
-                          <span class="text-details-col1">8:50 AM <br>
-                          CCS - AP Int. Maiquetia   </span>
+                          <div class="text-details-col1">CCS Aeropuerto Internacional de Maiquetía Simon Bolivar
+                          </div>
                         </div>
                       </td>
                       <td width="44%" align="left" class="text-cel2-col1">
                          
-                         <span class="text-details-col1">10:00 AM <br>
-                          VLN - AP Int. Michelena   </span>
+                         <div class="text-details-col1 margin-left">MAR La Chinita International Airport
+                         </div>
                          
                       </td>
                       <td width="18%" align="left" class="text-regular-14">
@@ -528,7 +528,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
                 <tr height="35px">
                        <td width="4%">
@@ -548,7 +548,7 @@
                     </tr>
                 
               </tbody>
-              <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
                        <tr height="35px">
                        <td width="4%">
@@ -557,13 +557,13 @@
                       
                       <td width="30%" align="left" class="text-cel2-col1">
                          <div class="margin-left">
-                          <span class="text-details-col1">5:50 AM <br>
-                          VLN - AP Int. Arturo Michelena   </span>
+                          <div class="text-details-col1">MAR La Chinita International Airport
+                          </span>
                         </div>
                       </td>
                       <td width="44%" align="left" class="text-cel2-col1">
-                         <span class="text-details-col1">10:00 AM <br>
-                          CCS - AP Int. Maiquetia   </span> 
+                         <div class="text-details-col1 margin-left">CCS Aeropuerto Internacional de Maiquetía Simon Bolivar
+                         </div> 
                       </td>
                       <td width="18%" align="left" class="text-regular-14">
                          <table>
@@ -1345,7 +1345,7 @@
                        
                       </td>
                       <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
-                         <div class="margin-right">
+                         <div class="margin-right margin-bottom">
                          Siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación necesaria
                           para volar según su situación
                         </div>
@@ -1384,7 +1384,7 @@
       <mj-divider  border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
 
       <mj-raw > 
-          <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
               <tbody>
                     <tr>
                        <td width="4%">
@@ -1406,11 +1406,11 @@
 
       <!-- Fin de informacion Debes recordar -->
 
-      <mj-divider  border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
+      <mj-divider padding-bottom="15"  css-class="margin-bottom" border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
 
       <!-- Inicio mensaje con link  -->
       <mj-raw > 
-          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+          <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                 <tbody>
                     <tr>
                        <td width="4%">
@@ -1450,17 +1450,14 @@
                        <span></span>
                       </td>
                     </tr>
-                    <tr height="20px" >
-                      <td>
-                      </td>
-                    </tr>   
+                      
                   </tbody>
             </table>   
       </mj-raw>
       <!-- Fin -->
       <!-- Inicio footer -->
       <mj-raw >
-             <table bgcolor="#783CBD" border="0" cellpadding="0" cellspacing="0" width="100%" >
+             <table class="margin-top-20" bgcolor="#783CBD" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
                     <tr height="20px" >
                       <td >

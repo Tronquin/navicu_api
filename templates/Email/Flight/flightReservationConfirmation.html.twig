@@ -143,16 +143,16 @@
                        <td width="4%">
                       <img width="15px" align="left" src="http://navicu.com/images/flights/check_green.png">   
                       </td>
-                      <td width="62%" align="left" class="text-cel" style="font-size: 14px; font-family: lato; font-style=: bold; color: #60D08C;">
-                          La compra de boleto fue exitosa     
+                      <td width="62%" align="left" class="text-cel" style="font-size: 14px; font-family: Lato; font-style=: bold; color: #60D08C;">
+                         <span class="text-cel" style="font-size: 14px; font-family: Lato; font-style=: bold; color: #60D08C;"> La compra de boleto fue exitosa </span>   
                       </td>
                       <td width="10%" align="center" class="button-td">
-                        <a class="button-a" href="https://{{ domain }}/resumeReservationPdf/{{ public_id }}" target="_blank" style="display: inline-block; padding-bottom: 15px; background: #783CBC; color: #ffffff; font-family: lato; font-size: 12px; font-weight: normal; line-height: 120%; margin-top: 1px; text-decoration: none; text-transform: none; padding: 6px 6px; mso-padding-alt: 0px; border-radius: 1px;">
+                        <a class="button-a" href="https://{{ domain }}/resumeReservationPdf/{{ public_id }}" target="_blank" style="display: inline-block; padding-bottom: 15px; background: #783CBC; color: #ffffff; font-family: Lato; font-size: 12px; font-weight: normal; line-height: 120%; margin-top: 1px; text-decoration: none; text-transform: none; padding: 6px 6px; mso-padding-alt: 0px; border-radius: 1px;">
                           <div>Imprimir</div>
                         </a>
                       </td>
                       <td width="20%" align="center" class="button-td">
-                        <a class="button-a" href="https://{{ domain }}/resumeReservationPdf/{{ public_id }}" target="_blank" style="display: inline-block; padding-bottom: 15px; background: #783CBC; color: #ffffff; font-family: lato; font-size: 12px; font-weight: normal; line-height: 120%; margin-top: 1px; text-decoration: none; text-transform: none; padding: 6px 6px; mso-padding-alt: 0px; border-radius: 1px;">
+                        <a class="button-a" href="https://{{ domain }}/resumeReservationPdf/{{ public_id }}" target="_blank" style="display: inline-block; padding-bottom: 15px; background: #783CBC; color: #ffffff; font-family: Lato; font-size: 12px; font-weight: normal; line-height: 120%; margin-top: 1px; text-decoration: none; text-transform: none; padding: 6px 6px; mso-padding-alt: 0px; border-radius: 1px;">
                           <div>Guardar PDF</div>
                         </a>
                       </td>                  
@@ -170,16 +170,16 @@
                        <td width="4%">
                         <img width="15px" align="left" src="http://navicu.com/images/flights/ticket.png"> 
                       </td>
-                      <td width="35%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                      <td width="35%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                           Detalles del pasajero    
                       </td>
-                      <td width="25%" align="left" class="text-cel2-col2" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">
+                      <td width="25%" align="left" class="text-cel2-col2" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">
                       Equipaje
                       </td>
                       <td align="right">
                               <span class="space-15-right" style="margin-right: 15px; padding: 6px 6px;">
-                                <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">ID </span>
-                                <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">{{public_id}}</span>
+                                <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">ID </span>
+                                <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">{{public_id}}</span>
                               </span>
                             </td>                 
                     </tr>
@@ -194,12 +194,12 @@
                        </td>
                      
                        <td width="30%" align="left">
-                        <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">Nombres </span> 
-                         <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">{{ passenger['firstName'] ~ " " ~ passenger['lastName'] }}
+                        <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">Nombres </span> 
+                         <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">{{ passenger['firstName'] ~ " " ~ passenger['lastName'] }}
                          </span>   
                       </td>
 
-                      <td width="25%" align="left" class="text-regular-12" style="font-size: 12px; font-family: lato; font-weight: lighter; color: #808080;">
+                      <td width="25%" align="left" class="text-regular-12" style="font-size: 12px; font-family: Lato; font-weight: lighter; color: #808080;">
                       1 bulto/2 piezas en bodega
                       </td>
                       {% if passenger.tickets|length < 2 %}
@@ -209,8 +209,8 @@
                             <tr>
                               <td>
                                 <span class="space-15-right" style="margin-right: 15px; padding: 6px 6px;">
-                                <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">N° TKT - IDA </span>
-                                <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
+                                <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">N° TKT - IDA </span>
+                                <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
                               </span>
                               </td>
                             </tr>
@@ -224,16 +224,16 @@
                             <tr>
                               <td>
                                 <span class="space-15-right" style="margin-right: 15px; padding: 6px 6px;">
-                                <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">N° TKT - IDA </span>
-                                <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
+                                <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">N° TKT - IDA </span>
+                                <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">&nbsp;{{"  " ~ passenger.tickets[0].number }}</span>
                               </span>
                               </td>
                             </tr>
                              <tr>
                               <td>
                                 <span class="space-15-right" style="margin-right: 15px; padding: 6px 6px;">
-                                <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">N° TKT - VUELTA </span>
-                                <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">&nbsp;{{ "  " ~ passenger.tickets[1].number }}</span>
+                                <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">N° TKT - VUELTA </span>
+                                <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">&nbsp;{{ "  " ~ passenger.tickets[1].number }}</span>
                               </span>
                               </td>
                             </tr>
@@ -256,7 +256,7 @@
                        <td width="4%">
                        <img width="20px" align="left" src="http://navicu.com/images/flights/plane.png"> 
                       </td>
-                      <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                      <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                           Detalles del vuelo    
                       </td>
                     </tr>                      
@@ -265,17 +265,17 @@
 
                     {% for flight in flights %}
                      {% if flight['return'] or flight['isReturn'] %}
-                <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px;" >
                   <tbody>
                     <tr height="35px">
                        <td width="4%">
                            <span></span>
                         </td>
                           
-                        <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                        <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                                 <div class="margin-left" style="margin-left: 15px;">
-                                <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">Vuelta  </span>
-                                <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">{{ flight['departure']|date('d-m-Y H:i') }}</span> 
+                                <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">Vuelta  </span>
+                                <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">{{ flight['departure']|date('d-m-Y H:i') }}</span> 
                               </div>
                         </td>    
                         <td width="4%">
@@ -285,16 +285,16 @@
                   </tbody>
                 </table>
                      {% else %}
-                 <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px;" >
                     <tbody>
                       <tr height="35px">
                         <td width="4%">
                          <span></span>
                         </td>
-                       <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                       <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                             <div class="margin-left" style="margin-left: 15px;">
-                            <span class="text-td-1" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #54284E;">Ida  </span>
-                            <span class="text-td-2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #54284E;">{{ flight['departure']|date('d-m-Y H:i') }}</span> 
+                            <span class="text-td-1" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #54284E;">Ida  </span>
+                            <span class="text-td-2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #54284E;">{{ flight['departure']|date('d-m-Y H:i') }}</span> 
                           </div>
                         </td>
                         <td width="4%">
@@ -313,19 +313,20 @@
                        <span></span>
                       </td>
                       
-                      <td width="30%" align="left" class="text-cel2-col1 " style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                      <td width="30%" align="left" class="text-cel2-col1 " style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                          <div class="margin-left" style="margin-left: 15px;">
-                          <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{ flight['departure']|date('d-m-Y H:i') }} <br>
-                          {{ flight['originCode'] ~ " " ~ flight['originName'] }}</span>
+                          <div class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">
+                          {{ flight['originCode'] ~ " " ~ flight['originName'] }}
+                        </div>
                         </div>
                       </td>
-                      <td width="44%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                      <td width="44%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                          
-                         <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{ flight['arrival']|date('d-m-Y H:i') }}<br>
-                         {{ flight['destinationCode'] ~ " " ~ flight['destinationName'] }}</span>
-                         
+                          <div class="text-details-col1 margin-left" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080; margin-left: 15px;"> 
+                         {{ flight['destinationCode'] ~ " " ~ flight['destinationName'] }}
+                         </div>                        
                       </td>
-                      <td width="18%" align="left" class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                      <td width="18%" align="left" class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                         <table>
                           <tbody>
                             <tr>
@@ -360,23 +361,23 @@
                        <td width="4%">
                             <span></span>
                        </td>                      
-                       <td width="43%" align="left" class="text-cel2-col1 padding-top-23" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E; padding-top: 23px;">
+                       <td width="43%" align="left" class="text-cel2-col1 padding-top-23" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E; padding-top: 23px;">
                           <div class="margin-left" style="margin-left: 15px;">
-                          <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;"> <br>
+                          <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;"> <br>
                           Política de cancelación no reembolsable</span>
                         </div>
                        </td>
-                       <td width="12%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                       <td width="12%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                          <img width="60" height="70" align="center" src="http://navicu.com/images/flights/preciogarantizadomin.png">
                        </td>
-                       <td width="32%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+                       <td width="32%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                          <table>
                           <tbody>
                             {% if amountsInLocalCurrency %}
                             <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">Subtotal: {{ currencyLocalSimbol ~ " " ~ subTotalLocal |number_format(0, ',', '.') }}
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">Subtotal: {{ currencyLocalSimbol ~ " " ~ subTotalLocal |number_format(0, ',', '.') }}
                                      </span>
                                   </div>
                               </td>
@@ -384,7 +385,7 @@
                             <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">Garantia de compra: {{ currencyLocalSimbol ~ " " ~ incrementGuaranteeLocal |number_format(0, ',', '.') }}
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">Garantia de compra: {{ currencyLocalSimbol ~ " " ~ incrementGuaranteeLocal |number_format(0, ',', '.') }}
                                      </span>
                                   </div>
                               </td>
@@ -392,7 +393,7 @@
                              <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                       Gasto de emisión: {{ currencyLocalSimbol ~ " " ~ incrementExpensesLocal |number_format(0, ',', '.') }}
                                      </span>
                                   </div>
@@ -401,7 +402,7 @@
                             <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                       {% if discount > 0 %}
                                         Desc. navicu.com:
                                          {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(0, ',', '.') }}
@@ -421,7 +422,7 @@
                              <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">Subtotal {{ CurrencyReservationSimbol ~ " " ~ subTotal |number_format(2, ',', '.') }}
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">Subtotal {{ CurrencyReservationSimbol ~ " " ~ subTotal |number_format(2, ',', '.') }}
                                      </span>
                                   </div>
                               </td>
@@ -429,7 +430,7 @@
                              <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">Garantia de compra {{ CurrencyReservationSimbol ~ " " ~ incrementGuarantee |number_format(2, ',', '.') }}
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">Garantia de compra {{ CurrencyReservationSimbol ~ " " ~ incrementGuarantee |number_format(2, ',', '.') }}
                                      </span>
                                   </div>
                               </td>
@@ -437,7 +438,7 @@
                             <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                       Gasto de emisión {{ CurrencyReservationSimbol ~ " " ~ incrementExpenses |number_format(2, ',', '.') }}
                                      </span>
                                   </div>
@@ -446,7 +447,7 @@
                             <tr>
                               <td align="right">
                                   <div class="margin-right" style="margin-right: 15px;">
-                                     <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                     <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                       {% if discount > 0 %}
                                         Desc. navicu.com:
                                          {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(0, ',', '.') }}
@@ -456,16 +457,7 @@
                                          {{ currencyLocalSimbol ~ " " ~ discountLocal |number_format(0, ',', '.') }}
 
                                        {% endif %}
-
-                                       {% if discount > 0 %}
-                                        Desc. navicu.com 
-                                        {{ CurrencyReservationSimbol ~ " -" ~ discount |number_format(2, ',', '.') }}
-                                        {% else %}
-                                        Desc. navicu.com 
-                                        {{ CurrencyReservationSimbol ~ " " ~ discount |number_format(2, ',', '.') }}
-
-                                        {% endif %}
-                                     </span>
+                                       </span>
                                   </div>
                               </td>
                             </tr>
@@ -474,7 +466,7 @@
                             <tr>
                               <td align="right">
                                 <div class="margin-right" style="margin-right: 15px;">
-                                 <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                 <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                  IVA {{ currencyLocalSimbol ~ " " ~ taxLocal |number_format(0, ',', '.') }}
                                   </span>
                                  </div>
@@ -483,7 +475,7 @@
                             <tr>
                               <td align="right">
                                 <div class="margin-right" style="margin-right: 15px;">
-                                 <span class="text-regular-total" style="font-size: 14px; font-family: lato; font-weight: bold; color: #391860;">
+                                 <span class="text-regular-total" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #391860;">
                                   TOTAL {{ currencyLocalSimbol ~ " " ~ totalToPayLocal |number_format(0, ',', '.') }}
                                 </span>
                                  </div>
@@ -494,7 +486,7 @@
                             <tr>
                               <td align="right">
                                 <div class="margin-right" style="margin-right: 15px;">
-                                 <span class="text-regular-14" style="font-size: 14px; font-family: lato; font-weight: lighter; color: #808080;">
+                                 <span class="text-regular-14" style="font-size: 14px; font-family: Lato; font-weight: lighter; color: #808080;">
                                   IVA {{ CurrencyReservationSimbol ~ " " ~ tax |number_format(2, ',', '.') }}
                                   </span>
                                  </div>
@@ -503,7 +495,7 @@
                             <tr>
                               <td align="right">
                                 <div class="margin-right" style="margin-right: 15px;">
-                                 <span class="text-regular-total" style="font-size: 14px; font-family: lato; font-weight: bold; color: #391860;">
+                                 <span class="text-regular-total" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #391860;">
                                  TOTAL {{ CurrencyReservationSimbol ~ " " ~ totalToPay |number_format(2, ',', '.') }}
                                 </span>
                                  </div>
@@ -551,7 +543,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Información de origen de reserva 
               </td>
             </tr>
@@ -567,10 +559,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Dirección IP origen</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Dirección IP origen</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Origen de reserva</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Origen de reserva</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -585,10 +577,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{ipAddress}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{ipAddress}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{ origin }}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{ origin }}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -605,7 +597,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Canal de distribución 
               </td>
             </tr>
@@ -623,10 +615,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">GDS</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">GDS</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Moneda</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Moneda</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -641,10 +633,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{provider.Alfa3}}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{provider.Alfa3}}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -659,10 +651,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Precio</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Precio</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;"></span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;"></span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -677,11 +669,11 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{provider.simbol}} {{provider.subtotalOriginal  | number_format(2, ',', '.') }}
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{provider.simbol}} {{provider.subtotalOriginal  | number_format(2, ',', '.') }}
                  </span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;"></span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;"></span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -737,7 +729,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Información de pago de reserva 
               </td>
             </tr>
@@ -753,10 +745,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Moneda de pago del cliente</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Moneda de pago del cliente</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Importe del cliente</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Importe del cliente</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -771,10 +763,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{currencyReservationAlfa3}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{currencyReservationAlfa3}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{totalToPay |number_format(2, ',', '.') }}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{totalToPay |number_format(2, ',', '.') }}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -789,10 +781,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Incremento Markup</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Incremento Markup</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Incremento consolidador</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Incremento consolidador</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -807,10 +799,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{markupIncrementAmount |number_format(2, ',', '.') }}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{markupIncrementAmount |number_format(2, ',', '.') }}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;"> {{CurrencyReservationSimbol}}  {{incrementConsolidator |number_format(2, ',', '.') }} </span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;"> {{CurrencyReservationSimbol}}  {{incrementConsolidator |number_format(2, ',', '.') }} </span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -825,10 +817,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Garantia de Compra</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Garantia de Compra</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Gastos de emisión</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Gastos de emisión</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -843,10 +835,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{incrementGuarantee  | number_format(2, ',', '.')}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{incrementGuarantee  | number_format(2, ',', '.')}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{incrementExpenses |number_format(2, ',', '.') }}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{incrementExpenses |number_format(2, ',', '.') }}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -862,10 +854,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Descuento Navicu</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Descuento Navicu</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Impuestos</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Impuestos</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -880,11 +872,11 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{discount |number_format(2, ',', '.') }}
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{discount |number_format(2, ',', '.') }}
                  </span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{tax  |number_format(2, ',', '.')}}
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}}  {{tax  |number_format(2, ',', '.')}}
                 </span> 
                </td>
                <td width="4%">
@@ -902,7 +894,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Canal de distribución 
               </td>
             </tr>
@@ -920,10 +912,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">GDS</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">GDS</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Precio</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Precio</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -938,10 +930,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{provider.SubtotalOriginalCurrencyReservation  |number_format(2, ',', '.')}}
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{CurrencyReservationSimbol}} {{provider.SubtotalOriginalCurrencyReservation  |number_format(2, ',', '.')}}
                 </span> 
                </td>
                <td width="4%">
@@ -997,7 +989,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Información de origen de reserva USD:
               </td>
             </tr>
@@ -1013,10 +1005,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Importe pago del cliente </span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Importe pago del cliente </span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Incremento Markup</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Incremento Markup</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1031,10 +1023,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$ {{totalToPayUSD }}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$ {{totalToPayUSD }}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$ {{markupIncrementAmountUSD }} </span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$ {{markupIncrementAmountUSD }} </span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1049,10 +1041,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Incremento consolidador</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Incremento consolidador</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Garantía de compra</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Garantía de compra</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1067,10 +1059,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$  {{incrementConsolidatorUSD  }}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$  {{incrementConsolidatorUSD  }}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;"> $ {{incrementGuaranteeUSD  }}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;"> $ {{incrementGuaranteeUSD  }}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1085,10 +1077,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Gasto de emisión</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Gasto de emisión</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Descuento Navicu</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Descuento Navicu</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1103,10 +1095,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$  {{incrementExpensesUSD }}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$  {{incrementExpensesUSD }}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$  {{discountUSD  }}</span> 
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$  {{discountUSD  }}</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1121,10 +1113,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Impuestos</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Impuestos</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Tasa de conversion</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Tasa de conversion</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1139,12 +1131,12 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$ {{taxUSD }}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$ {{taxUSD }}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$ 1 =  {{ dollar_rate_convertion  }}
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$ 1 =  {{ dollar_rate_convertion  }}
                   </span><br> 
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">
                   {% if not ( isLocalActiveCurrency(currencyReservationAlfa3) ) and  not ( currencyReservationAlfa3 == 'USD' )%}
                    {{CurrencyReservationSimbol}} 1 =  {{ Currency_rate_convertion }}
                    {% endif %} 
@@ -1165,7 +1157,7 @@
                  <span></span>
                </td>
                 
-              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
+              <td width="96%" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
                 Canal de distribución 
               </td>
             </tr>
@@ -1183,10 +1175,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">GDS</span>
+                 <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">GDS</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col2" style="font-size: 14px; font-family: lato; font-weight: bold; color: #808080;">Precio</span> 
+                <span class="text-details-col2" style="font-size: 14px; font-family: Lato; font-weight: bold; color: #808080;">Precio</span> 
                </td>
                <td width="4%">
                  <span></span>
@@ -1201,10 +1193,10 @@
                </td>
                 
                <td width="44%" align="left">
-                 <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
+                 <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">{{provider.provider}}</span>
                </td>
                <td width="44%" align="left">
-                <span class="text-details-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #808080;">$ {{provider.SubtotalOriginalUSD  }}
+                <span class="text-details-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #808080;">$ {{provider.SubtotalOriginalUSD  }}
                 </span> 
                </td>
                <td width="4%">
@@ -1239,7 +1231,7 @@
                       
                       <img width="15" height="15" align="center" src="http://navicu.com/images/flights/tips.png">
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-bold-979797-12" style="font-size: 12px; font-family: lato; font-weight: bold; color: #979797;">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-bold-979797-12" style="font-size: 12px; font-family: Lato; font-weight: bold; color: #979797;">
                           Debes recordar   
                       </td>
                       <td width="4%">
@@ -1247,7 +1239,8 @@
                       </td>
                     </tr>                      
                   </tbody>
-             </table><table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px">
+             </table>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px">
                   <tbody>
                     <tr>
                        <td width="4%">
@@ -1256,8 +1249,8 @@
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: lato; font-weight: normal; color: #979797;">
-                         <div class="margin-right" style="margin-right: 15px;">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: Lato; font-weight: normal; color: #979797;">
+                         <div class="margin-right" style="margin-bottom: 15px;margin-right: 15px;">
                          Siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación necesaria
                           para volar según su situación
                         </div>
@@ -1299,7 +1292,7 @@
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: lato; font-weight: normal; color: #979797;">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: Lato; font-weight: normal; color: #979797;">
                          El embarque se realizará 45 minutos antes de la hora de salida del vuelo
                       </td>
                       <td width="4%">
@@ -1339,7 +1332,7 @@
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: lato; font-weight: normal; color: #979797;">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12" style="font-size: 12px; font-family: Lato; font-weight: normal; color: #979797;">
                          La puerta de embarque cierra 30 minutos antes de la hora de salida del vuelo
                       </td>
                       <td width="4%">
@@ -1378,12 +1371,12 @@
                        <span></span>
                       </td>
                       
-                      <td width="46%" align="left" class="text-bold-54284E-12" style="font-size: 12px; font-family: lato; font-weight: bold; color: #54284E;">
+                      <td width="46%" align="left" class="text-bold-54284E-12" style="font-size: 12px; font-family: Lato; font-weight: bold; color: #54284E;">
                         ¡Reserva tu hospedaje al mejor precio! 
                       </td>
-                      <td width="46%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: lato; font-weight: normal; color: #54284E;">
-                        <span class="text-ligth-783CBD-12" style="font-size: 12px; font-family: lato; font-weight: lighter; color: #783CBD;">Disfruta de los mejores alojamientos en</span>
-                        <a hrfe="#" target="_blank" class="text-regular-783CBD-12" style="font-size: 12px; font-family: lato; font-weight: normal; color: #783CBD; text-decoration: none;">Valencia</a>
+                      <td width="46%" align="right" class="text-cel2-col1" style="font-size: 14px; font-family: Lato; font-weight: normal; color: #54284E;">
+                        <span class="text-ligth-783CBD-12" style="font-size: 12px; font-family: Lato; font-weight: lighter; color: #783CBD;">Disfruta de los mejores alojamientos en</span>
+                        <a hrfe="#" target="_blank" class="text-regular-783CBD-12" style="font-size: 12px; font-family: Lato; font-weight: normal; color: #783CBD; text-decoration: none;">Valencia</a>
                            
                       </td>
                        <td width="4%">
@@ -1395,7 +1388,7 @@
           <!-- Fin mensaje con link -->
          
               <!-- Inicio footer -->
-            <table bgcolor="#783CBD" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <table class="margin-top-20" bgcolor="#783CBD" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px;" >
                   <tbody>
                     <tr height="20px">
                       <td>
@@ -1432,7 +1425,7 @@
                     </tr> 
                      <tr height="20px">
                       <td>
-                        <span class="class-footer-5" style="color: #979797; font-size: 12px; font-weight: normal; text-align: center; font-family: laton;">
+                        <span class="class-footer-5" style="color: #979797; font-size: 12px; font-weight: normal; text-align: center; font-family: Laton;">
                         Este e-mail ha sido enviado por  <a href="https://www.navicu.com" target="_blank" style="text-decoration: none; color:#FFFFFF; font-family:Lato,sans-serif; font-weight:300;">navicu.com</a>
 
 
