@@ -66,7 +66,7 @@ class SendFlightPreReservationEmailHandler extends BaseHandler
         $data['sendNavicu'] = false;
         EmailService::send(
             $recipients,
-            'Confirmación de la Reserva - navicu.com',
+            'Pre-Reserva de boletos - navicu',
             'Email/Flight/flightPreReservationConfirmation.html.twig',
             $data
         );
@@ -76,7 +76,7 @@ class SendFlightPreReservationEmailHandler extends BaseHandler
         $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
-            'Confirmación de la Reserva - navicu.com',
+            'Pre-Reserva de boletos - navicu',
             'Email/Flight/flightPreReservationConfirmation.html.twig',
             $data
         );
