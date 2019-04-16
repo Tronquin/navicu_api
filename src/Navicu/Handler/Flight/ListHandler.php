@@ -8,6 +8,7 @@ use App\Entity\Airline;
 use App\Entity\Airport;
 use App\Entity\Consolidator;
 use App\Entity\AirlineTypeRate;
+use App\Entity\FlightSearchRegister;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Exception\OtaException;
 use App\Navicu\Handler\BaseHandler;
@@ -137,7 +138,7 @@ class ListHandler extends BaseHandler
         }   
 
         $responseFinal = $this->logoAirlineExists($responseFinal);
-     
+        $this->saveFlightSearch($responseFinal);
         return $responseFinal;
     }
 
@@ -264,5 +265,44 @@ class ListHandler extends BaseHandler
         }
 
         return $airports;
+    }
+     /**
+     * Guarda la busqueda y la respuesta emitida
+     *
+     * @param array $parameters
+     * @param array $response
+     */
+    private function saveFlightSearch(array $response)
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $parameters = $this->getParams();
+        $flightSearchRegister = new FlightSearchRegister();
+        $flightSearchRegister
+        ->setAdults($parameters['adt'])
+        ->setChildren($parameters['cnn'])
+        ->setBaby($parameters['inf'])
+        ->setCountry($parameters['country'])
+        ->setCurrency($parameters['currency'])
+        ->setCabin($parameters['cabin'])
+        ->setScale($parameters['scale'])
+        ->setBaggage($parameters['baggage'])
+        ->setEndDate(new \DateTime($parameters['endDate']))
+        ->setSearchType($parameters['searchType'])
+        ->setDate(new \DateTime($parameters['date']))
+        ->setUserCurrency($parameters['userCurrency'])
+        ->setSourceSearchType($parameters['sourceSearchType'])
+        ->setDestSearchType($parameters['destSearchType'])
+        ->setRoundTrip($parameters['roundTrip'])
+        ->setItinerary( isset($parameters['itinerary']) ? $parameters['itinerary'] : null)
+        ->setSource(isset($parameters['source']) ? $parameters['source'] : null)
+        ->setDest(isset($parameters['dest']) ? $parameters['dest']: null)
+        ->setStarDate(isset($parameters['startDate']) ?new \DateTime($parameters['startDate'])  : null)
+        ->setProvider($parameters['provider'])
+        ->setResponse($response)
+    ;
+
+    $manager->persist($flightSearchRegister);
+    $manager->flush();
+
     }
 }
