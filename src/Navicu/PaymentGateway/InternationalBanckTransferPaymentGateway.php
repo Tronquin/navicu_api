@@ -137,7 +137,7 @@ class InternationalBanckTransferPaymentGateway implements PaymentGateway
             'success' => true,
             'code' => '201',
             'status' => '0',
-            'response' => null,
+            'response' => "{Banco Emisor:".$response['emisorNameBank']."}",
             'currency' => $this->currency,
             'dollarPrice' => $response['amount'],
             'nationalPrice' => $np,
