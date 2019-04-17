@@ -139,7 +139,9 @@ class ListHandler extends BaseHandler
 
         $responseFinal = $this->logoAirlineExists($responseFinal);
         $this->saveFlightSearch($responseFinal);
+
         return $responseFinal;
+        
     }
 
     /**
@@ -192,19 +194,20 @@ class ListHandler extends BaseHandler
     private function logoAirlineExists($data)
     {
         global $kernel;
-        $dir = $kernel->getRootDir() . '/../web/images/airlines/';
-
+        $dir = $kernel->getRootDir() . '/../public/images/airlines/';
+        
+       
         if (isset($data[0]['groupItinerary'])) {
             foreach ($data as $k => $groupItinerary) {
                 foreach ($groupItinerary['groupItinerary']['itineraries'] as $j => $itinerary) {
                     foreach ($itinerary['flights'] as $i => $flight) {
 
                         $data[$k]['groupItinerary']['itineraries'][$j]['flights'][$i]['logo_exists'] = file_exists($dir . $flight['airline'] . '.png');
+
                     }
                 }
             }
         }
-
         return $data;
     }
 

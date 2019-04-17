@@ -7,6 +7,7 @@ use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\NavicuCurrencyConverter;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * Resumen de Reservacion de vuelos
@@ -27,11 +28,12 @@ class ResumeReservationHandler extends BaseHandler
     {
         $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
+        $dotenv = new Dotenv();
+        $urlBase = getenv('DOMAIN');
 
         $flightsArray = [];
         global $kernel;
-        $dir = $kernel->getRootDir() . '/../web/images/airlines/';
-
+        $dir = $kernel->getRootDir() . '/../public/images/airlines/';
         $reservation = $manager->getRepository(FlightReservation::class)->findOneByPublicId($params['public_id']);
 
         if (is_null($reservation)) {
@@ -265,7 +267,8 @@ class ResumeReservationHandler extends BaseHandler
             'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
             'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion(),
             'bookCode' => $bookCode,
-            'dateExpire' =>  $reservation->getExpireDate()->format('Y-m-d H:i:s')
+            'dateExpire' =>  $reservation->getExpireDate()->format('Y-m-d H:i:s'),
+            'baseURL' =>$urlBase
         ];
 
        /* $flightsArray = [];

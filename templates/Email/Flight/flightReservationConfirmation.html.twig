@@ -349,9 +349,9 @@
 
                                                         <p style="font-family:Lato,sans-serif;font-weight:400;color:#808080;font-size:14px">{{ flight['destinationCode'] ~ " " ~ flight['destinationName'] }}</p>
                                                     </td>
-                                                    <td>
+                                                    <td>q
                                                         {% if flight['logo_exists'] %}
-                                                            <img src="http://navicu.com/images/airlines/{{ flight['airlineCode'] }}.png">
+                                                            <img src="{{baseURL}}images-api/images/airlines/{{ flight['airlineCode'] }}.png">
                                                         {% endif %}
 
                                                         <p style="font-family:Lato,sans-serif;font-weight:300;color:#808080;font-size:14px">{{ flight['airlineName'] }}</p>
