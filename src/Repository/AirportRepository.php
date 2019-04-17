@@ -53,6 +53,7 @@ class AirportRepository extends BaseRepository
                     a.visible
                 FROM web_fligths_autocompleted_view a
                 WHERE a.visible is true AND ".$tsQuery. "
+                ORDER BY a.name
                 LIMIT 10
             ")
             ->fetchAll();
