@@ -230,39 +230,185 @@
         }
 
         
+        .btn-template {
+        display:inline-block;
+        font-family:Lato;
+        font-size:13px;
+        font-weight:normal;
+        line-height:120%;
+        Margin:0;
+        text-decoration:none;
+        text-transform:none;
+        padding:6px 15px;
+        mso-padding-alt:0px;
+        border-radius:55px;
+         }
+
+         .btn-background-ffffff{
+          background:#ffffff;
+         }
+
+         .text-color-54284E{
+          color:#54284E;
+         }
+
+         .text-color-ffffff{
+          color:#ffffff;
+          font-family:Lato;
+         }
+
+         .btn-background-391860{
+          background:#391860;
+         }
+
+          .btn-background-62269E{
+          background:#62296E;
+         }
+
+
+         .td-background-60D08C{
+          background:#60D08C;
+         }
+         .border-divider-table {
+         border-bottom:1px solid #EBEBEB;
+         }
+
+         .border-divider-table-54284E {
+         border-bottom:1px solid #54284E;
+         }
+
+         .border-divider-table-C2A0E0 {
+         border-bottom:1px solid #C2A0E0;
+         }
+
+         .text-color-391860{
+          color:#391860;
+          font-family:Lato;
+         }
+         .font-wight-bold{
+          font-weight:bold;
+          }
+          .font-wight-lighter{
+          font-weight:lighter;
+          }
+         .font-size-14{
+          font-size:13px;
+         }
+          .font-size-12{
+          font-size:12px;
+         }  
+         .font-size-11{
+          font-size:11px;
+         }
+         .tr-background-CBF7DD{
+          background:#CBF7DD;
+         }    
+         .text-color-34AD7B{
+          color:#34AD7B;
+          font-family:Lato;
+         }
+
+         .text-color-777777{
+          color:#777777;
+          font-family:Lato;
+         }  
+         .text-color-29124C{
+          color:#29124C;
+          font-family:Lato;
+         }  
+         .font-wight-semibold{
+          font-weight:600;
+         } 
+         .text-color-898989{
+          color:#898989;
+          font-family:Lato;
+         }   
+         .text-color-783CBD{
+          color:#783CBD;
+          font-family:Lato;
+         }   
+         .text-color-EDA900{
+          color:#EDA900;
+          font-family:Lato;
+         }
+
+         .font-weight-normal{
+          font-weight:normal;
+
+         } 
+
+
+         .font-weight-ligth{
+          font-weight:lighter;
+
+         } 
+
+         .text-color-7352A3{
+          color:#7352A3;
+          font-family:Lato;
+         }
+   
+
+         
+           
+
     </mj-style>
   </mj-head>
 
   <mj-body>
-    <mj-section padding="20px" background-color="#ffffff">
+    <mj-section padding="20px" background-color="#F9F9F9">
        <!-- banner + logo. -->
-      <mj-column  width="100%" background-color="#783CBD">
-        <mj-image width="150px" align="left" src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Logo_Navicu_Wikipedia-09.png"></mj-image>
-      </mj-column>
+      <mj-raw>
+       <table width="100%" bgcolor="#783CBD">
+         <tbody>
+           <tr height="70px">
+            <td width="2%">
+              <span></span>
+            </td>
+             <td width="50%">
+              <img width="150px" align="left" src="iconos_correos/logo-correo.png">
+             </td>
+             <td width="25%" class="">
+              <a class="btn-template btn-background-ffffff text-color-391860 font-wight-bold font-size-14" href="#" target="_blank">
+               <div>Book Code Lorem ipsum</div>
+              </a>
+            </td>
+            <td width="21%" class="">
+               <a class="btn-template btn-background-62269E  text-color-ffffff font-weight-bold font-size-12" href="#" target="_blank">
+                  <div><img  width="13px" height="5px" src="iconos_correos/print.svg">&nbsp; &nbsp; Imprimir</div>
+                </a>
+            </td>
+             <td width="2%">
+              
+            </td>
+             
+           </tr>
+         </tbody>
+       </table> 
+      </mj-raw>
+
        <!-- Fin banner + logo . -->
        <!-- Mensaje + links descargas -->
+
+        
+  
       <mj-raw>
+
             <table bgcolor="#EBEBEB" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
-                    <tr height="40px">
+                    <tr height="40px" class="tr-background-CBF7DD">
                        <td width="4%">
                        <span></span>
                       </td>
                        <td width="4%">
-                      <img width="15px" align="left" src="despiece/check.png">   
+                      <img width="17px" align="left" src="iconos_correos/confirmada.svg">   
                       </td>
-                      <td width="62%" align="left" class="text-cel">
-                          <span class="text-cel"> La compra de boleto fue exitosa </span>    
+                      <td width="62%" align="left" class="text-color-34AD7B">
+                          <span class="text-color-34AD7B font-size-14 font-wight-bold"> Lorem ipsum dolor sit amet consectetur adipiscing elit porta </span>    
                       </td>
-                      <td  width="10%"  align="center" class="button-td">
-                        <a class="button-a" href="#" target="_blank">
-                          <div>Imprimir</div>
-                        </a>
-                      </td>
-                      <td  width="20%"  align="center" class="button-td">
-                        <a class="button-a" href="#" target="_blank">
-                          <div>Guardar PDF</div>
-                        </a>
+                      <td  width="30%"  align="center" class="text-color-34AD7B font-size-14   ">
+                         <div> <span class="font-wight-lighter"> Loren </span>
+                         <span class="font-weight-bold"> Code</span></div>
                       </td>                  
                     </tr>
                   </tbody>
@@ -271,25 +417,23 @@
        <!-- Fin mensaje+link descargas -->
        <!-- Detalles del pasajero -->
       <mj-raw > 
-            <table bgcolor="#EFE4F5" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+            <table bgcolor="#E8E8E8" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
                     <tr>
                        <td width="4%">
                        <span></span>
                       </td>
                        <td width="4%">
-                        <img width="15px" align="left" src="despiece/boleto.png"> 
+                        <img width="15px" align="left" src="iconos_correos/user.svg"> 
                       </td>
-                      <td width="35%" align="left" class="text-cel2-col1">
-                          Detalles del pasajero    
+                      <td width="35%" align="left" class="text-color-777777 font-size-14">
+                          Lorem ipsum dolor    
                       </td>
-                      <td  width="25%"  align="left" class="text-cel2-col2">
-                      Equipaje
-                      </td>
+                      
                       <td align="right">
                               <span class="space-15-right">
-                                <span class="text-td-1">ID </span>
-                                <span class="text-td-2">3134412</span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">N° </span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">Items</span>
                               </span>
                             </td>                 
                     </tr>
@@ -298,183 +442,131 @@
       </mj-raw>
 
       <mj-raw > 
-              <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <table  bgcolor="F9F9F9" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
-                    <tr bgcolor="#FDFBFE" height="35px">
+                    <tr bgcolor="#F9F9F9" height="65px" class="border-divider-table padding-bottom">
                        <td width="4%">
                        <span></span>
-                       </td>
-                     
-                       <td width="30%" align="left">
-                        <span class="text-details-col1">Nombres </span> 
-                         <span class="text-details-col2">Juan Perez</span>   
+                       </td>                     
+                       <td width="68%" align="left"> 
+                         <span class="text-color-777777 font-size-14  font-weight-bold">
+                           Lorem ipsum dolor sit amet consectetur adipiscing elit...
+                         </span>   
                       </td>
-                      <td  width="25%" align="left" class="text-regular-12">
-                      1 bulto/2 piezas en bodega
-                      </td>
-                      <td align="right"  width="41%" >
-                        <table>
+                      <td align="right"  width="24%" >
+                        <table width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - IDA </span>
-                                <span class="text-td-2">2563245789652</span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">Item </span>
+                              </span>
+                              </td>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-color-777777 font-size-14  font-weight-ligth">Code</span>
                               </span>
                               </td>
                             </tr>
                              <tr>
                               <td>
                                 <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - Vuelta </span>
-                                <span class="text-td-2">2563245789652</span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">Item </span>
                               </span>
                               </td>
-                            </tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-color-777777 font-size-14  font-weight-ligth">Code</span>
+                              </span>
+                              </td>
+                              </tr>
                           </tbody>
                         </table>
-                       </td>                 
+                       </td>
+                       <td width="4%">
+                        <span></span>
+                        </td>                 
                     </tr>
 
-                    <tr bgcolor="#F0F0F0" height="35px">
+                    <tr bgcolor="#F9F9F9" height="65px">
                        <td width="4%">
                        <span></span>
-                       </td>
-                     
-                       <td width="30%" align="left">
-                        <span class="text-details-col1">Nombres </span> 
-                         <span class="text-details-col2">Manuel Perez</span>   
+                       </td>                     
+                       <td width="68%" align="left"> 
+                         <span class="text-color-777777 font-size-14  font-weight-bold">
+                           Lorem ipsum dolor sit amet consectetur adipiscing elit...
+                         </span>   
                       </td>
-                      <td  width="25%" align="left" class="text-regular-12">
-                      1 bulto/2 piezas en bodega
-                      </td>
-                      <td align="right"  width="41%" >
-                         <table>
+                      <td align="right"  width="24%" >
+                        <table width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - IDA </span>
-                                <span class="text-td-2">2563245789652</span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">Item </span>
+                              </span>
+                              </td>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-color-777777 font-size-14  font-weight-ligth">Code</span>
                               </span>
                               </td>
                             </tr>
                              <tr>
                               <td>
                                 <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - Vuelta </span>
-                                <span class="text-td-2">2563245789652</span>
+                                <span class="text-color-777777 font-size-14  font-weight-bold">Item </span>
                               </span>
                               </td>
-                            </tr>
+                              <td>
+                                <span class="space-15-right">
+                                <span class="text-color-777777 font-size-14  font-weight-ligth">Code</span>
+                              </span>
+                              </td>
+                              </tr>
                           </tbody>
                         </table>
-                       </td>                 
-                    </tr>
-                    <tr bgcolor="#FDFBFE" height="35px">
-                       <td width="4%">
-                       <span></span>
                        </td>
-                     
-                       <td width="30%" align="left">
-                        <span class="text-details-col1">Nombres </span> 
-                         <span class="text-details-col2">Ricardo Rodriguez</span>   
-                      </td>
-                      <td  width="25%" align="left" class="text-regular-12">
-                      1 bulto/1 piezas en bodega
-                      </td>
-                      <td align="right"  width="41%" >
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - IDA </span>
-                                <span class="text-td-2">2563245789652</span>
-                              </span>
-                              </td>
-                            </tr>
-                             <tr>
-                              <td>
-                                <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - Vuelta </span>
-                                <span class="text-td-2">2563245789652</span>
-                              </span>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                       </td>                 
-                    </tr>
-                    <tr bgcolor="#F0F0F0" height="35px">
                        <td width="4%">
-                       <span></span>
-                       </td>
-                     
-                       <td width="30%" align="left">
-                        <span class="text-details-col1">Nombres </span> 
-                         <span class="text-details-col2">María Pérez</span>   
-                      </td>
-                      <td  width="25%" align="left" class="text-regular-12">
-                      1 bulto
-                      </td>
-                      <td align="right"  width="41%" >
-                         <table>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - IDA </span>
-                                <span class="text-td-2">2563245789652</span>
-                              </span>
-                              </td>
-                            </tr>
-                             <tr>
-                              <td>
-                                <span class="space-15-right">
-                                <span class="text-td-1">N° TKT - Vuelta </span>
-                                <span class="text-td-2">2563245789652</span>
-                              </span>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                       </td>                 
+                        <span></span>
+                        </td>                 
                     </tr>
+
+                   
                   </tbody>
               </table>
       </mj-raw>
       <!--Fin detalles de pasajero-->
        <!-- Detalles de vuelo -->
       <mj-raw > 
-              <table class="margin-bottom" bgcolor="#EFE4F5" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <table class="margin-bottom" bgcolor="#E8E8E8" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
-                    <tr>
+                    <tr >
                        <td width="4%">
                        <span></span>
                       </td>
                        <td width="4%">
-                       <img width="15px" align="left" src="despiece/avion-ico.png"> 
+                       <img width="15px" align="left" src="iconos_correos/plane.svg"> 
                       </td>
-                      <td width="96%" align="left" class="text-cel2-col1">
-                          Detalles del vuelo    
+                      <td width="96%" align="left" class="text-color-777777 font-weight-lighter font-size-14">
+                          Lorem ipsum dolor ...    
                       </td>
                     </tr>                      
                   </tbody>
                 </table>
       </mj-raw>
       <mj-raw > 
-            <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+            <table bgcolor="F9F9F9" class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
               <tbody>
                 <tr height="35px">
                        <td width="4%">
                        <span></span>
                       </td>
                       
-                      <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
+                      <td width="92%" bgcolor="F5ECF9" align="left" class="text-cel2-col1">
                             <div class="margin-left">
-                            <span class="text-td-1">Ida  </span>
-                            <span class="text-td-2">20-04-2019 05:15</span> 
+                            <span class="text-color-29124C font-size-14 font-weight-lighter">Item  </span>
+                            <span class="text-color-29124C font-size-14 font-weight-lighter">Data</span> 
                           </div>
                       </td>
                     
@@ -485,23 +577,28 @@
                 
               </tbody>
             </table>
-              <table  class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+            <table  class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
                   <tbody>
                     <tr height="35px">
-                       <td width="4%">
+                       <td width="4%" bgcolor="#F9F9F9">
                        <span></span>
                       </td>
                       
                       <td width="30%" align="left" class="text-cel2-col1 ">
                          <div class="margin-left">
-                          <div class="text-details-col1">CCS Aeropuerto Internacional de Maiquetía Simon Bolivar
+                          <div class="font-weight-semibold text-color-777777 font-size-12">Item
+                          </div>
+                          <div class="text-color-777777 font-size-14">Lorem ipsum dolor sit amet consectetur adipiscing elit porta.....
                           </div>
                         </div>
                       </td>
                       <td width="44%" align="left" class="text-cel2-col1">
-                         
-                         <div class="text-details-col1 margin-left">MAR La Chinita International Airport
+                        <div class="margin-left">
+                         <div class="font-weight-semibold text-color-777777 font-size-12">Item
+                        </div>
+                         <div class="text-color-777777 font-size-14 ">Lorem ipsum dolor sit amet consectetur adipiscing elit porta....                  
                          </div>
+                       </div>
                          
                       </td>
                       <td width="18%" align="left" class="text-regular-14">
@@ -510,10 +607,7 @@
                             <tr>
                               <td>
                                 <img class="align-aerolin-vuelo " align="left" width="50px" align="left" src="despiece/aerolinea.png">
-                              </td>
-                            </tr>
-                             <tr>
-                              <td>
+
                                 <div class="margin-right">
                                 Laser Airlines
                                </div>
@@ -522,155 +616,174 @@
                           </tbody>
                         </table>    
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#F9F9F9">
                        <span></span>
                       </td>
                     </tr>
                   </tbody>
-                </table>
-                <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
-                  <tbody>
-                <tr height="35px">
-                       <td width="4%">
-                       <span></span>
-                      </td>
-                      
-                      <td width="92%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1">
-                            <div class="margin-left">
-                            <span class="text-td-1">Vuelta  </span>
-                            <span class="text-td-2">20-04-2019 05:15</span> 
-                          </div>
-                      </td>
-                    
-                      <td width="4%">
-                       <span></span>
-                      </td>
-                    </tr>
-                
-              </tbody>
+              </table>
               <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
-                       <tr height="35px">
-                       <td width="4%">
+                    <tr height="35px">
+                       <td width="4%" bgcolor="#F9F9F9">
                        <span></span>
                       </td>
                       
+                      <td width="92%" bgcolor="F5ECF9" align="left" class="text-cel2-col1">
+                            <div class="margin-left">
+                            <span class="text-color-29124C font-size-14 font-weight-lighter">Item  </span>
+                            <span class="text-color-29124C font-size-14 font-weight-lighter">Data</span> 
+                          </div>
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                  </tr>
+              </tbody>
+            </table>
+            <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tbody>
+                  <tr height="35px" bgcolor="#F9F9F9">
+                      <td width="4%">
+                       <span></span>
+                      </td>  
                       <td width="30%" align="left" class="text-cel2-col1">
-                         <div class="margin-left">
-                          <div class="text-details-col1">MAR La Chinita International Airport
-                          </span>
+                        <div class="margin-left">
+                         <div class="font-weight-semibold text-color-777777 font-size-12">Item
                         </div>
+                         <div class="text-color-777777 font-size-14 ">Lorem ipsum dolor sit amet consectetur adipiscing elit porta....
+                         </div>
+                       </div>
                       </td>
                       <td width="44%" align="left" class="text-cel2-col1">
-                         <div class="text-details-col1 margin-left">CCS Aeropuerto Internacional de Maiquetía Simon Bolivar
-                         </div> 
+                         <div class="margin-left">
+                         <div class="font-weight-semibold text-color-777777 font-size-12">Item
+                        </div>
+                         <div class="text-color-777777 font-size-14 ">Lorem ipsum dolor sit amet consectetur adipiscing elit porta....
+                         </div>
+                       </div>
                       </td>
                       <td width="18%" align="left" class="text-regular-14">
                          <table>
                           <tbody>
                             <tr>
                               <td>
-                                <img class="align-aerolin-vuelo " align="left" width="50px" align="left" src="despiece/aerolinea.png">
-                              </td>
-                            </tr>
-                             <tr>
-                              <td>
-                               <div class="margin-right">
+                               <img class="align-aerolin-vuelo " align="left" width="50px" align="left" src="despiece/aerolinea.png">
+
+                                <div class="margin-right">
                                 Laser Airlines
                                </div>
                               </td>
                             </tr>
-                          </tbody>
+                            </tbody>
                         </table>  
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#F9F9F9">
                        <span></span>
                       </td>
                     </tr>
                   </tbody>
-                </table>
+          </table>
       </mj-raw>     
       <mj-raw > 
-         <table  class="margin-bottom" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
-            <tbody>
-                    <tr height="35px" COLSPAN="5" >
-                       <td width="4%" >
-                            <span></span>
-                       </td>                      
-                       <td width="43%" align="left" class="text-cel2-col1 padding-top-23" valign="bottom" >
-                          <div class="margin-left">
-                          <span class="text-regular-14"> <br>
-                          Política de cancelación no reembolsable</span>
-                        </div>
-                       </td>
-                       <td width="12%" align="right" class="text-cel2-col1">
-                         <img width="60" height="70" align="center" src="despiece/icon-n.png">
-                       </td>
-                       <td width="32%" align="right" class="text-cel2-col1" >
-                         <table>
-                          <tbody>
-                            <tr>
-                              <td align="right">
-                                  <div class="margin-right">
-                                     <span class="text-regular-14">Subtotal 108.000.000</span>
-                                  </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                  <div class="margin-right">
-                                     <span class="text-regular-14">Subtotal 108.000.000</span>
-                                  </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                  <div class="margin-right">
-                                     <span class="text-regular-14">Subtotal 108.000.000</span>
-                                  </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                  <div class="margin-right">
-                                     <span class="text-regular-14">Subtotal 108.000.000</span>
-                                  </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                  <div class="margin-right">
-                                     <span class="text-regular-14">Subtotal 108.000.000</span>
-                                  </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                <div class="margin-right">
-                                 <span class="text-regular-14">IVA Bs 7.000.000.00</span>
-                                 </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td align="right">
-                                <div class="margin-right">
-                                 <span class="text-regular-total">TOTAL Bs 115.000.000.00</span>
-                                 </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                         </table> 
-                       </td>
-                       <td width="4%" rowspan="3">
+        <table  class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9" >
                          <span></span>
-                       </td>
-                    </tr>
-
-            </tbody>
-         </table>
+                      </td>                     
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Item  </span>    
+                          </div>
+                      </td>
+                      <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                          <div class="margin-left">
+                            <span class="">BsS. 00.000.000,00  </span>
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Item  </span>  
+                          </div>
+                      </td>
+                      <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                         <div class="margin-left">
+                            <span class="">BsS. -00.000.000,00  </span>   
+                          </div>
+                      </td>
+                      <td width="6%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                        <span></span>
+                      </td>      
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Item  </span>        
+                          </div>
+                      </td>
+                      <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="">BsS.000,00  </span>   
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Item  </span>
+                          </div>
+                      </td>
+                      <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="">BsS. -00.000.000,00  </span>
+                          </div>
+                      </td>
+                      <td width="6%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 border-divider-table-C2A0E0">
+                          <span></span>
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="43%" colspan="2" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Política de cancelación no reembolsable</span>   
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 ">
+                          <div class="margin-left ">
+                            <span class="text-color-783CBD font-size-12">TOTAL  </span>
+                          </div>
+                      </td>
+                      <td width="25%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 ">
+                          <div class="margin-left ">
+                            <span class="text-color-783CBD font-size-12">BsS. -00.000.000,00  </span>
+                          </div>
+                      </td>
+                      <td width="6%" bgcolor="#F0F0F0" align="left" class="text-cel2-col1 ">
+                         <span></span>
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
       </mj-raw>
-       <!-- Fin detalles de vuelo-->
-       <mj-divider  border-width="1px" width="91%" border-color="#54284E"></mj-divider>
+
+     <!-- Fin detalles de vuelo-->
+       <mj-divider css-class="margin-top-20" border-width="1px" width="90%" border-color="#CACACA"></mj-divider>
+
+      
        <!-- Inicio de Información de origen de reserva -->
       <mj-raw>
         <table  class="margin-top-20 margin-bottom-20"  border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -844,518 +957,24 @@
         </table>
       </mj-raw>
       <!-- Fin de Información de origen de reserva -->
-       <mj-divider  border-width="1px" width="91%" border-color="#54284E"></mj-divider>
-       <!-- Inicio de Información de pago de reserva -->
-       <mj-raw>
-        <table class="margin-top-20 margin-bottom-20"   border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                <td width="4%" >
-                 <span></span>
-               </td>
-                
-              <td width="96%" align="left"  class="text-cel2-col1">
-                Información de pago de reserva 
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-
-      <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Moneda de pago del cliente</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Importe del cliente</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">EUR</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#8364; 7,34</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Incremento Markup</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Incremento consolidador</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#8364; 0,00</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1"> &#8364; 0,00 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-             <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Garantia de Compra</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Gastos de emisión</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-             <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#8364; 0,00</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1"> &#8364; 0,00 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Descuento Navicu</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Impuestos</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#8364; 0,13</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1"> &#8364; 0,11 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-
-      <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                <td width="4%" >
-                 <span></span>
-               </td>
-                
-              <td width="96%" align="left"  class="text-cel2-col1">
-                Canal de distribución 
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-
-      <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">GDS</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Precio</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">KIU</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#8364; 6,51</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-               </td>
-               <td width="4%" >
-               </td>       
-               <td width="44%" align="left">               
-               </td>
-               <td width="44%" align="left">           
-               </td>
-               <td width="4%" >
-               </td>
-            </tr>         
-          </tbody>
-        </table>
-      </mj-raw>
-      <!-- Fin de Información de pago de reserva -->
-
-      <mj-divider  border-width="1px" width="91%" border-color="#54284E"></mj-divider>
-
-      <!-- Inicio de Información de origen de reserva USD -->
-      <mj-raw>
-        <table class="margin-top-20 margin-bottom-20"  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                <td width="4%" >
-                 <span></span>
-               </td>
-                
-              <td width="96%" align="left"  class="text-cel2-col1">
-                Información de origen de reserva USD:
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-
-       <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Importe pago del cliente </span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Incremento Markup</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#36;8.26 </span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#36; 0 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Incremento consolidador</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Garantía de compra</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#36; 0 </span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#36; 0 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>  
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Gasto de emisión</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Descuento Navicu</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#36; 0.73 </span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#36; 0.15 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>  
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">Impuestos</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Tasa de conversion</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">&#36; 0.13 </span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#36; 1 = 2814.259 </span><br> 
-                <span class="text-details-col1">&#8364; 1 = 3169.334 </span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>            
-          </tbody>
-        </table>
-      </mj-raw>
-
-      <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                <td width="4%" >
-                 <span></span>
-               </td>
-                
-              <td width="96%" align="left"  class="text-cel2-col1">
-                Canal de distribución 
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-
-       <mj-raw>
-        <table  border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col2">GDS</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col2">Precio</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-                 <span></span>
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-                
-               <td width="44%" align="left">
-                 <span class="text-details-col1">KIU</span>
-               </td>
-               <td width="44%" align="left">
-                <span class="text-details-col1">&#36; 7.33</span> 
-               </td>
-               <td width="4%" >
-                 <span></span>
-               </td>
-            </tr>
-            <tr height="35px">
-               <td width="4%" >
-               </td>
-               <td width="4%" >
-               </td>       
-               <td width="44%" align="left">               
-               </td>
-               <td width="44%" align="left">           
-               </td>
-               <td width="4%" >
-               </td>
-            </tr>
-          </tbody>
-        </table>
-      </mj-raw>
-      <!-- Fin de Información de origen de reserva USD -->
-
+       <mj-divider  border-width="1px" width="91%" border-color="#CACACA"></mj-divider>
+       
       <!-- Inicio de informacion Debes recordar -->
       <mj-raw > 
              <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
                     <tr>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB" >
                        <span></span>
                       </td>
                        <td width="4%" bgcolor="#FFF7EB">
                       
                       <img width="15" height="15" align="center" src="despiece/bombillo.png">
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-bold-979797-12">
-                          Debes recordar   
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="font-size-12 font-weight-bold text-color-29124C">
+                          Condiciones y recomendaciones   
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                     </tr>                      
@@ -1367,19 +986,19 @@
             <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
                     <tr>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
                          <div class="margin-right margin-bottom">
                          Siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación necesaria
                           para volar según su situación
                         </div>
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                     </tr>                     
@@ -1393,16 +1012,16 @@
           <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
               <tbody>
                     <tr>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB" >
                        <span></span>
                       </td>
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
                          El embarque se realizará 45 minutos antes de la hora de salida del vuelo
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                     </tr>
@@ -1410,13 +1029,13 @@
           </table>
       </mj-raw>
 
-      <mj-divider  border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
+      <mj-divider  border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
 
       <mj-raw > 
           <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
               <tbody>
                     <tr>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB" >
                        <span></span>
                       </td>
                        <td width="4%" bgcolor="#FFF7EB">
@@ -1425,7 +1044,7 @@
                       <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
                          La puerta de embarque cierra 30 minutos antes de la hora de salida del vuelo
                       </td>
-                      <td width="4%">
+                      <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                     </tr>                   
@@ -1435,26 +1054,26 @@
 
       <!-- Fin de informacion Debes recordar -->
 
-      <mj-divider padding-bottom="15"  css-class="margin-bottom" border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
+      <mj-divider padding-bottom="15"  css-class="margin-bottom" border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
 
       <!-- Inicio mensaje con link  -->
       <mj-raw > 
           <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                 <tbody>
                     <tr>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                       
-                      <td width="46%" align="left" class="text-bold-54284E-12">
+                      <td width="46%" align="left" class="font-weight-bold font-size-12 text-color-783CBD">
                         ¡Reserva tu hospedaje al mejor precio! 
                       </td>
                       <td width="46%" align="right" class="text-cel2-col1">
                         <span class="text-ligth-783CBD-12">Disfruta de los mejores alojamientos en</span>
-                        <a hrfe="#" target="_blank" class="text-regular-783CBD-12">Valencia</a>
+                        <a hrfe="#" target="_blank" class="font-weight-bold font-size-12 text-color-783CBD">Valencia ></a> 
                            
                       </td>
-                       <td width="4%">
+                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
                       </td>
                     </tr>                      
@@ -1467,17 +1086,12 @@
             <table border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
                     <tr>
-                       <td width="4%">
-                       <span></span>
-                      </td>
                       
-                      <td width="92%" align="center">
+                      
+                      <td width="100%" align="center">
                         <img width="100%" align="center" src="despiece/ant-footer.png">
                       </td>
                       
-                       <td width="4%">
-                       <span></span>
-                      </td>
                     </tr>
                       
                   </tbody>
@@ -1486,53 +1100,107 @@
       <!-- Fin -->
       <!-- Inicio footer -->
       <mj-raw >
-             <table class="margin-top-20" bgcolor="#783CBD" border="0" cellpadding="0" cellspacing="0" width="100%" >
+             <table class="" bgcolor="#29124C" border="0" cellpadding="0" cellspacing="0" width="100%" >
                   <tbody>
-                    <tr height="20px" >
-                      <td >
-                        <span class="class-footer-1">
-                        Viajar abre tu mente y amplia tu cultura
-                      </span>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="class-footer-2">                       
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      <td width="10%" rowspan="3" align="right">
+                       <img width="25px" align="right" src="iconos_correos/icon-n_search.png">
+                      </td>
+                      <td width="4%">
+                       <span></span>
                       </td>
                     </tr>
-                    <tr height="20px" >
-                      <td >
-                        <span class="class-footer-2">
-                          <a  class="class-footer-2" style="text-decoration: none; " href="mailto:preguntas@navicu.com" target="_blank">preguntas@navicu.com</a>
-                       
-                      </span>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="">
+                       <span class="text-color-EDA900 font-weight-normal font-size-12">Inicia tu viaje con un simple clic</span>
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
                       </td>
                     </tr>
-                   <tr height="20px" >
-                      <td>
-                        <span class="class-footer-3">
-                        08008-NAVICU (628428)
-                        </span>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="" >
+                       <span class="text-color-ffffff font-size-11 font-weight-bold">Contactanos de lunes a domingos de 7:00 AM a 9:00 PM</span>
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
                       </td>
                     </tr>
-                    <tr height="20px" >
-                      <td>
-                        <span class="class-footer-4">
-                        Lunes a viernes de 8:00 AM a 5:00 PM
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="">
+                       <span> <a  class="text-color-ffffff font-size-11 font-weight-ligth" style="text-decoration: none; " href="mailto:preguntas@navicu.com" target="_blank">preguntas@navicu.com</a>
                        </span>
                       </td>
-                    </tr> 
-                     <tr height="20px" >
-                      <td>
-                       
+                      
+                      <td  colspan="2" align="right" class="font-size-11 font-weight-ligth text-color-7352A3">
+                       <span align="right">Este correo ha sido enviado por navicu.com</span>
                       </td>
-                    </tr> 
-                     <tr height="20px" >
-                      <td>
-                        <span class="class-footer-5">
-                        Este e-mail ha sido enviado por  <a href="https://www.navicu.com" target="_blank" style="text-decoration: none; color:#FFFFFF; font-family:Lato,sans-serif; font-weight:300;">navicu.com</a>
-                         -2014 · 2017 <a href="https://www.navicu.com" target="_blank" style="text-decoration: none; color:#FFFFFF; font-family:Lato,sans-serif; font-weight:300;">navicu.com</a> - Todos los derechos reservados
-                      </span>
+                      <td width="4%">
+                       <span></span>
                       </td>
-                    </tr>       
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="font-size-11 font-weight-ligth text-color-ffffff">
+                       <span>0800 NAVICU (628428) - (+58) 241-8948776</a>
+                       </span>
+                      </td>                      
+                      <td colspan="2" align="right" class="font-size-11 font-weight-ligth text-color-7352A3">
+                       <span align="right">Todos los derechos reservados -2019</span>
+                      </td>
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="class-footer-2">
+                       <span></span>
+                      </td>
+                      <td colspan="2" >
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    
                   </tbody>
-            </table>   
-      </mj-raw>
+            </table>
+
+          </mj-raw>
+
+        
       <!-- Fin footer  -->
 
         
