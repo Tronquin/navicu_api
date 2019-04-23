@@ -624,7 +624,10 @@
                     </tr>
                 
               </tbody>
-            </table><table class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+            </table>
+
+             {% if isLocalCurrency(currencyReservationAlfa3) %}
+            <table class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
               <tbody>
                 <tr height="15px">
                       <td width="4%" bgcolor="#F9F9F9">
@@ -769,7 +772,172 @@
                 </tr>
                   
               </tbody>
-          </table><!-- Fin Realiza transferencia -->
+          </table>
+
+          {% else %}
+           {% for bank in nvcBanks %}  
+          <table class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+              <tbody>
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">Nombre  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class>Routing number </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">SWIFT  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"> Navicu LLC</span>        
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12" style="font-weight: bold; font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class> {{ bank.routing_number }}  </span>   
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <a class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif; text-decoration: none;" href="mailto:preguntas@navicu.com" target="_blank"> {{ bank.swift_code }}</a>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class> </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                                        
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  {{ bank.name }} </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"> Direccion </span>  
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"> Email </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                       
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ bank.account_number }}</span>        
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ bank.billing_address }}</span>
+                          </div>
+                      </td>
+                      
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ bank.billing_email }}</span>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class> </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                  
+              </tbody>
+          </table>
+
+            {% endfor %}
+
+          {% endif %}
+
+
+
+          <!-- Fin Realiza transferencia -->
           <!--[if mso | IE]>
             <td
                class="margin-top-20-outlook" style=""
