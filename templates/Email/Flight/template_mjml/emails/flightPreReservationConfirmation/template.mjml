@@ -1,0 +1,1191 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+        <mj-font href="https://fonts.googleapis.com/css?family=Lato">
+    </mj-attributes>
+   
+      <mj-style inline="inline">
+      .btn-desing  a {
+        padding: 1px 3px;
+        
+      }
+       .text-cel {
+       font-size:14px;
+       font-family:Lato,sans-serif; 
+       font-style:bold;
+       color:#60D08C;
+        
+      }
+      .text-cel2-col1 {
+       font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: normal;
+        color:#54284E;
+        
+      }
+      .text-cel2-col2 {
+       font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: lighter;
+        color:#54284E;
+        
+      }
+
+      .text-details-col1 {
+       font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: normal;
+        color:#808080;
+        
+      }
+       .text-details-col2 {
+       font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: bold;
+        color:#808080;
+        
+      }
+        
+        
+      .button-td  a  {
+        display:inline-block;
+        padding-bottom: 15px;
+        background:#783CBC;
+        color:#ffffff;
+        font-family:Lato,sans-serif;
+        font-size:12px;
+        font-weight:normal;
+        line-height:120%;
+        margin-top:1px;
+        text-decoration:none;
+        text-transform:none;
+        padding:6px 6px;
+        mso-padding-alt:0px;
+        border-radius:1px;
+        }
+
+        .text-td-1  {
+        font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: lighter;
+        color:#54284E;
+
+        }
+        .text-td-2  {
+        font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: bold;
+        color:#54284E;
+        }
+        .space-15-right{
+        margin-right: 15px;
+        padding:6px 6px;
+        }
+        .text-regular-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: lighter;
+        color:#808080;
+        }
+
+        .text-regular-14  {
+        font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: lighter;
+        color:#808080;
+        }
+
+        .text-regular-total  {
+        font-size:14px;
+        font-family:Lato,sans-serif;
+        font-weight: bold;
+        color:#391860;
+        }
+         .text-regular-979797-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: normal;
+        color:#979797;
+        }
+        .text-bold-979797-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: bold;
+        color:#979797;
+        }
+
+        .text-bold-54284E-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: bold;
+        color:#54284E;
+        }
+
+
+        .text-ligth-783CBD-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: lighter;
+        color:#783CBD;
+        }
+
+        .text-regular-783CBD-12  {
+        font-size:12px;
+        font-family:Lato,sans-serif;
+        font-weight: normal;
+        color:#783CBD;
+        text-decoration: none; 
+        }
+
+        .align-aerolin-vuelo 
+        {
+          margin-right: 25px;
+        }
+
+        .margin-left 
+        {
+          margin-left: 15px;
+        }
+        .margin-right 
+        {
+          margin-right: 15px;
+        }
+
+        .margin-bottom
+        {
+          margin-bottom: 15px;
+        }
+
+        .padding-top-23
+        {
+         padding-top:23px;
+        }
+
+        .margin-top-20
+        {
+        margin-top:20px;
+        }
+
+        .margin-bottom-20
+        {
+        margin-bottom:20px;
+        }
+        .class-footer-1
+        {
+        
+        font-weight:400;
+        font-style: italic;
+        color:#ffffff;
+       
+
+        cursor:auto;
+        
+        font-family:Ubuntu, Helvetica, Arial, sans-serif;
+        font-size:15px;
+        line-height:22px;
+        text-align:center;
+
+
+        }
+        .class-footer-2
+        {
+        font-family:Lato,sans-serif;   
+        color:#ffffff;
+        font-size:13px;
+        font-weight:400;
+        text-decoration:none!important;
+        }
+        .class-footer-3
+        {
+        font-family:Lato,sans-serif;
+        font-size:14px;
+        color:#F2AF00;
+        font-weight:bold;
+        text-decoration:none!important;
+        }
+
+        .class-footer-4
+        {
+        font-family:Lato,sans-serif;
+    
+        color:#FFFFFF;
+        font-size:12px;
+        font-weight:normal;
+        text-decoration:none!important;
+         font-style: italic;
+        }
+        .class-footer-5
+        {
+        
+       
+        color:#979797;
+        font-size:12px;
+        font-weight: normal;
+        
+        text-align:center;
+        
+        font-family:Lato;
+
+
+        }
+
+        
+        .btn-template {
+        display:inline-block;
+        font-family:Lato,sans-serif;
+        font-size:13px;
+        font-weight:normal;
+        line-height:120%;
+        Margin:0;
+        text-decoration:none;
+        text-transform:none;
+        padding:6px 15px;
+        mso-padding-alt:0px;
+        border-radius:55px;
+         }
+
+         .btn-background-ffffff{
+          background:#ffffff;
+         }
+
+         .text-color-54284E{
+          color:#54284E;
+         }
+
+         .text-color-ffffff{
+          color:#ffffff;
+          font-family:Lato,sans-serif;
+         }
+
+         .btn-background-391860{
+          background:#391860;
+         }
+
+          .btn-background-62269E{
+          background:#62296E;
+         }
+
+
+         .td-background-60D08C{
+          background:#60D08C;
+         }
+         .border-divider-table {
+         border-bottom:1px solid #EBEBEB;
+         }
+
+         .border-divider-table-54284E {
+         border-bottom:1px solid #54284E;
+         }
+
+         .border-divider-table-C2A0E0 {
+         border-bottom:1px solid #C2A0E0;
+         }
+
+         .text-color-391860{
+          color:#391860;
+          font-family:Lato,sans-serif;
+         }
+         .font-weight-bold{
+          font-weight:bold;
+          }
+          .font-weight-lighter{
+          font-weight:lighter;
+          }
+         .font-size-14{
+          font-size:13px;
+         }
+          .font-size-12{
+          font-size:12px;
+         }  
+         .font-size-11{
+          font-size:11px;
+         }
+         .tr-background-CBF7DD{
+          background:#CBF7DD;
+         } 
+         .tr-background-E73E51{
+          background:#E73E51;
+         }   
+
+         .tr-background-FFF2DB{
+          background:#FFF2DB;
+         }
+         .tr-background-FFF1D9{
+          background:#FFF1D9;
+         } 
+         
+          
+         .text-color-34AD7B{
+          color:#34AD7B;
+          font-family:Lato,sans-serif;
+         }
+
+         .text-color-777777{
+          color:#777777;
+          font-family:Lato,sans-serif;
+         }  
+         .text-color-29124C{
+          color:#29124C;
+          font-family:Lato,sans-serif;
+         }  
+         .font-weight-semibold{
+          font-weight:600;
+         } 
+         .text-color-898989{
+          color:#898989;
+          font-family:Lato,sans-serif;
+         } 
+         .text-color-F6BA43{
+          color:#F6BA43;
+          font-family:Lato,sans-serif;
+         } 
+           
+         .text-color-783CBD{
+          color:#783CBD;
+          font-family:Lato,sans-serif;
+         }   
+         .text-color-EDA900{
+          color:#EDA900;
+          font-family:Lato,sans-serif;
+         }
+
+         .font-weight-normal{
+          font-weight:normal;
+
+         } 
+
+
+         .font-weight-ligth{
+          font-weight:lighter;
+
+         } 
+
+         .text-color-7352A3{
+          color:#7352A3;
+          font-family:Lato;
+         }
+
+         .text-color-EDA900{
+          color:#EDA900;
+          font-family:Lato;
+         }
+         
+         
+         .text-color-E73E51{
+          color:#E73E51;
+          font-family:Lato,sans-serif;
+         }
+
+         .delet-decoration{
+          text-decoration:none;
+         }
+
+         
+           
+
+    </mj-style>
+  </mj-head>
+
+  <mj-body>
+    <mj-section padding="20px" background-color="#F9F9F9">
+       <!-- banner + logo. -->
+      <mj-raw>
+       <table width="100%" bgcolor="#783CBD">
+         <tbody>
+           <tr height="70px">
+            <td width="2%">
+              <span></span>
+            </td>
+             <td width="50%">
+              <img width="150px" align="left" src="iconos_correos/logo-correo.png">
+             </td>
+             <td width="21%" class="">
+              
+            </td>
+            <td width="25%" class="">
+               <a class="btn-template btn-background-ffffff text-color-391860 font-wight-bold font-size-14" href="#" target="_blank">
+               <div>Book Code FJIEZV</div>
+              </a>
+            </td>
+             <td width="2%">
+              
+            </td>
+             
+           </tr>
+         </tbody>
+       </table> 
+      </mj-raw>
+
+       <!-- Fin banner + logo . -->
+       <!-- Mensaje + links descargas -->
+
+        
+  
+      <mj-raw>
+
+            <table bgcolor="#EBEBEB" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                    <tr height="40px" class="tr-background-FFF1D9">
+                       <td width="4%">
+                       <span></span>
+                      </td>
+                       <td width="4%">
+                      <img width="17px" align="left" src="iconos_correos/pendiente.svg">   
+                      </td>
+                      <td width="62%" align="left" class="text-color-34AD7B">
+                          <span class="text-color-EDA900 font-size-14 font-weight-bold"> La compra de tu boleto está en proceso de verificación </span>    
+                      </td>
+                      <td  width="30%"  align="center" class="text-color-34AD7B font-size-14   ">
+                         
+                      </td>                  
+                    </tr>
+                  </tbody>
+            </table>
+      </mj-raw> 
+       <!-- Fin mensaje+link descargas -->
+       <!-- Detalles del pasajero -->
+      <mj-raw > 
+            <table bgcolor="#E8E8E8" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                  <tbody>
+                    <tr>
+                       <td width="4%">
+                       <span></span>
+                      </td>
+                       <td width="4%">
+                        <img width="15px" align="left" src="iconos_correos/user.svg"> 
+                      </td>
+                      <td width="35%" align="left" class="text-color-777777 font-weight-lighter font-size-14">
+                          Detalles del pasajero    
+                      </td>
+                      
+                      <td align="right">
+                              <span class="space-15-right">
+                                <span class="text-color-783CBD font-size-14 ">Localizador </span>
+                                <span class="text-color-783CBD font-size-14  font-weight-bold"> 5CB5BB1A</span>
+                              </span>
+                            </td>                 
+                    </tr>
+                  </tbody>
+            </table>
+      </mj-raw>
+
+      <mj-raw > 
+              <table  bgcolor="F9F9F9" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                  <tbody>
+                    <tr bgcolor="#F9F9F9" height="40px" class="border-divider-table padding-bottom">
+                       <td width="4%">
+                       <span></span>
+                       </td>  
+                       <td width="4%">
+                       <span></span>
+                       </td>                   
+                       <td width="68%" align="left"> 
+                         <span class="text-color-777777 font-size-14  font-weight-bold">Juan Antonio Perez Gutierrez</span>   
+                      </td>
+                      <td align="right"  width="20%" >
+                        
+                       </td>
+                       <td width="4%">
+                        <span></span>
+                        </td>                 
+                    </tr>
+
+                    <tr bgcolor="#F9F9F9" height="40px">
+                       <td width="4%">
+                       <span></span>
+                       </td> 
+                       <td width="4%">
+                       <span></span>
+                       </td>                    
+                       <td width="68%" align="left"> 
+                         <span class="text-color-777777 font-size-14  font-weight-bold">Mania Virginia Perez Gutierrez</span>   
+                      </td>
+                      <td align="right"  width="20%" >
+                        
+                       </td>
+                       <td width="4%">
+                        <span></span>
+                        </td>                 
+                    </tr>
+
+                   
+                  </tbody>
+              </table>
+      </mj-raw>
+      <!--Fin detalles de pasajero-->
+       <!-- Detalles de vuelo -->
+      <mj-raw > 
+              <table class="margin-bottom" bgcolor="#E8E8E8" border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                  <tbody>
+                    <tr >
+                       <td width="4%">
+                       <span></span>
+                      </td>
+                       <td width="4%">
+                       <img width="15px" align="left" src="iconos_correos/plane.svg"> 
+                      </td>
+                      <td width="96%" align="left" class="text-color-777777 font-weight-lighter font-size-14">
+                          Detalles del vuelo    
+                      </td>
+                    </tr>                      
+                  </tbody>
+                </table>
+      </mj-raw>
+      <mj-raw > 
+            <table bgcolor="F9F9F9" class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="35px">
+                       <td width="4%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="92%" bgcolor="F5ECF9" align="left" class="">
+                            <div class="margin-left">
+                            <span class="text-color-777777 font-size-14 font-weight-bold">Ida  </span>
+                            <span class="text-color-777777 font-size-14 font-weight-bold">20-04-2019 05:15</span> 
+                          </div>
+                      </td>
+                    
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                
+              </tbody>
+            </table>
+            <table  class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+                  <tbody>
+                    <tr height="35px">
+                       <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                      
+                      <td width="30%" align="left" class="text-cel2-col1 ">
+                         <div class="margin-left">
+                          <div class="text-color-777777 font-size-12">8:50 AM
+                          </div>
+                          <div class="text-color-777777 font-size-14 font-weight-lighter">CCS Aeropuerto Internacional de Maiquetía Simon Bolivar
+                          </div>
+                        </div>
+                      </td>
+                      <td width="44%" align="left" class="text-cel2-col1">
+                        <div class="margin-left">
+                         <div class="text-color-777777 font-size-12">10:50 AM
+                        </div>
+                         <div class="text-color-777777 font-size-14 font-weight-lighter ">MAR La Chinita International Airport
+                         </div>
+                       </div>
+                         
+                      </td>
+                      <td width="18%" align="left" class="text-regular-14">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <img class="align-aerolin-vuelo " align="left" width="50px" align="left" src="despiece/aerolinea.png">
+
+                                <div class="margin-right">
+                                Laser Airlines
+                               </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>    
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                    <tr height="35px">
+                       <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                      
+                      <td width="92%" bgcolor="F5ECF9" align="left" class="text-cel2-col1">
+                            <div class="margin-left">
+                            <span class="text-color-777777 font-size-14 font-weight-bold">Vuelta</span>
+                            <span class="text-color-777777 font-size-14 font-weight-bold">20-04-2019 05:15</span> 
+                          </div>
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                  </tr>
+              </tbody>
+            </table>
+            <table class="margin-bottom" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tbody>
+                  <tr height="35px" bgcolor="#F9F9F9">
+                      <td width="4%">
+                       <span></span>
+                      </td>  
+                      <td width="30%" align="left" class="text-cel2-col1">
+                        <div class="margin-left">
+                         <div class="text-color-777777 font-size-12">10:50 AM
+                        </div>
+                         <div class="text-color-777777 font-size-14 font-weight-lighter ">MAR La Chinita International Airport
+                         </div>
+                       </div>
+                      </td>
+                      <td width="44%" align="left" class="text-cel2-col1">
+                         <div class="margin-left">
+                         <div class="text-color-777777 font-size-12">10:50 AM
+                        </div>
+                         <div class="text-color-777777 font-size-14 font-weight-lighter ">MAR La Chinita International Airport
+                         </div>
+                       </div>
+                      </td>
+                      <td width="18%" align="left" class="text-regular-14">
+                         <table>
+                          <tbody>
+                            <tr>
+                              <td>
+                               <img class="align-aerolin-vuelo " align="left" width="50px" align="left" src="despiece/aerolinea.png">
+
+                                <div class="margin-right">
+                                Laser Airlines
+                               </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                        </table>  
+                      </td>
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td>
+                    </tr>
+                  </tbody>
+          </table>
+      </mj-raw>     
+      <mj-raw > 
+        <table  class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Sub Total  </span>    
+                          </div>
+                      </td>
+                      <td width="28%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                          <div class="margin-left">
+                            <span class="">BsS. 00.000.000,00  </span>
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Descuento navicu.com  </span>  
+                          </div>
+                      </td>
+                      <td width="28%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                         <div class="margin-right">
+                            <span class="">BsS. -00.000.000,00  </span>   
+                          </div>
+                      </td>   
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Garantia de compra  </span>        
+                          </div>
+                      </td>
+                      <td width="28%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="">BsS.000,00  </span>   
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 border-divider-table-C2A0E0">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">IVA  </span>
+                          </div>
+                      </td>
+                      <td width="28%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 border-divider-table-C2A0E0">
+                          <div class="margin-right">
+                            <span class="">BsS. -00.000.000,00  </span>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="50px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="46%" colspan="2" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Política de cancelación <b>No reembolsable</b></span>   
+                          </div>
+                      </td>
+                      <td width="18%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 ">
+                          <div class="margin-left ">
+                            <span class="text-color-783CBD font-weight-bold font-size-12">TOTAL  </span>
+                          </div>
+                      </td>
+                      <td width="28%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 ">
+                          <div class="margin-right ">
+                            <span class="text-color-783CBD font-weight-bold font-size-12">BsS. -00.000.000,00 
+                             </span>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </mj-raw>
+
+
+     <!-- Fin detalles de vuelo-->
+       <mj-divider css-class="margin-top-20" border-width="1px" width="90%" border-color="#C2A0E0"></mj-divider>
+
+       <mj-raw > 
+            <table bgcolor="F9F9F9" class="margin-bottom margin-top-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="35px">
+                       <td width="4%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="92%" bgcolor="FFFFFF" align="left" class="">
+                            <div class="margin-left">
+                            <span class="text-color-391860 font-size-14 font-weight-bold">¡Realiza ahora la transferencia! Te facilitamos los datos bancarios:</span> 
+                          </div>
+                      </td>
+                    
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                
+              </tbody>
+            </table>
+
+          </mj-raw>
+
+
+       <mj-raw > 
+        <table  class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" >
+              <tbody>
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Nombre  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
+                          <div class="margin-left">
+                            <span class="">RIF </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Correo  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Navicu C.A </span>        
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                          <div class="margin-left">
+                            <span class="">J-40621968-1  </span>   
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">preguntas@navicu.com  </span>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
+                          <div class="margin-left">
+                            <span class=""> </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12"> Banco Mercantil </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
+                          <div class="margin-left">
+                            <span class="">Banesco </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+
+                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9">
+                       <span></span>
+                      </td> 
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">0105-0699-92-1699185247</span>        
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12">
+                          <div class="margin-left">
+                            <span class="">0105-0699-92-1699185247</span>   
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12"></span>
+                          </div>
+                      </td>
+                      
+                      <td width="4%" bgcolor="#F9F9F9">
+                        <span></span>
+                      </td>
+                  </tr>
+                  <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
+                          <div class="margin-left">
+                            <span class=""> </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">  </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+                  
+              </tbody>
+          </table>
+      </mj-raw>
+
+
+ <!-- Fin Realiza transferencia-->
+       <mj-divider css-class="margin-top-20" border-width="1px" width="90%" border-color="#C2A0E0"></mj-divider>
+
+
+      
+     
+      <!-- Inicio de informacion Debes recordar -->
+      <mj-raw > 
+             <table  border="0" class="margin-top-20" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                  <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                      
+                      <img width="15" height="15" align="center" src="despiece/bombillo.png">
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="font-size-12 font-weight-bold text-color-29124C">
+                          Condiciones y recomendaciones   
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                      
+                  </tbody>
+             </table>
+      </mj-raw>
+
+      <mj-raw > 
+            <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                  <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                         <div class="margin-right margin-bottom">
+                         Siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación necesaria
+                          para volar según su situación
+                        </div>
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                     
+                  </tbody>
+            </table>
+      </mj-raw>
+
+      <mj-divider  border-width="1px" width="91%" border-color="#EDA900"></mj-divider>
+
+      <mj-raw > 
+          <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                         El embarque se realizará 45 minutos antes de la hora de salida del vuelo
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>
+              </tbody>
+          </table>
+      </mj-raw>
+
+      <mj-divider  border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
+
+      <mj-raw > 
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
+                         La puerta de embarque cierra 30 minutos antes de la hora de salida del vuelo
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                   
+              </tbody>
+          </table>
+      </mj-raw>
+
+      <!-- Fin de informacion Debes recordar -->
+
+      <mj-divider padding-bottom="15"  css-class="margin-bottom" border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
+
+      <!-- Inicio mensaje con link  -->
+      <mj-raw > 
+          <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+                <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                      
+                      <td width="40%" align="left" class="font-size-12 text-color-783CBD">
+                        ¡Reserva tu hospedaje al mejor precio! 
+                      </td>
+                      <td width="52%" align="right" class="text-cel2-col1">
+                        <span class="text-ligth-783CBD-12">Disfruta de los mejores alojamientos en</span>
+                        <a hrfe="#" target="_blank" class="font-weight-bold font-size-12 text-color-783CBD">Valencia ></a> 
+                           
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                      
+                </tbody>
+          </table>
+      </mj-raw>
+      <!-- Fin mensaje con link  -->
+      <!-- Inicio imagen referencia de hotel -->
+      <mj-raw >
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                    <tr>
+                      
+                      
+                      <td width="100%" align="center">
+                        <img width="100%" align="center" src="despiece/ant-footer.png">
+                      </td>
+                      
+                    </tr>
+                      
+                  </tbody>
+            </table>   
+      </mj-raw>
+      <!-- Fin -->
+      <!-- Inicio footer -->
+      <mj-raw >
+             <table class="" bgcolor="#29124C" border="0" cellpadding="0" cellspacing="0" width="100%" >
+                  <tbody>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="class-footer-2">                       
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      <td width="10%" rowspan="3" align="right">
+                       <img width="25px" align="right" src="iconos_correos/icon-n_search.png">
+                      </td>
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="">
+                       <span class="text-color-EDA900 font-weight-normal font-size-12">Inicia tu viaje con un simple clic</span>
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="" >
+                       <span class="text-color-ffffff font-size-11 font-weight-bold">Contactanos de lunes a domingos de 7:00 AM a 9:00 PM</span>
+                      </td>
+                      <td width="32%">
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="">
+                       <span> <a  class="text-color-ffffff font-size-11 font-weight-ligth" style="text-decoration: none; " href="mailto:preguntas@navicu.com" target="_blank">preguntas@navicu.com</a>
+                       </span>
+                      </td>
+                      
+                      <td  colspan="2" align="right" class="font-size-11  delet-decoration font-weight-ligth text-color-7352A3">
+                       <span align="right">Este correo ha sido enviado por navicu.com</span>
+                      </td>
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="font-size-11 font-weight-ligth text-color-ffffff">
+                       <span>0800 NAVICU (628428) - (+58) 241-8948776</a>
+                       </span>
+                      </td>                      
+                      <td colspan="2" align="right" class="font-size-11 font-weight-ligth text-color-7352A3">
+                       <span align="right">Todos los derechos reservados -2019</span>
+                      </td>
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    <tr height="20px">
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                      <td  align="left" width="50%" class="class-footer-2">
+                       <span></span>
+                      </td>
+                      <td colspan="2" >
+                       <span></span>
+                      </td>
+                      
+                      <td width="4%">
+                       <span></span>
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+            </table>
+
+          </mj-raw>
+
+        
+      <!-- Fin footer  -->
+
+        
+    
+    </mj-section>
+  </mj-body>
+</mjml>
