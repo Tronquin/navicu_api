@@ -627,6 +627,7 @@
             </table>
 
              {% if isLocalCurrency(currencyReservationAlfa3) %}
+             {% for bank in nvcBanks %}
             <table class="margin-bottom-20" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
               <tbody>
                 <tr height="15px">
@@ -659,17 +660,24 @@
                       </td> 
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
                           <div class="margin-left" style="margin-left: 15px;">
-                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ nvcBanks.[0].billing_name }} </span>        
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ bank.billing_name }} </span>        
                           </div>
                       </td>
                       <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12" style="font-weight: bold; font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
                           <div class="margin-left" style="margin-left: 15px;">
-                            <span class>{{ nvcBanks.[0].rif_code }}  </span>   
+                            <span class>
+                            {% if bank.rif_code is defined %}
+    
+                            {{ bank.rif_code }}
+
+                            {% endif %}
+
+                              </span>   
                           </div>
                       </td>
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
                           <div class="margin-left" style="margin-left: 15px;">
-                            <a class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif; text-decoration: none;" href="mailto:preguntas@navicu.com" target="_blank">{{ nvcBanks.[0].billing_email }}</a>
+                            <a class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif; text-decoration: none;" href="mailto:preguntas@navicu.com" target="_blank">{{ bank.billing_email }}</a>
                           </div>
                       </td>
                       
@@ -706,13 +714,18 @@
                       <td width="4%" bgcolor="#F9F9F9">
                          <span></span>
                       </td>
-                      {% for bank in nvcBanks %}                     
+                                           
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
                           <div class="margin-left" style="margin-left: 15px;">
                             <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  {{ bank.name }} </span>    
                           </div>
                       </td>
-                      {% endfor %}
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"></span>
+                          </div>
+                      </td>
+                      
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1" style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
                           <div class="margin-left" style="margin-left: 15px;">
                             <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">  </span>  
@@ -728,14 +741,18 @@
                       <td width="4%" bgcolor="#F9F9F9">
                        <span></span>
                       </td>
-                      {% for bank in nvcBanks %} 
+                     
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1  font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
                           <div class="margin-left" style="margin-left: 15px;">
                             <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;">{{ bank.account_number }}</span>        
                           </div>
                       </td>
-                      {% endfor %}
-                      
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
+                          <div class="margin-left" style="margin-left: 15px;">
+                            <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"></span>
+                          </div>
+                      </td>
+                                           
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 font-weight-bold" style="font-size: 14px; font-family: Lato,sans-serif; color: #54284E; font-weight: bold;">
                           <div class="margin-left" style="margin-left: 15px;">
                             <span class="text-color-777777 font-size-12" style="font-size: 12px; color: #777777; font-family: Lato,sans-serif;"></span>
@@ -773,6 +790,8 @@
                   
               </tbody>
           </table>
+           {% endfor %}
+
 
           {% else %}
            {% for bank in nvcBanks %}  
