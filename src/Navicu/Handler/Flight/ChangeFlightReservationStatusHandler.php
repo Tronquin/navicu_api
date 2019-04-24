@@ -98,6 +98,9 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 }
                 $reservation->setStatus(FlightReservation::STATE_CANCEL);
                 $manager->flush();
+                $handler = new SendFlightDeniedEmailHandler();
+                $handler->setParam('publicId',  $publicId );
+                $handler->processHandler();
                 return [
                     "code"=> 200
                 ];
