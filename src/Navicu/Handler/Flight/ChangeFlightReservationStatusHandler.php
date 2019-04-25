@@ -101,10 +101,6 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 $handler = new SendFlightDeniedEmailHandler();
                 $handler->setParam('publicId',  $publicId );
                 $handler->processHandler();
-                if (! $handler->isSuccess()) {
-                    throw new NavicuException('Error Enviar mail Cancelación', BaseHandler::CODE_BAD_REQUEST );
-                }
-
                 return [
                     "code"=> 200
                 ];
