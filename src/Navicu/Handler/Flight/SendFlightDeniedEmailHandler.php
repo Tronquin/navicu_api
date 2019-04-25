@@ -47,6 +47,7 @@ class SendFlightDeniedEmailHandler extends BaseHandler
         if (! $handler->isSuccess()) {
             throw new NavicuException('Email data not found');
         }
+        $data = $handler->getData()['data'];
          // Envia correo a los pasajeros
          $data['amountsInLocalCurrency'] = false;
          $data['sendNavicu'] = false;
@@ -54,7 +55,7 @@ class SendFlightDeniedEmailHandler extends BaseHandler
             $recipients,
             'Reserva Denegada - navicu.com',
             'Email/Flight/flightDeniedReservation.html.twig',
-            $handler->getData()['data']
+            $data
         );
         // Envia correo a navicu
         $data['amountsInLocalCurrency'] = true;
@@ -63,7 +64,7 @@ class SendFlightDeniedEmailHandler extends BaseHandler
             'reservationDenied',
             'Reserva Denegada - navicu.com',
             'Email/Flight/flightDeniedReservation.html.twig',
-            $handler->getData()['data']
+            $data
         );
 
         return compact('reservation');
