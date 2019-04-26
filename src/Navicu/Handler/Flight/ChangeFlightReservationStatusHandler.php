@@ -91,19 +91,22 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
             }
               // cancela la reserva
             if($status == FlightReservation::STATE_CANCEL){
-
-                foreach ($reservation->getGdsReservations() as $reservationGds) {
-                    $reservationGds->setStatus(FlightReservation::STATE_CANCEL);
-                    $manager->flush();
-                }
-                $reservation->setStatus(FlightReservation::STATE_CANCEL);
-                $manager->flush();
-                $handler = new SendFlightDeniedEmailHandler();
+                //Cancela el vuelo en ota
+                $handler = new CancelBookFlightHandler();
                 $handler->setParam('publicId',  $publicId );
                 $handler->processHandler();
-                return [
-                    "code"=> 200
-                ];
+                //Envia correo de reserva cancelada 
+                if ($handler->isSuccess()) {
+                    $handler = new SendFlightDeniedEmailHandler();
+                    $handler->setParam('publicId',  $publicId );
+                    $handler->processHandler();
+                    return [
+                        "code"=> 200
+                    ];
+                }else{
+
+                    throw new NavicuException('Error In Cancel Book OTA', BaseHandler::CODE_BAD_REQUEST );
+                }
             }
             // se debe cambiar el estatus a cancelada o aceptada
             if($status == FlightReservation::STATE_IN_PROCESS){
