@@ -61,6 +61,10 @@ class BookFlightCancelCommand extends Command
                 $handler->setParam('publicId',  $flightReservation->getPublicId() );
                 $handler->processHandler();
                 $logger->warning('La reserva con public_id '.$flightReservation->getPublicId(). 'fue cancelada correctamente');
+                if (! $handler->isSuccess()) {
+                    $logger->warning('Error al enviar correo de cancelación'.$flightReservation->getPublicId());
+                    $logger->warning(json_encode($handler->getErrors()));
+                }
             }else{
                 $logger->warning('Ocurrió un error a cancelar la reserva con public id '.$flightReservation->getPublicId());
                 $logger->warning(json_encode($handler->getErrors()));
