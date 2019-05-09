@@ -1,5 +1,11 @@
 monolog:
+    channels: ['flight']
     handlers:
+        flight:
+            level:    debug
+            type:     stream
+            path:     '%kernel.logs_dir%/flight/flight.log'
+            channels: ["flight"]
         main:
             type: fingers_crossed
             action_level: error

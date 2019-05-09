@@ -45,6 +45,18 @@ class FlightReservationRepository extends BaseRepository
 
         return $data;
     }
+    public function getExpiredFlight()
+    {
+        $expiredDateStart = new \DateTime('now');
+        return $this->createQueryBuilder('fr')
+            ->where('fr.status = :status')
+            ->andWhere(':expiredDateStart >= fr.expire_date')
+            ->andWhere('fr.status IS NOT NULL')
+            ->setParameter('expiredDateStart', $expiredDateStart)
+            ->setParameter('status', FlightReservation::STATE_PRE_RESERVATION)
+            ->getQuery()
+            ->getResult();
+    }
 
 
 }

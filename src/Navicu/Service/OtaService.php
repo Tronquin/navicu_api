@@ -53,7 +53,7 @@ class OtaService
             'ins' => 'required|numeric',
             'startDate' => 'required|date_format:Y-m-d',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'cabin' => 'required|in:C,F,N,M,W,Y,ALL,Economy,First,Business,PremiumEconomy',
             'scale' => 'required|numeric|between:0,3',
             'baggage' => 'required|numeric|between:0,2',
         ]);
@@ -87,7 +87,7 @@ class OtaService
             'startDate' => 'required|date_format:Y-m-d',
             'endDate' => 'required|date_format:Y-m-d',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'cabin' => 'required|in:C,F,N,W,M,Y,ALL,Economy,First,Business,PremiumEconomy',
             'scale' => 'required|numeric|min:0|max:3',
             'baggage' => 'required|numeric|between:0,2',
         ]);
@@ -118,7 +118,7 @@ class OtaService
             'ins' => 'required|numeric',
             'itinerary' => 'required',
             'provider' => 'required|regex:/^[A-Z]{3}$/',
-            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'cabin' => 'required|in:C,F,N,W,M,Y,ALL',
             'scale' => 'required|numeric|between:0,3',
             'baggage' => 'required|numeric|between:0,2',
         ]);
@@ -145,7 +145,7 @@ class OtaService
             'cnn' => 'required|numeric',
             'inf' => 'required|numeric',
             'ins' => 'required|numeric',
-            'cabin' => 'required|in:C,F,N,W,Y,ALL',
+            'cabin' => 'required|in:C,F,N,M,W,Y,ALL,Economy,First,Business,PremiumEconomy',
             'scale' => 'required|numeric|between:0,3',
             'baggage' => 'required|numeric|between:0,2',
             'source' => 'required',

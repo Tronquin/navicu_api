@@ -1,7 +1,13 @@
 monolog:
+    channels: ['flight']
     handlers:
+        flight:
+            level:    debug
+            type:     stream
+            path:     '%kernel.logs_dir%/flight/flight.log'
+            channels: ["flight"]
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
+            level: error
             channels: ["!event"]

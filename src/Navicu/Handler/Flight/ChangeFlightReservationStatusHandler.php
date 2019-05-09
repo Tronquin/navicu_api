@@ -32,6 +32,10 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
         $totalReservation = 0;
         $status = $params['status'];
         $amountTransferred =  $params['amountTransferred'];
+
+        $incrementExpenses = $incrementGuarantee = $discount = $subTotal = $markupIncrementAmount = $incrementConsolidator = $tax  = 0;
+        $round = 2;
+
     
         if ($reservation->getStatus() == FlightReservation::STATE_IN_PROCESS){
             //Procesa la reserva
@@ -40,7 +44,24 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 foreach ($reservation->getGdsReservations() as $reservationGds) {
                     $currencyRateConvertion = $reservationGds->getCurrencyRateConvertion();
                     $currencyRateConvertion = $currencyRateConvertion ?? 0.0;
-                    $totalReservation += NavicuCurrencyConverter::convertToRate($reservationGds->getTotal(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $subTotal += NavicuCurrencyConverter::convertToRate(
+                        $reservationGds->getSubtotal(), 
+                        CurrencyType::getLocalActiveCurrency()->getAlfa3(), 
+                        $reservationGds->getCurrencyReservation()->getAlfa3(), 
+                        $reservationGds->getDollarRateConvertion(),
+                        $currencyRateConvertion);
+                    $incrementExpenses += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementExpenses(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $incrementGuarantee += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementGuarantee(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $discount += NavicuCurrencyConverter::convertToRate($reservationGds->getDiscount(),CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $tax += NavicuCurrencyConverter::convertToRate($reservationGds->getTax(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $markupIncrementAmount += NavicuCurrencyConverter::convertToRate($reservationGds->getMarkupIncrementAmount(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $incrementConsolidator += NavicuCurrencyConverter::convertToRate($reservationGds->getIncrementConsolidator(), CurrencyType::getLocalActiveCurrency()->getAlfa3(), $reservationGds->getCurrencyReservation()->getAlfa3(), $reservationGds->getDollarRateConvertion(), $currencyRateConvertion);
+                    $subTotal = round($subTotal,$round) ;
+                    $tax = round($tax, $round);
+                    $incrementExpenses = round($incrementExpenses, $round);
+                    $incrementGuarantee = round($incrementGuarantee, $round);
+                    $discount = round($discount, $round);
+                    $totalReservation = round($subTotal + $tax + $incrementExpenses + $incrementGuarantee - $discount , $round);
                 }
                  /*| **********************************************************************
                     *| Paso 1:
@@ -91,16 +112,22 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
             }
               // cancela la reserva
             if($status == FlightReservation::STATE_CANCEL){
+                //Cancela el vuelo en ota
+                $handler = new CancelBookFlightHandler();
+                $handler->setParam('publicId',  $publicId );
+                $handler->processHandler();
+                //Envia correo de reserva cancelada 
+                if ($handler->isSuccess()) {
+                    $handler = new SendFlightDeniedEmailHandler();
+                    $handler->setParam('publicId',  $publicId );
+                    $handler->processHandler();
+                    return [
+                        "code"=> 200
+                    ];
+                }else{
 
-                foreach ($reservation->getGdsReservations() as $reservationGds) {
-                    $reservationGds->setStatus(FlightReservation::STATE_CANCEL);
-                    $manager->flush();
+                    throw new NavicuException('Error In Cancel Book OTA', BaseHandler::CODE_BAD_REQUEST );
                 }
-                $reservation->setStatus(FlightReservation::STATE_CANCEL);
-                $manager->flush();
-                return [
-                    "code"=> 200
-                ];
             }
             // se debe cambiar el estatus a cancelada o aceptada
             if($status == FlightReservation::STATE_IN_PROCESS){
@@ -122,7 +149,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
     {
         $paymentComplete = false;
         $manager = $this->getDoctrine()->getManager();
-
+        
         $flightPayment = $manager->getRepository(FlightPayment::class)->findOneBy(['flightReservation' => $reservationId ]);
         if ($TotalTransferred >= $totalReservation ) {
             $paymentComplete= true;
