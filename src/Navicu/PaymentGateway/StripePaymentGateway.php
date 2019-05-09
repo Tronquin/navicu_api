@@ -254,25 +254,36 @@ class StripePaymentGateway implements  PaymentGateway
     private function getPaymentError($response) {
 
         $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
+        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
 
         if ($response['type'] === 'card_error') {
             if ($response['code'] === 'incorrect_number') {
 
                 $code = '21';
-                $messages = ['El número de tarjeta parece no estar correcto','¡Intenta colocarlo de nuevo!'];
+                $messages = ['El número de tarjeta parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
 
             } else if ($response['code'] === 'card_declined') {
 
                 $code = '22';
-                $messages = ['La tarjeta ha sido rechazada','Intenta con otra o realiza una transferencia bancaria'];
+                $messages = ['Lo sentimos, tu tarjeta ha sido rechazada,','Intenta con otra o realiza una transferencia bancaria'];
 
             } else if ($response['code'] === 'invalid_expiry_year') {
 
                 $code = '23';
-                $messages = ['La fecha de vencimiento de tu tarjeta no es correcta','¡Verifica tus datos e intenta colocarla nuevamente!'];
+                $messages = ['La fecha de vencimiento de tu tarjeta no es correcta,','¡Verifica tus datos e intenta colocarla nuevamente!'];
+
+            }else if($response['code'] === 'incorrect_cvc'){
+
+                $code = '83';
+                $messages = ['El código CVC parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
+                
+            }else if($response['code'] === 'insufficient_funds'){
+
+                $code = '51';
+                $messages = ['La tarjeta que utilizas no cuenta con fondo suficiente,','Recarga tu saldo o realiza una transferencia bancaria'];
             }
-        }
+
+        }   
 
         return [
             'code' => $code,

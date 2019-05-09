@@ -1188,17 +1188,17 @@ class PayeezyPaymentGateway implements  PaymentGateway
     private function getPaymentError($response) {
 
         $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco', 'por favor intentalo más tarde'];
+        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
 
         if (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_card_number') {
 
             $code = '21';
-            $messages = ['El número de tarjeta parece no estar correcto','¡Intenta colocarlo de nuevo!'];
+            $messages = ['El número de tarjeta parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
 
         } elseif (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_exp_date') {
 
             $code = '23';
-            $messages = ['La fecha de vencimiento de tu tarjeta no es correcta','¡Verifica tus datos e intenta colocarla nuevamente!'];
+            $messages = ['La fecha de vencimiento de tu tarjeta no es correcta,','¡Verifica tus datos e intenta colocarla nuevamente!'];
         }
 
         return [
