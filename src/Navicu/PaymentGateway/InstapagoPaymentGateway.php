@@ -540,7 +540,7 @@ class InstapagoPaymentGateway implements PaymentGateway
     {
 
         $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco,', ', por favor intentalo más tarde'];
+        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
 
         if ($response['responsecode'] === '02') {
 
