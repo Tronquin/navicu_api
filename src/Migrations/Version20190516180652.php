@@ -13,12 +13,14 @@ final class Version20190516180652 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
+       
+        $this->addSql("UPDATE currency_type SET simbol = 'Bs' WHERE id = 151");
 
     }
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql("UPDATE currency_type SET simbol = 'Bs.s' WHERE id = 151");
 
     }
 }
