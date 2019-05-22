@@ -572,7 +572,8 @@ class InstapagoPaymentGateway implements PaymentGateway
         return [
             'code' => $code,
             'messages' => $messages,
-            'card' => $response['CardNumber']
+            'card' => $response['CardNumber'],
+            'responseError' => $response
         ];
     }
 

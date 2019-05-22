@@ -287,7 +287,8 @@ class StripePaymentGateway implements  PaymentGateway
 
         return [
             'code' => $code,
-            'messages' => $messages
+            'messages' => $messages,
+            'responseError' => $response
         ];
 
     }

@@ -1203,7 +1203,8 @@ class PayeezyPaymentGateway implements  PaymentGateway
 
         return [
             'code' => $code,
-            'messages' => $messages
+            'messages' => $messages,
+            'responseError' => $response
         ];
     }
 
