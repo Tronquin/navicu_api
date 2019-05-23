@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
  * @return  Object | \Navicu\Core\Application\Contract\json | array
  */
 
-class InstapagoPaymentGateway implements PaymentGateway
+class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGateway
 {
     /**
      *  constante que define una antelación general para los PaymentGateway
@@ -194,7 +194,7 @@ class InstapagoPaymentGateway implements PaymentGateway
         ];
 
         $this->logger = $logger;
-
+        parent::__construct();
     }
 
     /**
@@ -410,20 +410,27 @@ class InstapagoPaymentGateway implements PaymentGateway
     {
         //global $kernel;
         //$logger = $kernel->getContainer()->get('Logger');
-        //$logger->warning('Petición (request): ');
+        
+        $logger = $this->getContainer()->get('monolog.logger.flight');
+        $logger->warning('******************************');
+        $logger->warning('Petición Instapago (request): ');
 
         $amount = str_replace(",","",(string)$request['amount']);  //Eliminar las comas del monto a cobrar
 
-        /*$logger->warning(json_encode(array(
+ 
+        $logger->warning(json_encode(array(
+            'PublicKeyId' => $this->config['public_id'],
+            'KeyId' => $this->config['private_id'],
+            'StatusId' => $this->statusId,
             'Amount' => (string)$amount,
             'Description' => $request['description'],
             'CardHolder' => $request['holder'],
             'CardHolderId' => (string)$request['holderId'],
             'CardNumber' => $request['number'],
-            'StatusId' => $this->statusId,
-            'ExpirationDate' => $request['ExpirationDate'],
+            'CVC' => $request['cvc'],
+            'ExpirationDate' => $request['expirationDate'],
             'IP' => $request['ip'])
-        ));*/
+        ));
 
         return [
             'PublicKeyId' => $this->config['public_id'],
@@ -458,7 +465,22 @@ class InstapagoPaymentGateway implements PaymentGateway
         $requestFinal['Description'] = $request['description'];
         $requestFinal['IP'] = $request['ip'];
 
+        $logger = $this->getContainer()->get('monolog.logger.flight');
+        $logger->warning('******************************');
+        $logger->warning('Petición Instapago (request): ');
+        $logger->warning(json_encode(array(
+            'Amount' => $requestFinal['Amount'],
+            'Description' => $requestFinal['Description'],
+            'CardHolder' => $requestFinal['CardHolder'],
+            'CardHolderId' => (string)$requestFinal['CardHolderId'],
+            'CardNumber' => preg_replace('/[0-9]/', '*', $requestFinal['CardNumber'], 12),
+            'StatusId' => "1",
+            'ExpirationDate' => $requestFinal['ExpirationDate'],
+            'IP' => $requestFinal['IP'])
+    ));
+      
         /*
+        
         $logger->warning('Petición (request): ');
         $logger->warning(json_encode(array(
                 'Amount' => $requestFinal['Amount'],
@@ -519,9 +541,10 @@ class InstapagoPaymentGateway implements PaymentGateway
                 'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         }
-
-        /*
-        $logger->warning('Respuesta de la peticion:');     
+        $logger = $this->getContainer()->get('monolog.logger.flight');
+        $logger->warning('******************************');
+        
+        $logger->warning('Respuesta de la peticion Instapago:');     
         $logger->warning(json_encode(array( 'id' => $return['id'],
             'success' => $return['success'],
             'code' => $return['code'],
@@ -531,7 +554,7 @@ class InstapagoPaymentGateway implements PaymentGateway
             'status' => $return["success"],
             'amount' => $return['amount'])));
         $logger->warning('.......................................................................................');
-        */
+        
 
         return $return;
     }

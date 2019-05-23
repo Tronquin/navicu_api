@@ -10,7 +10,8 @@ use App\Navicu\Service\ConsolidatorService;
 use App\Navicu\Service\NotificationService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
-
+use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 /**
  * Genera el ticket para una reserva
  *
@@ -60,7 +61,10 @@ class IssueTicketHandler extends BaseHandler
                     'provider' => $gdsReservation->getGds()->getName()
                 ]);
             }
-
+            $logger = $this->container->get('monolog.logger.flight');
+            $logger->warning('**********************************');
+            $logger->warning('Recibiendo respuesta OTA');
+            $logger->warning(json_encode($response));
             foreach ($response['TicketItemInfo'] as $data) {
 
                 foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
@@ -74,7 +78,9 @@ class IssueTicketHandler extends BaseHandler
                         strtolower($lastName) === strtolower($data['Surname']) &&
                         ! $flightReservationPassenger->hasTicket()
                     ) {
-
+                        $logger->warning('**********************************');
+                        $logger->warning('Guardando ticket en Base de datos');
+                        $logger->warning(json_encode($data));
                         $flightReservationPassenger
                             ->setPrice($data['Amount'])
                             ->setCommision($data['Commission'])

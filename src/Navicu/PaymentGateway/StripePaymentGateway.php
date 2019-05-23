@@ -5,6 +5,7 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 use Omnipay\Common\CreditCard;
 use Omnipay\Omnipay;
 use App\Navicu\Service\NavicuCurrencyConverter;
@@ -13,7 +14,7 @@ use App\Navicu\Service\NavicuCurrencyConverter;
 * @author Javier Vasquez <jvasquez@jacidi.com>
 */
 
-class StripePaymentGateway implements  PaymentGateway
+class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGateway
 {
 
     /**
@@ -64,16 +65,27 @@ class StripePaymentGateway implements  PaymentGateway
             'api_connection_error' => 2,
             'api_error' => 2,
         ];
+        parent::__construct();
     }
 
     public function processPayment($request)
     {
         try {
+            $logger = $this->getContainer()->get('monolog.logger.flight');
+            $logger->warning('******************************');
             \Stripe\Stripe::setApiKey($this->config['api_key']);
+          
+            $logger->warning('Peticiom Stripe');
+            $logger->warning(json_encode($this->formaterRequestData($request)));
 
             $charge = \Stripe\Charge::create($this->formaterRequestData($request));
-
+           
+        
+            
+            $logger->warning('Respuesta Stripe');
+            $logger->warning(json_encode($this->formaterResponseData($charge)));
             return $this->formaterResponseData($charge);
+            
 
         } catch(\Stripe\Error\Base $e) {
 
@@ -81,6 +93,8 @@ class StripePaymentGateway implements  PaymentGateway
             $err  = $body['error'];
             $err['status'] = $e->getHttpStatus();
             $err['amount'] = $request['amount'];
+            $logger->warning('Error Stripe');
+            $logger->warning(json_encode( $this->formaterResponseErrorData($err,$request)));
             return $this->formaterResponseErrorData($err,$request);
         }
     }

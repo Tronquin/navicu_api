@@ -6,12 +6,13 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 use App\Navicu\Service\NavicuCurrencyConverter;
 /*
 * @author Javier Vasquez <jvasquez@jacidi.com>
 */
 
-class PayeezyPaymentGateway implements  PaymentGateway
+class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGateway
 {
     /**
      * @var string The Payeezy API params to be used for requests.
@@ -68,6 +69,7 @@ class PayeezyPaymentGateway implements  PaymentGateway
             'api_connection_error' => 2,
             'api_error' => 2,
         ];
+        parent::__construct();
 
     }
     /**
@@ -101,17 +103,20 @@ class PayeezyPaymentGateway implements  PaymentGateway
 
     public function processPayment($request)
     {
-       // $this->logger->warning('PayeezyPaymentGateway::processPayment');
+        $logger = $this->getContainer()->get('monolog.logger.flight');
+        
+       $logger->warning('******************************');
+       $logger->warning('PayeezyPaymentGateway::processPayment');
        $args = $this->generateArgs($request);
-       //$this->logger->warning('generateArgs:');
-       //$this->logger->warning(json_encode($args));
+       $logger->warning('generateArgs:');
+       $logger->warning(json_encode($args));
        $response = $this->purchase($args);
        $response = json_decode($response, true);
        $response['checkInDate'] = $request['date'];
 
        $response = $this->formaterResponseData($response);
-       //$this->logger->warning('formaterResponseData:');
-       //$this->logger->warning(json_encode($response));
+       $logger->warning('formaterResponseData:');
+       $logger->warning(json_encode($response));
        return $response;
     }
 
