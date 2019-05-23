@@ -38,16 +38,16 @@ class EmailService
 
         $message = (new \Swift_Message())
             ->setFrom($from)
-            ->setTo($kernel->getEnvironment() == 'prod' ? [$from] : $recipients)
+            ->setTo($kernel->getEnvironment() !== 'prod' ? [$from] : $recipients)
             ->setCharset('UTF-8')
             ->setSubject($subject)
             ->setBody($twig->render($template, $params), 'text/html');
 
-        if ($kernel->getEnvironment() == 'prod') {
+        if ($kernel->getEnvironment() !== 'prod') {
             $message = self::addRecipientsToEmail($message, $recipients);
         }
 
-        if ($kernel->getEnvironment() === 'prod') {
+        if ($kernel->getEnvironment() === 'dev') {
             return self::printEmail($message);
         }
 
