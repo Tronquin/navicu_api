@@ -22,7 +22,7 @@ class TokenSubscriber implements EventSubscriberInterface
 
     public function onKernelController(FilterControllerEvent $event)
     {
-       /* $request = $event->getRequest();
+        $request = $event->getRequest();
 
         if (! $request->headers->has('token')) {
 
@@ -59,11 +59,11 @@ class TokenSubscriber implements EventSubscriberInterface
             $token = $tokenStorage->getToken();
 
             /** @var FosUser $user */
-            /*if ($token && ($user = $token->getUser())) {
+            if ($token && ($user = $token->getUser())) {
                 AuthService::setUser($user);
             }
-        }*/
-}
+        }
+    }
 
     public static function getSubscribedEvents()
     {

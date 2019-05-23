@@ -8,7 +8,6 @@ use App\Navicu\Handler\Main\ListCurrencyHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * @Route("/navicu")
@@ -39,8 +38,6 @@ class IndexController extends AbstractController
      */
    public function listCurrency()
    {
-    throw new Exception ('Debes insertar un número positivo');
-    dump("Deje este dump");
       $handler = new ListCurrencyHandler();
       $handler->processHandler();
 
