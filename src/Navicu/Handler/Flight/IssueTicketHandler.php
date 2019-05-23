@@ -72,7 +72,16 @@ class IssueTicketHandler extends BaseHandler
 
                     $name = $flightReservationPassenger->getPassenger()->getName();
                     $lastName = $flightReservationPassenger->getPassenger()->getLastname();
-
+                    $logger->warning('**********************************');
+                    $logger->warning($name);
+                    $logger->warning('**********************************');
+                    $logger->warning('**********************************');
+                    $logger->warning($lastName);
+                    $logger->warning('**********************************');
+                    $logger->warning(!$flightReservationPassenger->hasTicket());
+                    $logger->warning(strtolower($name) === strtolower($data['GivenName']));
+                    $logger->warning( strtolower($lastName) === strtolower($data['Surname']));
+                    $logger->warning('**********************************');
                     if (
                         strtolower($name) === strtolower($data['GivenName']) &&
                         strtolower($lastName) === strtolower($data['Surname']) &&
