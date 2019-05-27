@@ -4,6 +4,8 @@ namespace App\Navicu\Service;
 
 use App\Navicu\Exception\OtaException;
 use Symfony\Component\Dotenv\Dotenv;
+use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Servicio para interactuar con la api de OTA
@@ -365,6 +367,7 @@ class OtaService
     {
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
+        global  $kernel;
 
         $urlBase = getenv('OTA_URL_BASE');
         $url = $urlBase . $url;
@@ -386,7 +389,10 @@ class OtaService
         }
 
         $url = $url . '?' . http_build_query($params);
-
+        $logger = $kernel->getContainer()->get('monolog.logger.flight');
+        $logger->warning('**********************************');
+        $logger->warning('URL a OTA');
+        $logger->warning(json_encode($url));
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
