@@ -340,9 +340,9 @@
                                 {% if flight['logo_exists'] %}
                                 <img class="align-aerolin-vuelo " align="left" width="50px" src="{{ baseURL }}/images-api/images/airlines/{{ flight['airlineCode'] }}.png" style="margin-right: 25px;">
                                 {% else %} 
-
+                               
                                 <div class="margin-right" style="margin-right: 15px;">
-                                Laser Airlines
+                                 {{ flight['airlineName'] }}
                                </div>
                                {% endif %}
                               </td>
