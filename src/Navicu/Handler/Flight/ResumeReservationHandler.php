@@ -223,8 +223,6 @@ class ResumeReservationHandler extends BaseHandler
         $incrementGuaranteeLocal = round($incrementGuaranteeLocal, $roundLocal);
         $discountLocal = round($discountLocal, $roundLocal);
         $totalLocal = round($subTotalLocal + $taxLocal + $incrementExpensesLocal + $incrementGuaranteeLocal - $discountLocal , $roundLocal);
-
-        
         $structure = [
             'currencyLocalAlfa3' => CurrencyType::getLocalActiveCurrency()->getAlfa3(),
             'currencyLocalSimbol' => CurrencyType::getLocalActiveCurrency()->getSimbol(),
@@ -267,7 +265,7 @@ class ResumeReservationHandler extends BaseHandler
             'dollar_rate_convertion' => $reservationGds->getDollarRateConvertion(),
             'Currency_rate_convertion' => $reservationGds->getCurrencyRateConvertion(),
             'bookCode' => $bookCode,
-            'dateExpire' =>  $reservation->getExpireDate()->format('Y-m-d H:i:s'),
+            'dateExpire' =>  is_null($reservation->getExpireDate()) ? "" : $reservation->getExpireDate()->format('Y-m-d H:i:s'),
             'baseURL' =>$urlBase
         ];
 
