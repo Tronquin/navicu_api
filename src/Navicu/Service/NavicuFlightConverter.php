@@ -49,7 +49,7 @@ class NavicuFlightConverter
         $subTotal = $otaAmount + $incrementLock + $incrementMarkup + $incrementConsolidator['amount'];
 
         // Calcula los gastos de gestion
-        $managementExpenses = self::calculateManagementExpenses($otaAmount, $currency, $currency, $isRateSell);
+        $managementExpenses = self::calculateManagementExpenses($subTotal, $currency, $currency, $isRateSell);
 
         // Calcula tax
         $tax =  ($incrementLock + $incrementMarkup + $managementExpenses['incrementExpenses']
