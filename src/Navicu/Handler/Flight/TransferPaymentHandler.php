@@ -48,6 +48,12 @@ class TransferPaymentHandler extends BaseHandler
             throw new NavicuException('PayFlightReservationHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }
 
+        //Envia correo de pago de pre-reservación
+        $handler = new SendFlightPaymentPreReservationEmailHandler();
+        $handler->setParam('publicId',  $params['publicId']);
+        $handler->setParam('paymentType',  $params['publicId']);
+        $handler->processHandler();  
+
         $reservation->setStatus(FlightReservation::STATE_IN_PROCESS);
         $manager->flush();
 
