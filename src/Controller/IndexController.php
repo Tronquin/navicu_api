@@ -38,7 +38,6 @@ class IndexController extends AbstractController
      */
    public function listCurrency()
    {
-    throw new Exception("Value must be 1 or below");
       $handler = new ListCurrencyHandler();
       $handler->processHandler();
 
