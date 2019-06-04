@@ -192,7 +192,7 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        $passengersData = $params['passengers'];
+        $passengersData = $this->formatPassengerData($params['passengers']) ;
 
         $flights = [];
         foreach ($reservationGds->getFlights() as $flight) {
@@ -222,6 +222,35 @@ class BookFlightHandler extends BaseHandler
 
 
         return $response['bookCode'];
+    }
+
+    private function formatPassengerData($passengerData) : array  {
+
+        foreach ($passengerData as &$passenger) {
+            $passenger['firstName'] = str_replace('á', 'a',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('Á', 'A',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('é', 'e',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('É', 'E',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('í', 'i',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('Í', 'I',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('ó', 'o',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('Ó', 'O',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('ú', 'u',  $passenger['firstName']);
+            $passenger['firstName'] = str_replace('Ú', 'U',  $passenger['firstName']);
+
+            $passenger['lastName'] = str_replace('á', 'a',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('Á', 'A',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('é', 'e',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('É', 'E',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('í', 'i',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('Í', 'I',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('ó', 'o',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('Ó', 'O',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('ú', 'u',  $passenger['lastName']);
+            $passenger['lastName'] = str_replace('Ú', 'U',  $passenger['lastName']);
+        }
+
+        return $passengerData;
     }
 
 
