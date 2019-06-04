@@ -2,9 +2,9 @@ monolog:
     channels: ['flight']
     handlers:
         flight:
-            level:    debug
-            type:     rotating_file
-            path:     '%kernel.logs_dir%/flight/flight.log'
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/flight/flight.log'
             max_files: 30
             channels: ["flight"]
         main:
