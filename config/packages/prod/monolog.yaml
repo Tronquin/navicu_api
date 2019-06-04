@@ -3,8 +3,9 @@ monolog:
     handlers:
         flight:
             level:    debug
-            type:     stream
+            type:     rotating_file
             path:     '%kernel.logs_dir%/flight/flight.log'
+            max_files: 30
             channels: ["flight"]
         main:
             type: fingers_crossed
@@ -14,9 +15,10 @@ monolog:
                 # regex: exclude all 404 errors from the logs
                 - ^/
         nested:
-            type: stream
+            type: rotating_file
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
+            max_files: 30
         console:
             type: console
             process_psr_3_messages: false
