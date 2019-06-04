@@ -19,7 +19,7 @@ use App\Navicu\Service\OtaService;
  * @author Emilio Ochoa <emilioaor@gmail.com>
  */
 class BookFlightHandler extends BaseHandler
-{    
+{
     /**
      * Aqui va la logica
      *
@@ -52,7 +52,7 @@ class BookFlightHandler extends BaseHandler
         $validFlight = 200;
         $ticketRp = $manager->getRepository(FlightReservationPassenger::class);
         $flightReservationRp = $manager->getRepository(FlightReservation::class);
-        $lastPassenger = $lastFlight = []; 
+        $lastPassenger = $lastFlight = [];
 
         foreach ($reservation->getGdsReservations() as $reservationGds) {
 
@@ -64,18 +64,19 @@ class BookFlightHandler extends BaseHandler
                     $lastFlight['to'] =  $flight->getAirportTo()->getIata();
                     $lastFlight['from'] = $flight->getAirportFrom()->getIata();
 
-                    $passengerNames = explode(' ', $currentPassenger['fullName']);
                     $from = $flight->getAirportFrom();
                     $to = $flight->getAirportTo();
 
-                    $resultTicket = $ticketRp->getflightByDatePassenger(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                    $resultTicket = $ticketRp->getflightByDatePassenger(
+                        strtoupper($currentPassenger['firstName']), strtoupper($currentPassenger['lastName']),
                         $flight->getDepartureTime(), $flight->getArrivalTime(), $from, $to);
 
                     if (count($resultTicket) > 0) {
                         $validFlight = BaseHandler::CODE_REPEATED_TICKET;
                         break;
                     } else {
-                        $result = $flightReservationRp->getRecentFlightReservation(strtoupper($passengerNames[0]), strtoupper($passengerNames[1]),
+                        $result = $flightReservationRp->getRecentFlightReservation(
+                            strtoupper($currentPassenger['firstName']), strtoupper($currentPassenger['lastName']),
                             $flight->getDepartureTime(), $flight->getArrivalTime(), $from, $to);
                         if (count($result) > 0) {
                             $validFlight = BaseHandler::CODE_REPEATED_BOOK;
@@ -88,19 +89,19 @@ class BookFlightHandler extends BaseHandler
                     break;
                 }
             }
-        }    
+        }
 
         if ($validFlight != 200) {
 
             $repeated = [
-                       'to' => $lastFlight['to'],
-                       'from' => $lastFlight['from'],
-                       'name' => $lastPassenger['fullName'] ];
+                'to' => $lastFlight['to'],
+                'from' => $lastFlight['from'],
+                'name' => $lastPassenger['fullName'] ];
 
-            throw new NavicuException('RepeatReservation', $validFlight, $repeated);            
+            throw new NavicuException('RepeatReservation', $validFlight, $repeated);
 
         }
-        
+
         /** fin de la validacion del boleto repetido **/
 
 
@@ -191,7 +192,7 @@ class BookFlightHandler extends BaseHandler
             }
         }
 
-        $passengersData = $this->formatPassengersData($params['passengers']);
+        $passengersData = $params['passengers'];
 
         $flights = [];
         foreach ($reservationGds->getFlights() as $flight) {
@@ -217,29 +218,10 @@ class BookFlightHandler extends BaseHandler
             'flights'=> $flights,
             'payment'=> $params['payments'][0] ?? [],
             'provider' => $reservationGds->getGds()->getName()
-        ]);        
+        ]);
 
 
         return $response['bookCode'];
-    }
-
-
-     /**
-     * Hace un formato a la data del pasajero
-     *
-     * @param array $passengerData
-     * @return Passenger
-     */
-    private function formatPassengersData($passengersData) : array
-    {
-        foreach ($passengersData as $key => &$passengerData) {
-            $passengerNames = explode(' ', $passengerData['fullName']);
-            unset($passengerData['fullName']);
-            $passengerData['firstName'] = strtoupper($passengerNames[0]);
-            $passengerData['lastName'] = strtoupper($passengerNames[1]);
-        }
-
-        return $passengersData;
     }
 
 
@@ -254,11 +236,9 @@ class BookFlightHandler extends BaseHandler
     {
         $passenger = new Passenger();
 
-        $passengerNames = explode(' ', $passengerData['fullName']);
-
         $passenger
-            ->setName($passengerNames[0])
-            ->setLastname($passengerNames[1])
+            ->setName($passengerData['firstName'])
+            ->setLastname($passengerData['lastNAme'])
             ->setDocumentType($passengerData['type'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])
