@@ -2,12 +2,12 @@ monolog:
     channels: ['flight']
     handlers:
         flight:
-            level:    debug
-            type:     rotating_file
-            path:     '%kernel.logs_dir%/flight/flight.log'
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/flight/flight.log'
             channels: ["flight"]
         main:
-             type: "rotating_file"
+            type: rotating_file
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: error
             channels: ["!event"]
