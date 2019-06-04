@@ -238,7 +238,7 @@ class BookFlightHandler extends BaseHandler
 
         $passenger
             ->setName($passengerData['firstName'])
-            ->setLastname($passengerData['lastNAme'])
+            ->setLastname($passengerData['lastName'])
             ->setDocumentType($passengerData['type'])
             ->setDocumentNumber($passengerData['documentNumber'])
             ->setEmail($passengerData['email'])
