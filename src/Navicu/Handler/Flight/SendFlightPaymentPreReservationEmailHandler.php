@@ -6,6 +6,8 @@ use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\EmailService;
+use App\Entity\FlightPayment;
+use App\Entity\BankType;
 
 /**
  * Envia el correo de pago de pre confirmacion de la reserva de boleteria
@@ -43,18 +45,25 @@ class SendFlightPaymentPreReservationEmailHandler extends BaseHandler
             break;
 
         }
-
+        
          $reservationId=$reservation->getId();
-         $flightReservation = $manager->getRepository(FlightPayment::class)->findOneBy(['flight_reservation' => $reservationId]);
+         $flightReservation = $manager->getRepository(FlightPayment::class)->findOneBy(['flightReservation' => $reservation]);
+         
          $referenceBank=$flightReservation->getReference();
+
          $bankId=$flightReservation->getBank();
+         $backIdReceiver=$flightReservation->getReceiverBank();
          $bank = $manager->getRepository(BankType::class)->findOneBy(['id' => $bankId]);
          $bankName=$bank->getTitle();
-         $data['referenceBank'] = $referenceBank;
-         $data['bankName'] = $bankName;
+         $bank = $manager->getRepository(BankType::class)->findOneBy(['id' => $backIdReceiver]);
+         $bankNamePaymentReceiver=$bank->getTitle();
 
-             
-
+         if($bankId=="E000"){
+           $varJson=str_replace('{Banco Emisor:','',$flightReservation->getResponse());
+           $varJson=str_replace('}','',$varJson);
+           $bankName=$varJson;
+         }
+        
         $handler = new ResumeReservationHandler();
         $handler->setParam('public_id', $params['publicId']);
         $handler->processHandler();
@@ -64,6 +73,9 @@ class SendFlightPaymentPreReservationEmailHandler extends BaseHandler
         }
 
         $data = $handler->getData()['data'];
+        $data['referenceBankPayment'] = $referenceBank;
+        $data['bankNamePayment'] = $bankName;
+        $data['bankNamePaymentReceiver'] = $bankNamePaymentReceiver;
 
         //Obtengo la moneda de la reservación
         $currencyReservation =$reservation->getGdsReservations()[0]->getCurrencyReservation();

@@ -818,7 +818,7 @@
                       </td>                     
                       <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
                           <div class="margin-left">
-                            <span class="text-color-777777 font-size-12">Banco:  </span>    
+                            <span class="text-color-777777 font-size-12">Banco emisor:  </span>    
                           </div>
                       </td>
                       <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
@@ -860,6 +860,31 @@
                          <span></span>
                       </td>
                 </tr>
+                                <tr height="15px">
+                      <td width="4%" bgcolor="#F9F9F9" >
+                         <span></span>
+                      </td>                     
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12">Banco receptor:  </span>    
+                          </div>
+                      </td>
+                      <td width="30%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-size-12">
+                          <div class="margin-left">
+                            <span class="">Banesco </span>
+                          </div>
+                      </td>
+                      <td width="31%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1">
+                          <div class="margin-left">
+                            <span class="text-color-777777 font-size-12"> </span>  
+                          </div>
+                      </td>
+                       
+                      <td width="4%" bgcolor="#F9F9F9">
+                         <span></span>
+                      </td>
+                </tr>
+              
           
                   <tr height="15px">
                       <td width="4%" bgcolor="#F9F9F9" >
