@@ -32,15 +32,27 @@ class SendFlightPaymentPreReservationEmailHandler extends BaseHandler
 
         if (! $reservation) {
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
-        }
 
+        }
+       
         $recipients = []; 
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
             foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
                 $recipients[] = $flightReservationPassenger->getPassenger()->getEmail();
             }
             break;
+
         }
+
+         $reservationId=$reservation->getId();
+         $flightReservation = $manager->getRepository(FlightPayment::class)->findOneBy(['flight_reservation' => $reservationId]);
+         $referenceBank=$flightReservation->getReference();
+         $bankId=$flightReservation->getBank();
+         $bank = $manager->getRepository(BankType::class)->findOneBy(['id' => $bankId]);
+         $bankName=$bank->getTitle();
+         $data['referenceBank'] = $referenceBank;
+         $data['bankName'] = $bankName;
+
              
 
         $handler = new ResumeReservationHandler();

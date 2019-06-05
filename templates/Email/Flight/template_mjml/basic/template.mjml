@@ -166,6 +166,11 @@
         margin-top:20px;
         }
 
+         .margin-top-15
+        {
+        margin-top:15px;
+        }
+
         .margin-bottom-20
         {
         margin-bottom:20px;
@@ -960,8 +965,9 @@
        <mj-divider  border-width="1px" width="91%" border-color="#CACACA"></mj-divider>
        
       <!-- Inicio de informacion Debes recordar -->
-      <mj-raw > 
-             <table  border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+      
+       <mj-raw > 
+             <table  border="0" class="margin-top-20" cellpadding="0" cellspacing="0" width="100%" height="35px" >
                   <tbody>
                     <tr>
                        <td width="4%" bgcolor="#FFF7EB" >
@@ -972,7 +978,7 @@
                       <img width="15" height="15" align="center" src="despiece/bombillo.png">
                       </td>
                       <td bgcolor="#FFF7EB" width="88%" align="left" class="font-size-12 font-weight-bold text-color-29124C">
-                          Condiciones y recomendaciones   
+                        Recomendaciones
                       </td>
                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
@@ -994,8 +1000,7 @@
                       </td>
                       <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
                          <div class="margin-right margin-bottom">
-                         Siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación necesaria
-                          para volar según su situación
+                         Recuerda siempre llevar tu identificación o pasaporte a la mano para viajar, el pasajero es responsable de la documentación para poder abordar sin ningún inconveniente. 
                         </div>
                       </td>
                       <td width="4%" bgcolor="#FFF7EB">
@@ -1019,7 +1024,10 @@
                        
                       </td>
                       <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
-                         El embarque se realizará 45 minutos antes de la hora de salida del vuelo
+                         <div class="margin-bottom margin-top-15 margin-right">
+
+                         El boleto no es transferible, ni endosable y se aplica una penalidad en caso de cambio. En caso de necesitar realizar un cambio, por favor notificarlo con un mínimo de 48 horas antes. 
+                       </div>
                       </td>
                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
@@ -1041,8 +1049,77 @@
                        <td width="4%" bgcolor="#FFF7EB">
                        
                       </td>
-                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-regular-979797-12">
-                         La puerta de embarque cierra 30 minutos antes de la hora de salida del vuelo
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                        <div class="margin-bottom margin-top-15 margin-right">
+                       Los pasajeros deben estar presentes para el chequeo 4 horas antes de la salida del vuelo si éste es nacional, en caso de ser vuelo internacional, deberá estar 6 horas antes de la salida.</div>
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                   
+              </tbody>
+          </table>
+      </mj-raw>
+
+         <mj-divider  border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
+
+      <mj-raw > 
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                       El embarque se realizará 45 minutos antes de la hora de salida del vuelo.
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                   
+              </tbody>
+          </table>
+      </mj-raw>
+       <mj-divider  border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
+
+      <mj-raw > 
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                      Para mayor seguridad favor presentar la confirmación del boleto impreso.
+                      </td>
+                      <td width="4%" bgcolor="#FFF7EB">
+                       <span></span>
+                      </td>
+                    </tr>                   
+              </tbody>
+          </table>
+      </mj-raw>
+
+       <mj-divider  border-width="1px" width="91%" border-color="#F6BA43"></mj-divider>
+
+      <mj-raw > 
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" height="35px" >
+              <tbody>
+                    <tr>
+                       <td width="4%" bgcolor="#FFF7EB" >
+                       <span></span>
+                      </td>
+                       <td width="4%" bgcolor="#FFF7EB">
+                       
+                      </td>
+                      <td bgcolor="#FFF7EB" width="88%" align="left" class="text-color-898989 font-size-14 font-weight-lighter">
+                      Los boletos emitidos no son reembolsables.
                       </td>
                       <td width="4%" bgcolor="#FFF7EB">
                        <span></span>
