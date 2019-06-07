@@ -27,7 +27,7 @@ class TransferPaymentHandler extends BaseHandler
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId'] ]);
         $date = new \DateTime('now');
-
+ 
         if (! $reservation) {
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
