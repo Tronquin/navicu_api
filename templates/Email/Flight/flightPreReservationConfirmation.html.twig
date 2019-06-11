@@ -106,11 +106,11 @@
                   {% for passenger in passengers %}
                     {% if passenger.tickets|length < 2 %}
 
-                      {{"  " ~  bookCode[0].bookCode}}
+                      {{"  " ~  bookCode[0]}}
 
                     {% else %}
-                        Ida- {{"  " ~  bookCode[0].bookCode}} <br>
-                        Vuelta- {{"  " ~  bookCode[1].bookCode}}
+                        Ida- {{"  " ~  bookCode[0]}} <br>
+                        Vuelta- {{"  " ~  bookCode[1]}}
                     {% endif %}
 
                    {% endfor %}

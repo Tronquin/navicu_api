@@ -49,6 +49,7 @@ class ResumeReservationHandler extends BaseHandler
         $round = $roundLocal = 2;
         $passengers = [];
         $providers = [];
+        $bookCode=[];
       
   
         foreach ($reservation->getGdsReservations() as $key => $reservationGds) {
@@ -119,7 +120,13 @@ class ResumeReservationHandler extends BaseHandler
                 'simbol'=> $reservationGds->getCurrencyGds()->getSimbol()
                 
             ];
-            $bookCode[] = ['bookCode' => $reservationGds->getBookCode()];
+
+
+            if (!in_array( $reservationGds->getBookCode(), $bookCode)) {
+                    $bookCode[] = $reservationGds->getBookCode();   
+                    }
+                   
+            
 
             //es un viaje doble one way
             if($key >=1){
@@ -223,7 +230,8 @@ class ResumeReservationHandler extends BaseHandler
         $incrementGuaranteeLocal = round($incrementGuaranteeLocal, $roundLocal);
         $discountLocal = round($discountLocal, $roundLocal);
         $totalLocal = round($subTotalLocal + $taxLocal + $incrementExpensesLocal + $incrementGuaranteeLocal - $discountLocal , $roundLocal);
-        $structure = [
+          
+         $structure = [
             'currencyLocalAlfa3' => CurrencyType::getLocalActiveCurrency()->getAlfa3(),
             'currencyLocalSimbol' => CurrencyType::getLocalActiveCurrency()->getSimbol(),
             'currencyReservationAlfa3' => $currencyReservation->getAlfa3(),
@@ -313,6 +321,7 @@ class ResumeReservationHandler extends BaseHandler
         }       
 
         $structure['payments'] = $payments;
+
         return $structure;
     }
 
