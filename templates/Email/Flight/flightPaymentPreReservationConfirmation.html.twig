@@ -102,8 +102,7 @@
             <td width="25%" class>
                <a class="btn-template btn-background-ffffff text-color-391860 font-wight-bold font-size-14" href="#" target="_blank" style="display: inline-block; font-weight: normal; line-height: 120%; Margin: 0; text-decoration: none; text-transform: none; padding: 6px 15px; mso-padding-alt: 0px; border-radius: 55px; background: #ffffff; color: #391860; font-family: Lato,sans-serif; font-size: 13px;">
                <div>Book Code 
-                  {% for passenger in passengers %}
-                    {% if passenger.tickets|length < 2 %}
+                 {% if bookCode|length < 2 %}
 
                       {{"  " ~  bookCode[0]}}
 
@@ -111,8 +110,6 @@
                         Ida- {{"  " ~  bookCode[0]}} <br>
                         Vuelta- {{"  " ~  bookCode[1]}}
                     {% endif %}
-
-                   {% endfor %}
                   </div>
               </a>
             </td>
