@@ -43,8 +43,14 @@ class ListCurrencyHandler extends BaseHandler
         unset($response[2]);
         $currenctEUR = $response[3];
         unset($response[3]);
-        array_unshift($response, $currenctVES, $currenctUSD, $currenctEUR );
-        return $response;
+        array_unshift($response, $currenctVES);
+        $orderArray = array_slice($response,0,3);
+        array_push( $orderArray,$currenctUSD);
+        $orderArray = array_merge( $orderArray,array_slice($response,4,2)); 
+        array_push( $orderArray,$currenctEUR);
+        $orderArray = array_merge( $orderArray,array_slice($response,6));  
+       
+        return  $orderArray;
     }   
 
 
