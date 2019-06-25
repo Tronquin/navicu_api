@@ -32,7 +32,7 @@ class BookFlightHandler extends BaseHandler
         $params = $this->getParams();
         $timeLimit = new \DateTime('now');
         $timeLimit = $timeLimit->modify('+2 hours');
-        $timeLimit = $timeLimit->format('Y-m-d H:i:s');
+        //$timeLimit = $timeLimit->format('Y-m-d H:i:s');
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
 
