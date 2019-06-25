@@ -23,26 +23,18 @@ class IsTransferActiveHandler extends BaseHandler
     {
         $params = $this->getParams();
         $now = new \DateTime('now');
+        $timeLimit = new \DateTime('now');
         $isTransferVisible = false;
-        $timeLimit = $now->format('Y-m-d H:i:s');
 
-        if ($params['provider'] === 'KIU') {
-            // 24 horas para transferir
+        // El tiempo limite para transferir es de 2 horas
+        $timeLimit = $timeLimit->modify('+2 hours');
+        //El tiempo de transferencia es de 6 am hasta las 7 pm
+        $transferStart = new \DateTime('now 06:00:00');
+        $transferEnd = new \DateTime('now 19:00:00');
 
-            $timeLimit = $now->modify('+1 day')->format('Y-m-d H:i:s');
+        if ($now > $transferStart && $now < $transferEnd) {
             $isTransferVisible = true;
-
-        } elseif ($params['provider'] === 'AMA') {
-            // Hasta las 12 de la noche hora de Panama para transferir
-
-            $transferStart = new \DateTime('now 02:00:00');
-            $transferEnd = new \DateTime('now 19:00:00');
-            $allowTo = new \DateTime('now 21:00:00');
-
-            if ($now > $transferStart && $now < $transferEnd) {
-                $isTransferVisible = true;
-                $timeLimit = $allowTo->format('Y-m-d H:i:s');
-            }
+            
         }
 
         return compact('isTransferVisible', 'timeLimit');
