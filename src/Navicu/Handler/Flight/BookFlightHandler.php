@@ -30,7 +30,9 @@ class BookFlightHandler extends BaseHandler
     {
         $manager = $this->getDoctrine()->getManager();
         $params = $this->getParams();
-
+        $timeLimit = new \DateTime('now');
+        $timeLimit = $timeLimit->modify('+2 hours');
+        $timeLimit = $timeLimit->format('Y-m-d H:i:s');
         /** @var FlightReservation $reservation */
         $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
 
@@ -127,6 +129,8 @@ class BookFlightHandler extends BaseHandler
         $reservation->setStatus(FlightReservation::STATE_IN_PROCESS);
         $reservation->setType('WEB');
         $reservation->setReservationDate(new \DateTime());
+        $reservation->setExpireDate($timeLimit);
+        
 
         foreach ($params['passengers'] as $passengerData) {
             // Guarda la informacion de los pasajeros
