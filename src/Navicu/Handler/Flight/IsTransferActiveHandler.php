@@ -28,6 +28,7 @@ class IsTransferActiveHandler extends BaseHandler
 
         // El tiempo limite para transferir es de 2 horas
         $timeLimit = $timeLimit->modify('+2 hours');
+        $timeLimit = $timeLimit->format('Y-m-d H:i:s');
         //El tiempo de transferencia es de 6 am hasta las 7 pm
         $transferStart = new \DateTime('now 06:00:00');
         $transferEnd = new \DateTime('now 19:00:00');
