@@ -69,16 +69,19 @@ class IssueTicketHandler extends BaseHandler
 
                 foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
                     // A cada pasajero le asigno su numero de ticket
-
+         
+                
+                   
                     $name = $flightReservationPassenger->getPassenger()->getName();
                     $lastName = $flightReservationPassenger->getPassenger()->getLastname();
+
+                    //Limpia los acentos para comparar con la ota
+                    $name = $this->cleantext($name);
+                    $lastName = $this->cleantext($lastName);
                     $logger->warning('**********************************');
-                    $logger->warning($name);
                     $logger->warning(strtolower($name) );
                     $logger->warning(strtolower($data['GivenName']));
                     $logger->warning('**********************************');
-                    $logger->warning('**********************************');
-                    $logger->warning($lastName);
                     $logger->warning(strtolower($lastName) );
                     $logger->warning(strtolower($data['Surname']));
                     $logger->warning('**********************************');
@@ -120,6 +123,22 @@ class IssueTicketHandler extends BaseHandler
         AirlineService::setMovementFromReservation($reservation, '-');
 
         return $response;
+    }
+
+    private function cleantext($name){
+        $name = str_replace('á', 'a',   $name);
+        $name = str_replace('Á', 'A',   $name);
+        $name = str_replace('é', 'e',   $name);
+        $name = str_replace('É', 'E',   $name);
+        $name = str_replace('í', 'i',   $name);
+        $name = str_replace('Í', 'I',   $name);
+        $name = str_replace('ó', 'o',   $name);
+        $name = str_replace('Ó', 'O',   $name);
+        $name = str_replace('ú', 'u',   $name);
+        $name = str_replace('Ú', 'U',   $name);
+
+        return $name;
+
     }
 
     /**
