@@ -501,11 +501,9 @@
                       <td width="28%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12" style="font-weight: bold; font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
                          <div class="margin-right" style="margin-right: 15px;">
                             <span class>
-                              {% if discount > 0 %}
+                        
                                 {{ CurrencyReservationSimbol ~ " -" ~ discount |number_format(2, ',', '.') }}
-                              {% else %}
-                                {{ CurrencyReservationSimbol ~ " " ~ discount |number_format(2, ',', '.') }}
-                              {% endif %}
+                            
                             </span>   
                           </div>
                       </td>   

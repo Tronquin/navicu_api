@@ -416,16 +416,10 @@
                       </td>
                       <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 " style=" font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
                           <div class="margin-left" style="margin-left: 15px;">
-                            <span class>{% if discount > 0 %}
+                            <span class>
                                         
-                                         {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(2, ',', '.') }}
+                                    {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(2, ',', '.') }}
 
-                                       {% else %}
-                                         
-                                         {{ currencyLocalSimbol ~ " " ~ discountLocal |number_format(2, ',', '.') }}
-
-                                       {% endif %}
-                              </span>
                           </div>
                       </td>
                       <td width="6%" bgcolor="#F5ECF9" align="left" class="text-cel2-col1 " style="font-size: 14px; font-family: Lato,sans-serif; font-weight: normal; color: #54284E;">
@@ -497,15 +491,10 @@
                       </td>
                       <td width="25%" bgcolor="#F5ECF9" align="left" class="text-color-777777 font-weight-bold font-size-12 " style=" font-size: 12px; color: #777777; font-family: Lato,sans-serif;">
                           <div class="margin-left" style="margin-left: 15px;">
-                            <span class>{% if discount > 0 %}
+                            <span class>
                                        
-                                         {{ currencyLocalSimbol ~ " -" ~ discountLocal |number_format(2, ',', '.') }}
+                                  {{ CurrencyReservationSimbol ~ " -" ~ discount |number_format(2, ',', '.') }}
 
-                                       {% else %}
-                                        
-                                         {{ currencyLocalSimbol ~ " " ~ discountLocal |number_format(2, ',', '.') }}
-
-                                       {% endif %}
                               </span>
                           </div>
                       </td>
