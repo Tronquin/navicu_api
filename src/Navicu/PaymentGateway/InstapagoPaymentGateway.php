@@ -6,6 +6,7 @@ use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
+use App\Navicu\Service\LogGenerator;
 
 /**
  * Clase para la comunicación con la pasarela de pago: Instapago.
@@ -411,14 +412,10 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
         //global $kernel;
         //$logger = $kernel->getContainer()->get('Logger');
         
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        $logger->warning('Petición Instapago (request): ');
 
         $amount = str_replace(",","",(string)$request['amount']);  //Eliminar las comas del monto a cobrar
 
- 
-        $logger->warning(json_encode(array(
+        LogGenerator::saveInstapago('Petición Instapago (request):',json_encode(array(
             'PublicKeyId' => $this->config['public_id'],
             'KeyId' => $this->config['private_id'],
             'StatusId' => $this->statusId,
@@ -449,8 +446,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
     public function formaterRequestDataTotal($request)
     {
-        //global $kernel;
-        //$logger = $kernel->getContainer()->get('Logger');
+        
 
         //Eliminar las comas del monto a cobrar
         $requestFinal['Amount'] = (string)(str_replace(",","",(string)$request['amount']));
@@ -465,10 +461,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
         $requestFinal['Description'] = $request['description'];
         $requestFinal['IP'] = $request['ip'];
 
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        $logger->warning('Petición Instapago (request): ');
-        $logger->warning(json_encode(array(
+        LogGenerator::saveInstapago('Petición Instapago (request):',json_encode(array(
             'Amount' => $requestFinal['Amount'],
             'Description' => $requestFinal['Description'],
             'CardHolder' => $requestFinal['CardHolder'],
@@ -477,22 +470,8 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
             'StatusId' => "1",
             'ExpirationDate' => $requestFinal['ExpirationDate'],
             'IP' => $requestFinal['IP'])
-    ));
-      
-        /*
-        
-        $logger->warning('Petición (request): ');
-        $logger->warning(json_encode(array(
-                'Amount' => $requestFinal['Amount'],
-                'Description' => $requestFinal['Description'],
-                'CardHolder' => $requestFinal['CardHolder'],
-                'CardHolderId' => (string)$requestFinal['CardHolderId'],
-                'CardNumber' => preg_replace('/[0-9]/', '*', $requestFinal['CardNumber'], 12),
-                'StatusId' => "1",
-                'ExpirationDate' => $requestFinal['ExpirationDate'],
-                'IP' => $requestFinal['IP'])
         ));
-        */
+    
         return $requestFinal;
     }
 
@@ -504,8 +483,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
      */
     public function formaterResponseData($response)
     {
-        //global $kernel;
-        //$logger = $kernel->getContainer()->get('Logger');
+ 
 
         $request = $response['request'];
         $jsonResponse = $response['response'];
@@ -541,21 +519,16 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         }
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        
-        $logger->warning('Respuesta de la peticion Instapago:');     
-        $logger->warning(json_encode(array( 'id' => $return['id'],
-            'success' => $return['success'],
-            'code' => $return['code'],
-            'reference' => $return['reference'],
-            'holder' => $return['holder'],
-            'holderId' => $return['holderId'],
-            'status' => $return["success"],
-            'amount' => $return['amount'])));
-        $logger->warning('.......................................................................................');
-        
 
+        LogGenerator::saveInstapago('Respuesta de la peticion Instapago:',json_encode(array( 'id' => $return['id'],
+        'success' => $return['success'],
+        'code' => $return['code'],
+        'reference' => $return['reference'],
+        'holder' => $return['holder'],
+        'holderId' => $return['holderId'],
+        'status' => $return["success"],
+        'amount' => $return['amount'])));
+        
         return $return;
     }
 

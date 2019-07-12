@@ -12,6 +12,7 @@ use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
+use App\Navicu\Service\LogGenerator;
 /**
  * Genera el ticket para una reserva
  *
@@ -61,10 +62,7 @@ class IssueTicketHandler extends BaseHandler
                     'provider' => $gdsReservation->getGds()->getName()
                 ]);
             }
-            $logger = $this->container->get('monolog.logger.flight');
-            $logger->warning('**********************************');
-            $logger->warning('Recibiendo respuesta OTA');
-            $logger->warning(json_encode($response));
+            LogGenerator::saveFlight('Respuesta ticket OTA IssueTicketHandler',json_encode($response));
             foreach ($response['TicketItemInfo'] as $data) {
 
                 foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
@@ -78,25 +76,16 @@ class IssueTicketHandler extends BaseHandler
                     //Limpia los acentos para comparar con la ota
                     $name = $this->cleantext($name);
                     $lastName = $this->cleantext($lastName);
-                    $logger->warning('**********************************');
-                    $logger->warning(strtolower($name) );
-                    $logger->warning(strtolower($data['GivenName']));
-                    $logger->warning('**********************************');
-                    $logger->warning(strtolower($lastName) );
-                    $logger->warning(strtolower($data['Surname']));
-                    $logger->warning('**********************************');
-                    $logger->warning(!$flightReservationPassenger->hasTicket());
-                    $logger->warning(strtolower($name) === strtolower($data['GivenName']));
-                    $logger->warning( strtolower($lastName) === strtolower($data['Surname']));
-                    $logger->warning('**********************************');
+
+                    LogGenerator::saveFlight('Comparación de Nombres y Apellido IssueTicketHandler',
+                    json_encode(['nameNavicu'=>$name, 'nameOta' => $data['GivenName'],'lastNameNavicu'=>$lastName, 'lastNameOta' => $data['Surname'],'hasticketpassanger'=> $flightReservationPassenger->hasTicket()]));
+                
                     if (
                         strtolower($name) === strtolower($data['GivenName']) &&
                         strtolower($lastName) === strtolower($data['Surname']) &&
                         ! $flightReservationPassenger->hasTicket()
                     ) {
-                        $logger->warning('**********************************');
-                        $logger->warning('Guardando ticket en Base de datos');
-                        $logger->warning(json_encode($data));
+                        LogGenerator::saveFlight('Guardando ticket en Base de datos IssueTicketHandler',json_encode($data));
                         $flightReservationPassenger
                             ->setPrice($data['Amount'])
                             ->setCommision($data['Commission'])

@@ -11,12 +11,12 @@ class LogGenerator
 {
     private $logger;
 
-   /* public function __construct(LoggerInterface $logger)
+   public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
-	*/
-
+ 
+/*
     public function warning($message) {
 
     	$this->logger->warning($message);
@@ -26,28 +26,52 @@ class LogGenerator
 
     	$this->logger->error($message);
 
+    }*/
+    // Guarda las execepciones en el log de execepciones
+    public function saveExeception($message) {
+        global $kernel;
+        $logger = $kernel->getContainer()->get('monolog.logger.exeception');
+        $logger->error('**********************************');
+        $logger->error('Execeptionn');
+        $logger->error($message);
+        $logger->error('**********************************');
+    }
+    // Guarda Todas las peticiones que se hacen a la ota y seguimiento de boletería
+    public function saveFlight($name, $message) {
+        global $kernel;
+        $logger = $kernel->getContainer()->get('monolog.logger.flight');
+        $logger->error('**********************************');
+        $logger->error($name);
+        $logger->error($message);
+        $logger->error('**********************************');
     }
 
-
-    /**
-     * Escribe en el log de boleteria
-     *
-     * @param string $message
-     */
-    public function flightLog($message)
-    {
+    // Guarda Todas las peticiones que se hacen en instapago
+    public function saveInstapago($name, $message) {
         global $kernel;
-
-        $folder = $kernel->getLogDir() . '/flight/';
-        $path = $folder . date('Y-m-d') . '.log';
-
-        if(! is_dir($folder)) {
-            mkdir($folder);
-        }
-
-        $file = fopen($path, "a");
-        fwrite($file,'['.  date('Y-m-d H:i:s').'] '.$message . "\n");
-        fclose($file);
+        $logger = $kernel->getContainer()->get('monolog.logger.instapago');
+        $logger->error('**********************************');
+        $logger->error($name);
+        $logger->error($message);
+        $logger->error('**********************************');
+    }
+    // Guarda Todas las peticiones que se hacen en payeezy
+    public function savePayeezy($name, $message) {
+        global $kernel;
+        $logger = $kernel->getContainer()->get('monolog.logger.payeezy');
+        $logger->error('**********************************');
+        $logger->error($name);
+        $logger->error($message);
+        $logger->error('**********************************');
+    }
+    // Guarda Todas las peticiones que se hacen en stripe
+    public function saveStripe($name, $message) {
+        global $kernel;
+        $logger = $kernel->getContainer()->get('monolog.logger.stripe');
+        $logger->error('**********************************');
+        $logger->error($name);
+        $logger->error($message);
+        $logger->error('**********************************');
     }
 
     

@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Omnipay\Common\CreditCard;
 use Omnipay\Omnipay;
 use App\Navicu\Service\NavicuCurrencyConverter;
+use App\Navicu\Service\LogGenerator;
 
 /**
 * @author Javier Vasquez <jvasquez@jacidi.com>
@@ -71,19 +72,15 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
     public function processPayment($request)
     {
         try {
-            $logger = $this->getContainer()->get('monolog.logger.flight');
-            $logger->warning('******************************');
+        
             \Stripe\Stripe::setApiKey($this->config['api_key']);
-          
-            $logger->warning('Peticiom Stripe');
-            $logger->warning(json_encode($this->formaterRequestData($request)));
+            LogGenerator::saveStripe('Peticion Stripe:',json_encode($this->formaterRequestData($request)));
+            
 
             $charge = \Stripe\Charge::create($this->formaterRequestData($request));
-           
         
-            
-            $logger->warning('Respuesta Stripe');
-            $logger->warning(json_encode($this->formaterResponseData($charge)));
+            LogGenerator::saveStripe('Respuesta Stripe:',json_encode($this->formaterResponseData($charge)));
+
             return $this->formaterResponseData($charge);
             
 
@@ -93,8 +90,9 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
             $err  = $body['error'];
             $err['status'] = $e->getHttpStatus();
             $err['amount'] = $request['amount'];
-            $logger->warning('Error Stripe');
-            $logger->warning(json_encode( $this->formaterResponseErrorData($err,$request)));
+
+            LogGenerator::saveStripe('Error Stripe:',json_encode( $this->formaterResponseErrorData($err,$request)));
+
             return $this->formaterResponseErrorData($err,$request);
         }
     }

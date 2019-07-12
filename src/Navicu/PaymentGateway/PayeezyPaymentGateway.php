@@ -8,6 +8,7 @@ use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use App\Navicu\Service\NavicuCurrencyConverter;
+use App\Navicu\Service\LogGenerator;
 /*
 * @author Javier Vasquez <jvasquez@jacidi.com>
 */
@@ -103,13 +104,11 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
 
     public function processPayment($request)
     {
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        
-       $logger->warning('******************************');
-       $logger->warning('PayeezyPaymentGateway::processPayment');
+           
        $args = $this->generateArgs($request);
-       $logger->warning('generateArgs:');
-       $logger->warning(json_encode($args));
+      
+       LogGenerator::savePayeezy('Petición Payeezy PayeezyPaymentGateway::processPayment',json_encode($args));
+
        $response = $this->purchase($args);
        $response = json_decode($response, true);
        $response['checkInDate'] = $request['date'];
@@ -117,6 +116,8 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
        $response = $this->formaterResponseData($response);
        $logger->warning('formaterResponseData:');
        $logger->warning(json_encode($response));
+       LogGenerator::savePayeezy('Respuesta Payeezy formaterResponseData',json_encode($response));
+       
        return $response;
     }
 

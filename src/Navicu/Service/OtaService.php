@@ -6,6 +6,9 @@ use App\Navicu\Exception\OtaException;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
+use App\Entity\ServiceRequest;
+use App\Entity\ServiceResponse;
+use App\Navicu\Service\LogGenerator;
 
 /**
  * Servicio para interactuar con la api de OTA
@@ -368,7 +371,8 @@ class OtaService
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
         global  $kernel;
-
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
+        $urlName = $url;
         $urlBase = getenv('OTA_URL_BASE');
         $url = $urlBase . $url;
         $params['token'] = getenv('OTA_TOKEN');
@@ -389,10 +393,24 @@ class OtaService
         }
 
         $url = $url . '?' . http_build_query($params);
-        $logger = $kernel->getContainer()->get('monolog.logger.flight');
-        $logger->warning('**********************************');
-        $logger->warning('URL a OTA');
-        $logger->warning(json_encode($url));
+
+        /*-----------------------------------------------------------
+         * | Guarda registro de la petición en Base de datos y Log
+         * ---------------------------------------------------------
+         * **********************************************************/
+        $serviceRequest = new ServiceRequest();
+        $serviceRequest->setNamespace(self::class)
+            ->setName($urlName)
+            ->setParameters($params)
+            ->setCreateAt(new \DateTime('now'))
+            ->setUpdateAt(new \DateTime('now'))
+            ->setRequest($url);
+
+        $manager->persist($serviceRequest);
+        $manager->flush();    	
+        
+        LogGenerator::saveFlight('Petición a OTA',json_encode($url));
+     
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -401,6 +419,25 @@ class OtaService
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
+
+
+        /*-----------------------------------------------------------
+         * | Guarda registro de la respuesta OTA en Base de datos y Log
+         * ---------------------------------------------------------
+         * **********************************************************/
+        $serviceResponse = new ServiceResponse();
+        $serviceResponse->setNamespace(self::class)
+            ->setName($urlName)
+            ->setParameters($params)
+            ->setCreateAt(new \DateTime('now'))
+            ->setUpdateAt(new \DateTime('now'))
+            ->setResponse(json_encode( $response ))
+            ->setServiceRequest($serviceRequest);
+
+        $manager->persist($serviceResponse);
+        $manager->flush();    
+        LogGenerator::saveFlight('Respuesta de OTA',json_encode($response));
+
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');
