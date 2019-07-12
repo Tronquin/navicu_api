@@ -66,18 +66,22 @@ class CompleteReservationHandler extends BaseHandler
 
         $responseData = $handler->getData()['data'];
 
-        /*| **********************************************************************
-         *| Paso 4:
-         *| - Envia correo de confirmacion a los pasajeros y a navicu
-         * .......................................................................
-         */
-        $handler = new SendFlightReservationEmailHandler();
-        $handler->setParam('publicId', $params['publicId']);
-        $handler->processHandler();
 
-        if (! $handler->isSuccess()) {
-            // Si falla el correo se notifica a navicu para gestion offline
-            $this->sendEmailAlternative($params['publicId']);
+        if ($responseData['code'] !== BaseHandler::CODE_TICKET_ERROR) {
+            /*| **********************************************************************
+             *| Paso 4:
+             *| - Envia correo de confirmacion a los pasajeros y a navicu
+             * .......................................................................
+             */
+            $handler = new SendFlightReservationEmailHandler();
+            $handler->setParam('publicId', $params['publicId']);
+            $handler->processHandler();
+
+            if (! $handler->isSuccess()) {
+                // Si falla el correo se notifica a navicu para gestion offline
+                $this->sendEmailAlternative($params['publicId']);
+            }
+
         }
 
         return $responseData;

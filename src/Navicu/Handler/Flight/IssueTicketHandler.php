@@ -7,6 +7,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\EmailService;
 use App\Navicu\Service\NotificationService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
@@ -53,6 +54,15 @@ class IssueTicketHandler extends BaseHandler
                     'BookingID' => $gdsReservation->getBookCode(),
                     'provider' => $gdsReservation->getGds()->getName()
                  ]);
+
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                    $this->sendEmailTicketFail($params['publicId']);
+                    return [
+                        'code' => $response['code'],
+                        'publicId' => $params['publicId']
+                    ];
+                }
+
             } else {
                  $response = OtaService::ticketTest([
                     'country' => $country,
@@ -61,6 +71,14 @@ class IssueTicketHandler extends BaseHandler
                     'BookingID' => $gdsReservation->getBookCode(),
                     'provider' => $gdsReservation->getGds()->getName()
                 ]);
+
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                    $this->sendEmailTicketFail($params['publicId']);
+                    return [
+                        'code' => $response['code'],
+                        'publicId' => $params['publicId']
+                    ];
+                }
             }
             LogGenerator::saveFlight('Respuesta ticket OTA IssueTicketHandler',json_encode($response));
             foreach ($response['TicketItemInfo'] as $data) {
@@ -128,6 +146,42 @@ class IssueTicketHandler extends BaseHandler
 
         return $name;
 
+    }
+
+    /**
+     * Envia correo cuando hay un fallo al generar el ticket
+     *
+     * @param string $publicId
+     */
+    private function sendEmailTicketFail(string $publicId) {
+        $handler = new SendFlightTicketFailEmailHandler();
+        $handler->setParam('publicId', $publicId);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+
+            // Si falla el correo se notifica a navicu para gestion offline
+            $this->sendEmailAlternative( $publicId );
+        }
+    }
+
+    /**
+     * Envia correo alternativo en caso que falle el envio del
+     * correo de confirmacion con el numero del ticket al cliente.
+     * La intencion es notificar a navicu sobre el fallo y gestionar
+     * el envio del numero del ticket, el resto del proceso deberia
+     * estar correcto.
+     *
+     * @param string $publicId
+     */
+    private function sendEmailAlternative(string $publicId) : void
+    {
+        EmailService::sendFromEmailRecipients(
+            'flightResume',
+            'Fallo correo confirmacion de ticket - navicu.com',
+            'Email/Flight/emailTicketFail.html.twig',
+            compact('publicId')
+        );
     }
 
     /**

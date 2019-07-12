@@ -3,6 +3,7 @@
 namespace App\Navicu\Service;
 
 use App\Navicu\Exception\OtaException;
+use App\Navicu\Handler\BaseHandler;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
@@ -36,6 +37,7 @@ class OtaService
 
     /** Codigos de respuesta de OTA */
     const CODE_SUCCESS = 1;
+    const ISSUE_TICKET_FAIL = 3;
 
     /**
      * Hace una busqueda one way en OTA
@@ -373,6 +375,8 @@ class OtaService
         global  $kernel;
         $manager = $kernel->getContainer()->get('doctrine')->getManager();
         $urlName = $url;
+
+        $urlCode = $url;
         $urlBase = getenv('OTA_URL_BASE');
         $url = $urlBase . $url;
         $params['token'] = getenv('OTA_TOKEN');
@@ -438,6 +442,21 @@ class OtaService
         $manager->flush();    
         LogGenerator::saveFlight('Respuesta de OTA',json_encode($response));
 
+
+        /* ---------------------------------------------------------------- *
+         * | Respuesta en caso de que el servicio de generar ticket falle | *
+         * -----------------------------------------------------------------*/
+        if ($urlCode === self::URL_TICKET || $urlCode === self::URL_TICKET_TEST) {
+
+            if (! $response) {
+                $response = [];
+                $response['code'] = BaseHandler::CODE_TICKET_ERROR;
+                return $response;
+            }
+            if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                return $response;
+            }
+        }
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');

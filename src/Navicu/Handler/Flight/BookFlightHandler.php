@@ -94,11 +94,12 @@ class BookFlightHandler extends BaseHandler
         }
 
         if ($validFlight != 200) {
-
             $repeated = [
                 'to' => $lastFlight['to'],
                 'from' => $lastFlight['from'],
-                'name' => $lastPassenger['fullName'] ];
+                'firstName' => $lastPassenger['firstName'],
+                'lastName' => $lastPassenger['lastName']
+            ];
 
             throw new NavicuException('RepeatReservation', $validFlight, $repeated);
 

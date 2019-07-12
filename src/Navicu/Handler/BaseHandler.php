@@ -34,6 +34,7 @@ abstract class BaseHandler
     const CODE_REPEATED_BOOK = 112;
     const CODE_REPEATED_TICKET = 113;
     const CODE_ERROR_ISSUE = 120;
+    const CODE_TICKET_ERROR = 90;
 
 
     /* codigos respuesta holeteria*/
