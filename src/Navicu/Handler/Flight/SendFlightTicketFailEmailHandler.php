@@ -53,7 +53,7 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
 
         $data = [
             'publicId' => $reservation->getPublicId(),
-            'passengers' => [$passengers[0]],
+            'passengers' => $passengers,
             'baseURL' => getenv('DOMAIN')
         ];
 
