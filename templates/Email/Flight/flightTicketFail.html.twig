@@ -186,6 +186,11 @@
                       </tr>
                       </tbody>
                     </table>
+                      {% if sendNavicu == true %}
+                        <div>
+                          <p class="mt-5 px-4 lato-heavy fc-red" style="margin: 0; font-family: Lato; font-size: 14px; font-weight: 900; color: #e73e51; margin-top: 3rem; padding-right: 1.5rem; padding-left: 1.5rem;">Error: {{ error }}</p>
+                        </div>
+                      {% endif %}
                   </div>
                 </div>
               </section>
