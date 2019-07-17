@@ -124,6 +124,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 if ($handler->isSuccess()) {
                     $handler = new SendFlightDeniedEmailHandler();
                     $handler->setParam('publicId',  $publicId );
+                    $handler->setParam('PaymentDenied', false);
                     $handler->processHandler();
                     return [
                         "code"=> 200

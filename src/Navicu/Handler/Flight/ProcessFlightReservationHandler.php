@@ -172,6 +172,7 @@ class ProcessFlightReservationHandler extends BaseHandler
     {
         $handler = new SendFlightDeniedEmailHandler();
         $handler->setParam('publicId', $publicId);
+        $handler->setParam('PaymentDenied', true);
         $handler->processHandler();
     }
 }
