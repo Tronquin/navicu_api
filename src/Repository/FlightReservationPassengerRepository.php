@@ -34,7 +34,7 @@ class FlightReservationPassengerRepository extends BaseRepository
             ->join(FlightReservationGds::class, 'frg', 'WITH', 'frg.id = t.flightReservationGds')
             ->join(Flight::class, 'f', 'WITH', 'f.flightReservationGds = frg.id')
             ->where('f.departureTime > :now and p.name = :firstName and p.lastname = :lastName
-                    and f.departureTime= :departure and f.airportFrom = :from')
+                    and f.departureTime= :departure and f.airportFrom = :from and frg.status <> 3 ')
             ->setParameter('firstName', $firstName)
             ->setParameter('lastName', $lastName)
             ->setParameter('departure', $departure)
