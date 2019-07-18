@@ -35,12 +35,13 @@ class FlightReservationRepository extends BaseRepository
             ->join(FlightPayment::class, 'fp', 'WITH', 'fp.flightReservation = fr.id')
             ->where('upper(p.name) = :firstName and UPPER(p.lastname) = :lastName
                     and f.departureTime= :departure and f.airportFrom = :from and frg.bookCode is not null
-                    and fr.reservationDate > :now and fp.state != 2' )
+                    and fr.reservationDate > :now and fp.state != 2 and frg.status != :status' )
             ->setParameter('firstName', $firstName)
             ->setParameter('lastName', $lastName)
             ->setParameter('departure', $departure)
             ->setParameter('from', $from)
             ->setParameter('now', $now)
+            ->setParameter('status', FlightReservation::STATE_CANCEL)
             ->getQuery()->getResult();
 
         return $data;
