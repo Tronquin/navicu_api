@@ -114,8 +114,7 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
        $response['checkInDate'] = $request['date'];
 
        $response = $this->formaterResponseData($response);
-       $logger->warning('formaterResponseData:');
-       $logger->warning(json_encode($response));
+    
        LogGenerator::savePayeezy('Respuesta Payeezy formaterResponseData',json_encode($response));
        
        return $response;
