@@ -57,7 +57,6 @@ class PayFlightReservationHandler extends BaseHandler
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {
-            $this->addErrorToHandler($handler->getErrors());
 
             throw new NavicuException('Payment fail', $handler->getErrors()['code'], $handler->getErrors()['params']);
         }

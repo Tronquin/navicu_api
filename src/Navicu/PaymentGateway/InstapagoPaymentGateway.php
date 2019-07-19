@@ -502,7 +502,6 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'status' => $response["success"] ? 1 : 2,
                 'amount' => $amount,
                 'response' => $jsonResponse,
-                'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         } else {
             $return = array_merge($response,[

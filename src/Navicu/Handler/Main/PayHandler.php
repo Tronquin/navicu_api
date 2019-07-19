@@ -36,7 +36,7 @@ class PayHandler extends BaseHandler
 
         foreach ($responsePayments as $payment) {
 
-            if (! $payment['success']) {
+            if (!$payment['success']) {
                 throw new NavicuException('Payment fail', BaseHandler::CODE_EXCEPTION, $payment['paymentError']);
             }
         }
