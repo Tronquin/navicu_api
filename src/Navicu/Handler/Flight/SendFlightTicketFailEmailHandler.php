@@ -58,8 +58,6 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
             'baseURL' => getenv('DOMAIN')
         ];
 
-        //dd($data['passengers']);
-
         // Envia correo a los pasajeros
         $data['sendNavicu'] = false;
         EmailService::send(

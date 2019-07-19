@@ -1188,21 +1188,21 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
         global $kernel;
         $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => 99]);
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '99']);
 
         if (isset($response['bank_resp_code']) && isset($response['amount'])) {
 
             $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
             $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
                 'paymentType' => $paymentType,
-                'code' => $response['bank_resp_code'] ?? 99
+                'code' => ((string)$response['bank_resp_code'])
             ]);
 
             if (!$paymentError) {
                 $paymentError = new PaymentError();
                 $paymentError
                     ->setPaymentType($paymentType)
-                    ->setCode($response['bank_resp_code'])
+                    ->setCode((string)$response['bank_resp_code'])
                     ->setName($response['bank_message'])
                     ->setGatewayMessage($response['bank_message'] ?? '')
                     ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente');

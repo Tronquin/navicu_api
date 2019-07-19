@@ -76,7 +76,7 @@ final class Version20190718171519 extends AbstractMigration
             'La tarjeta que utilizas no cuenta con fondo suficiente. Recarga tu saldo o realiza una transferencia bancaria'),
             (nextval('payment_error_id_seq'), 6, 522, 'Card is expired ',
             'Card has expired', 
-            'La tarjeta ha caducado'),
+            'Lo sentimos, tu tarjeta ha caducado'),
             (nextval('payment_error_id_seq'), 6, 530, 'Do Not Honor',
             'Generic Decline', 
             'Lo sentimos, tu tarjeta ha sido rechazada, intenta nuevamente con otra tarjeta o realiza una transferencia bancaria'),
@@ -124,7 +124,7 @@ final class Version20190718171519 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
 
-        $this->addSql('DELETE FROM payment_error');
+        $this->addSql('DELETE FROM payment_error WHERE payment_type_id = 6');
 
     }
 }
