@@ -270,11 +270,14 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
         global $kernel;
         $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '99']);
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
+
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
 
         if (isset($response['code'])) {
 
-            $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
             $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
                 'paymentType' => $paymentType,
                 'code' => $response['decline_code'] ?? $response['code']
@@ -287,7 +290,8 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
                     ->setCode($response['decline_code'] ?? $response['code'])
                     ->setName($response['decline_code'] ?? $response['code'])
                     ->setGatewayMessage($response['message'] ?? '')
-                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente');
+                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                    ->setCreatedAt(new \DateTime('now'));
 
                 $manager->persist($paymentError);
                 $manager->flush();

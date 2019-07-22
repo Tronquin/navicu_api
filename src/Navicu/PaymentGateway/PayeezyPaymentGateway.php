@@ -1188,30 +1188,40 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
         global $kernel;
         $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '99']);
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
 
-        if (isset($response['bank_resp_code']) && isset($response['amount'])) {
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
 
-            $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
+        if (isset($response['bank_resp_code'])) {
+
             $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
                 'paymentType' => $paymentType,
-                'code' => ((string)$response['bank_resp_code'])
+                'code' => $response['bank_resp_code']
             ]);
 
-            if (!$paymentError) {
-                $paymentError = new PaymentError();
-                $paymentError
-                    ->setPaymentType($paymentType)
-                    ->setCode((string)$response['bank_resp_code'])
-                    ->setName($response['bank_message'])
-                    ->setGatewayMessage($response['bank_message'] ?? '')
-                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente');
+        } else if (isset($response['gateway_resp_code'])) {
 
-                $manager->persist($paymentError);
-                $manager->flush();
-            }
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['gateway_resp_code']
+            ]);
         }
 
+        if (!$paymentError) {
+            $paymentError = new PaymentError();
+            $paymentError
+                ->setPaymentType($paymentType)
+                ->setCode($response['bank_resp_code'] ?? $response['gateway_resp_code'] ?? '')
+                ->setName($response['bank_message'] ?? $response['gateway_message'] ?? '')
+                ->setGatewayMessage($response['bank_message'] ?? $response['gateway_message'] ?? '')
+                ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                ->setCreatedAt(new \DateTime('now'));
+
+            $manager->persist($paymentError);
+            $manager->flush();
+        }
 
         return  [
             'response' => $response,

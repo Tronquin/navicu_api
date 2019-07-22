@@ -17,7 +17,7 @@ final class Version20190718171519 extends AbstractMigration
         $this->addSql("
           INSERT INTO payment_error (id, payment_type_id, code, name, gateway_message, message)
           VALUES 
-            (nextval('payment_error_id_seq'), 6, 99, 'Default error',
+            (nextval('payment_error_id_seq'), 6, 2014, 'Default error',
             'Default message', 
             'No pudimos procesar tu solicitud, por favor intenta nuevamente'),
             (nextval('payment_error_id_seq'), 6, 201, 'Invalid CC Number',
@@ -25,7 +25,7 @@ final class Version20190718171519 extends AbstractMigration
             'Los datos de tu tarjeta son inválidos, por favor verifícalos o realiza una transferencia bancaria'),
             (nextval('payment_error_id_seq'), 6, 202, 'Bad Amount Nonnumeric Amount',
             'Amount sent was zero, unreadable, over ceiling limit, or exceeds maximum allowable amount', 
-            'La cantidad enviada fue cero, ilegible, por encima del límite máximo, o excede la cantidad máxima permitida'),
+            'No pudimos procesar tu solicitud, por favor intenta nuevamente'),
             (nextval('payment_error_id_seq'), 6, 203, 'Zero Amount',
             'Amount sent was zero', 
             'La cantidad enviada fue cero'),
@@ -74,7 +74,7 @@ final class Version20190718171519 extends AbstractMigration
             (nextval('payment_error_id_seq'), 6, 521, 'Insufficient funds',
             'Insufficient funds/over credit limit', 
             'La tarjeta que utilizas no cuenta con fondo suficiente. Recarga tu saldo o realiza una transferencia bancaria'),
-            (nextval('payment_error_id_seq'), 6, 522, 'Card is expired ',
+            (nextval('payment_error_id_seq'), 6, 522, 'Card is expired',
             'Card has expired', 
             'Lo sentimos, tu tarjeta ha caducado'),
             (nextval('payment_error_id_seq'), 6, 530, 'Do Not Honor',
@@ -115,7 +115,31 @@ final class Version20190718171519 extends AbstractMigration
             'La fecha de vencimiento de tu tarjeta no es correcta ¡Verifica tus fatos e intenta colocarla nuevamente!'),
             (nextval('payment_error_id_seq'), 6, 904, 'Invalid Effective',
             'Card not active', 
-            'Por favor, conmunícate con tu banco y activa tu tarjeta para transacciones electrónicas');
+            'Por favor, conmunícate con tu banco y activa tu tarjeta para transacciones electrónicas'),
+            (nextval('payment_error_id_seq'), 6, 22, 'Invalid Credit Card Number',
+            'Invalid Credit Card Number', 
+            'Los datos de tu tarjeta son inválidos, por favor verifícalos o realiza una transferencia bancaria'),
+            (nextval('payment_error_id_seq'), 6, 25, 'Invalid Expiry Date',
+            'Invalid Expiry Date', 
+            'Lo sentimos, tu tarjeta ha caducado'),
+            (nextval('payment_error_id_seq'), 6, 26, 'Invalid Amount',
+            'Invalid Amount', 
+            'No pudimos procesar tu solicitud, por favor intenta nuevamente'),
+            (nextval('payment_error_id_seq'), 6, 27, 'Invalid Card Holder',
+            'Invalid Card Holder', 
+            'Los datos de tu tarjeta son inválidos, por favor verifícalos o realiza una transferencia bancaria'),
+            (nextval('payment_error_id_seq'), 6, 28, 'Invalid Authorization No',
+            'Invalid Authorization No', 
+            'No pudimos procesar tu solicitud, por favor intenta nuevamente'),
+            (nextval('payment_error_id_seq'), 6, 68, 'Restricted Card Number',
+            'Restricted Card Number', 
+            'Lo sentimos, tu tarjeta ha sido rechazada, intenta nuevamente con otra tarjeta o realiza una transferencia bancaria'),
+            (nextval('payment_error_id_seq'), 6, 33, 'Merchant Volume Exceeded',
+            'Merchant Volume Exceeded', 
+            'No pudimos procesar tu solicitud, por favor intenta nuevamente'),
+            (nextval('payment_error_id_seq'), 6, 34, 'Card Volume Exceeded',
+            'Card Volume Exceeded', 
+            'La tarjeta que utilizas no cuenta con fondo suficiente. Recarga tu saldo o realiza una transferencia bancaria');
         ");
 
     }

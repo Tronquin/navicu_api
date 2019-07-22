@@ -16,7 +16,7 @@ final class Version20190719180107 extends AbstractMigration
 
         $this->addSql("
             INSERT INTO payment_error (id, payment_type_id, code, name, gateway_message, message)
-              VALUES 
+            VALUES 
                 (nextval('payment_error_id_seq'), 3, 'approve_with_id', 'approve_with_id',
                 'The payment cannot be authorized', 
                 'El pago no puede ser autorizado'),
@@ -163,5 +163,6 @@ final class Version20190719180107 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
 
+        $this->addSql('DELETE FROM payment_error WHERE payment_type_id = 3');
     }
 }
