@@ -48,12 +48,19 @@ class SendFlightDeniedEmailHandler extends BaseHandler
             throw new NavicuException('Email data not found');
         }
         $data = $handler->getData()['data'];
+
+        //Verifico si viene de reserva cancelada o por fallo de Pago para cambiar el asunto
+        if($params['PaymentDenied']){
+            $subject =  'Reserva Denegada - navicu.com';
+        }else{
+            $subject =  'Reserva Cancelada - navicu.com';
+        }
          // Envia correo a los pasajeros
          $data['amountsInLocalCurrency'] = false;
          $data['sendNavicu'] = false;
         EmailService::send(
             $recipients,
-            'Reserva Denegada - navicu.com',
+            $subject,
             'Email/Flight/flightDeniedReservation.html.twig',
             $data
         );
@@ -61,7 +68,7 @@ class SendFlightDeniedEmailHandler extends BaseHandler
         $data['amountsInLocalCurrency'] = true;
         $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
-            'reservationDenied',
+            $subject,
             'Reserva Denegada - navicu.com',
             'Email/Flight/flightDeniedReservation.html.twig',
             $data
@@ -82,7 +89,8 @@ class SendFlightDeniedEmailHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
-            'publicId' => 'required'
+            'publicId' => 'required',
+            'PaymentDenied' => 'required'
         ];
     }
 }
