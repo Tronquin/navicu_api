@@ -2,6 +2,8 @@
 
 namespace App\Navicu\PaymentGateway;
 
+use App\Entity\PaymentError;
+use App\Entity\PaymentType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
@@ -483,7 +485,6 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
      */
     public function formaterResponseData($response)
     {
- 
 
         $request = $response['request'];
         $jsonResponse = $response['response'];
@@ -491,7 +492,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
         $amount = (! isset($response['amount']) ?  0 : str_replace(",","",(string)$response['amount']));
 
-        if (isset($response['success'])) {
+        if ($response['success']) {
             $return = array_merge($response, [
                 'id' => $response['id'],
                 'success' => $response['success'],
@@ -502,11 +503,10 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'status' => $response["success"] ? 1 : 2,
                 'amount' => $amount,
                 'response' => $jsonResponse,
-                'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         } else {
-            $return = array_merge($response,[
-                'id' =>  (isset($request['id']) ? $request['id'] : 0) ,
+            $return = [
+                'id' =>  (isset($request['id']) ? $request['id'] : 0),
                 'success' => false,
                 'code' => 500,
                 'reference' => 0,
@@ -516,8 +516,8 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'amount' => $amount,
                 'response' => $jsonResponse,
                 'message' => 'error',
-                'paymentError' => self::getPaymentError(array_merge($request, $response))
-            ]);
+                'paymentError' => $this->getPaymentError($response)
+            ];
         }
 
         LogGenerator::saveInstapago('Respuesta de la peticion Instapago:',json_encode(array( 'id' => $return['id'],
@@ -534,6 +534,48 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
     private function getPaymentError($response)
     {
+
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
+
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
+
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
+
+        if (isset($response['responsecode']) || isset($response['code'])) {
+
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['responsecode'] ?? $response['code']
+            ]);
+
+            if (!$paymentError) {
+                $paymentError = new PaymentError();
+                $paymentError
+                    ->setPaymentType($paymentType)
+                    ->setCode($response['responsecode'])
+                    ->setName($response['message'] ?? '')
+                    ->setGatewayMessage($response['message'] ?? '')
+                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                    ->setCreatedAt(new \DateTime('now'));
+
+                $manager->persist($paymentError);
+                $manager->flush();
+            }
+        }
+
+
+        return  [
+            'response' => $response,
+            'error' => [
+                'code' => $paymentError->getCode(),
+                'name' => $paymentError->getName(),
+                'gatewayMessage' => $paymentError->getGatewayMessage(),
+                'message' => $paymentError->getMessage()
+            ]
+        ];
 
         $code = '99';
         $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
@@ -567,9 +609,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
         return [
             'code' => $code,
-            'messages' => $messages,
-            'card' => $response['CardNumber'],
-            'responseError' => $response
+            'response' => $response
         ];
     }
 

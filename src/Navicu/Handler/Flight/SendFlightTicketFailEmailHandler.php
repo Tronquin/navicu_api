@@ -54,12 +54,12 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
         $data = [
             'publicId' => $reservation->getPublicId(),
             'passengers' => $passengers,
+            'error' => $params['error'],
             'baseURL' => getenv('DOMAIN')
         ];
 
-        //dd($data['passengers']);
-
         // Envia correo a los pasajeros
+        $data['sendNavicu'] = false;
         EmailService::send(
             [$recipients[0]],
             'Ticket Fail',
@@ -68,6 +68,7 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
         );
 
         // Envia correo a navicu
+        $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
             'Ticket Fail',

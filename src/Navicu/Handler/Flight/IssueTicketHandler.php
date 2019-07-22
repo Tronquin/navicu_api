@@ -56,7 +56,7 @@ class IssueTicketHandler extends BaseHandler
                  ]);
 
                 if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
-                    $this->sendEmailTicketFail($params['publicId']);
+                    $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
                     return [
                         'code' => $response['code'],
                         'publicId' => $params['publicId']
@@ -73,7 +73,7 @@ class IssueTicketHandler extends BaseHandler
                 ]);
 
                 if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
-                    $this->sendEmailTicketFail($params['publicId']);
+                    $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
                     return [
                         'code' => $response['code'],
                         'publicId' => $params['publicId']
@@ -153,9 +153,10 @@ class IssueTicketHandler extends BaseHandler
      *
      * @param string $publicId
      */
-    private function sendEmailTicketFail(string $publicId) {
+    private function sendEmailTicketFail(string $publicId, string $errorMessage) {
         $handler = new SendFlightTicketFailEmailHandler();
         $handler->setParam('publicId', $publicId);
+        $handler->setParam('error', $errorMessage);
         $handler->processHandler();
 
         if (! $handler->isSuccess()) {

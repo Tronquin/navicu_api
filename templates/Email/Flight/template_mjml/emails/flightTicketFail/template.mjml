@@ -38,7 +38,8 @@
       .fc-dark-violet { color: #694e95 }
       .fc-yellow { color: #eda900 !important }
       .fc-lilac { color: #d4c5ea }
-      
+      .fc-red { color: #e73e51 }
+
       .d-inline-block { display: inline-block !important }
 
       .flex-start {
@@ -137,6 +138,7 @@
             <div class="content mx-4 py-4 mt-3 bg-light-yellow">
               <div class="flex start px-4" style="align-items: start">
                 <div class="text-left">
+
                   <p class="mb-3">
                     Estimado: <span class="lato-heavy">
                     NOMBRE DEL CLIENTE</span>
@@ -198,6 +200,9 @@
                     </tr>
                   </tbody>
                 </table>
+                <div>
+									<p class="mt-5 px-4 lato-heavy fc-red">Error: TICKET FAIL</p>
+                </div>
               </div>
             </div>
           </section>

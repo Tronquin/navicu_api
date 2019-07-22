@@ -2,11 +2,10 @@
 
 namespace App\Navicu\PaymentGateway;
 
+use App\Entity\PaymentError;
+use App\Entity\PaymentType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
-use App\Navicu\Exception\NavicuException;
-use Psr\Log\LoggerInterface;
-use Psr\Container\ContainerInterface;
 use App\Navicu\Service\NavicuCurrencyConverter;
 use App\Navicu\Service\LogGenerator;
 /*
@@ -39,8 +38,6 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
     private $zeroDecimalBase;
 
     private $rf;
-
-    private $logger;
 
     private  $authorization;
 
@@ -99,6 +96,8 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
             }
         }
 
+        //dump($response);
+
         return $response;
     }
 
@@ -106,7 +105,7 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
     {
            
        $args = $this->generateArgs($request);
-      
+
        LogGenerator::savePayeezy('Petición Payeezy PayeezyPaymentGateway::processPayment',json_encode($args));
 
        $response = $this->purchase($args);
@@ -114,7 +113,7 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
        $response['checkInDate'] = $request['date'];
 
        $response = $this->formaterResponseData($response);
-    
+
        LogGenerator::savePayeezy('Respuesta Payeezy formaterResponseData',json_encode($response));
        
        return $response;
@@ -1149,67 +1148,89 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
     public function formaterResponseData($response)
     {
 
+        $np = $response['amount'] ? NavicuCurrencyConverter::convert((((integer)$response['amount']) / 100), 'USD', 'VES') : 0;
 
-        if (isset($response['amount'])) {
-            $np = NavicuCurrencyConverter::convert((((integer)$response['amount']) / 100), 'USD', 'VES');
-            }
-        else {
+        if ($response['transaction_status'] !== 'approved') {
             return [
-                'id' => null,
+                'code' => 400,
+                'responsecode' => 'success',
                 'success' => false,
-                'code' => '400',
-                'reference' => null,
+                'id' => $response['correlation_id'],
+                'reference' => $response['correlation_id'],
                 'status' => 2,
-                'amount' => 0,
                 'response' => $response,
-                'currency' => 'VES',
-                'dollarPrice' => 0,
-                'nationalPrice' => 0,
-                'responsecode' => 'error',
-                'holder' => null,
-                'message' => 'error',
-                'paymentError' => self::getPaymentError($response)
+                'holder' => $response['card']['cardholder_name'] ?? '',
+                'amount' => ((integer)$response['amount'])/100, //devuelve el monto sin comas
+                'dollarPrice' => ((integer)$response['amount'])/100,
+                'nationalPrice' => $np,
+                'paymentError' => $this->getPaymentError($response)
+            ];
+        } else {
+            return [
+                'code' => 201,
+                'responsecode' => 'success',
+                'success' => true,
+                'id' => $response['transaction_id'],
+                'reference' => $response['transaction_id'],
+                'status' => 1,
+                'response' => $response,
+                'holder' => $response['card']['cardholder_name'] ?? '',
+                'amount' => ((integer)$response['amount'])/100, //devuelve el monto sin comas
+                'dollarPrice' => ((integer)$response['amount'])/100,
+                'nationalPrice' => $np
             ];
         }
 
-        return [
-            'id' => isset($response['transaction_id']) ? $response['transaction_id'] : $response['correlation_id'],
-            'success' => $response['transaction_status'] == "approved",
-            'code' => ($response['transaction_status'] == "approved") ? '201' : '400',
-            'reference' => isset($response['transaction_id']) ? $response['transaction_id'] : $response['correlation_id'],
-            'status' => $response["transaction_status"] == 'approved' ? 1 : 2,
-            'amount' => ((integer)$response['amount'])/100, //devuelve el monto sin comas
-            'response' => $response,
-            'currency' => 'VES',
-            'dollarPrice' => ((integer)$response['amount'])/100,
-            'nationalPrice' => $np,
-            'responsecode' => 'success',
-            'holder' => $response['card']['cardholder_name'] ?? '',
-            'message' => 'success',
-            'paymentError' => $response['transaction_status'] !== "approved" ? self::getPaymentError($response) : []
-        ];
     }
 
     private function getPaymentError($response) {
 
-        $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        if (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_card_number') {
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
 
-            $code = '21';
-            $messages = ['El número de tarjeta parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
 
-        } elseif (isset($response['Error']['messages'][0]) && $response['Error']['messages'][0] === 'invalid_exp_date') {
+        if (isset($response['bank_resp_code'])) {
 
-            $code = '23';
-            $messages = ['La fecha de vencimiento de tu tarjeta no es correcta,','¡Verifica tus datos e intenta colocarla nuevamente!'];
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['bank_resp_code']
+            ]);
+
+        } else if (isset($response['gateway_resp_code'])) {
+
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['gateway_resp_code']
+            ]);
         }
 
-        return [
-            'code' => $code,
-            'messages' => $messages,
-            'responseError' => $response
+        if (!$paymentError) {
+            $paymentError = new PaymentError();
+            $paymentError
+                ->setPaymentType($paymentType)
+                ->setCode($response['bank_resp_code'] ?? $response['gateway_resp_code'] ?? '')
+                ->setName($response['bank_message'] ?? $response['gateway_message'] ?? '')
+                ->setGatewayMessage($response['bank_message'] ?? $response['gateway_message'] ?? '')
+                ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                ->setCreatedAt(new \DateTime('now'));
+
+            $manager->persist($paymentError);
+            $manager->flush();
+        }
+
+        return  [
+            'response' => $response,
+            'error' => [
+                'code' => $paymentError->getCode(),
+                'name' => $paymentError->getName(),
+                'gatewayMessage' => $paymentError->getGatewayMessage(),
+                'message' => $paymentError->getMessage()
+            ]
         ];
     }
 
