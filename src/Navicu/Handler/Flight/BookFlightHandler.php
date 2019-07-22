@@ -131,7 +131,9 @@ class BookFlightHandler extends BaseHandler
         $reservation->setType('WEB');
         $reservation->setReservationDate(new \DateTime());
         $reservation->setExpireDate($timeLimit);
-        
+
+
+
 
         foreach ($params['passengers'] as $passengerData) {
             // Guarda la informacion de los pasajeros
@@ -140,6 +142,14 @@ class BookFlightHandler extends BaseHandler
             $manager->flush();
 
             foreach ($reservation->getGdsReservations() as $gdsReservation) {
+
+                // Limpia los pasajeros
+                $flightReservationPassengers = $manager->getRepository(FlightReservationPassenger::class)->findBy(['flightReservationGds' => $gdsReservation]);
+                foreach ($flightReservationPassengers as $frp) {
+                    $manager->remove($frp);
+                    $manager->flush();
+                }
+
                 // FlightReservationPassenger es la pivot entre flightReservationGds y Passenger
                 // creo la relacion con cada reservationGds
                 $flightReservationPassenger = new FlightReservationPassenger();

@@ -66,10 +66,10 @@ class ProcessFlightReservationHandler extends BaseHandler
 
         if (! $handler->isSuccess()) {
 
-            $this->addErrorToHandler( $handler->getErrors()['errors'] );
+            $this->addErrorToHandler( $handler->getErrors()['errors']);
 
             // En caso de error envia correo de notificacion a navicu
-            $this->sendPaymentDeniedEmail($params['publicId']);
+            $this->sendPaymentDeniedEmail($params['publicId'], $handler->getErrors()['params']);
             
             // Cambia el estatus de la reserva a cancelada
             $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
@@ -168,10 +168,11 @@ class ProcessFlightReservationHandler extends BaseHandler
      *
      * @param string $publicId
      */
-    private function sendPaymentDeniedEmail(string $publicId) : void
+    private function sendPaymentDeniedEmail(string $publicId, array $error) : void
     {
         $handler = new SendFlightDeniedEmailHandler();
         $handler->setParam('publicId', $publicId);
+        $handler->setParam('error', $error);
         $handler->setParam('PaymentDenied', true);
         $handler->processHandler();
     }

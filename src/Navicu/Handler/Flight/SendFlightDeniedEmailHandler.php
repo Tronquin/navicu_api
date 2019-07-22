@@ -55,21 +55,35 @@ class SendFlightDeniedEmailHandler extends BaseHandler
         }else{
             $subject =  'Reserva Cancelada - navicu.com';
         }
-         // Envia correo a los pasajeros
-         $data['amountsInLocalCurrency'] = false;
-         $data['sendNavicu'] = false;
+
+        // Agrega datos de error de pago
+        if (isset($params['error'])) {
+            $error = $params['error']['error'];
+            $data['code'] = $error['code'];
+            $data['gatewayMessage'] = $error['gatewayMessage'];
+            $data['message'] = $error['message'];
+        } else {
+            $data['code'] = '';
+            $data['gatewayMessage'] = '';
+            $data['message'] = '';
+        }
+
+        // Envia correo a los pasajeros
+        $data['amountsInLocalCurrency'] = false;
+        $data['sendNavicu'] = false;
         EmailService::send(
             $recipients,
             $subject,
             'Email/Flight/flightDeniedReservation.html.twig',
             $data
         );
+
         // Envia correo a navicu
         $data['amountsInLocalCurrency'] = true;
         $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
+            'flightResume',
             $subject,
-            'Reserva Denegada - navicu.com',
             'Email/Flight/flightDeniedReservation.html.twig',
             $data
         );
