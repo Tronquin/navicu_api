@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FlightReservationPassenger;
+use App\Entity\FlightReservation;
 use App\Entity\Flight;
 use App\Entity\Passenger;
 use App\Entity\FlightReservationGds;
@@ -34,12 +35,13 @@ class FlightReservationPassengerRepository extends BaseRepository
             ->join(FlightReservationGds::class, 'frg', 'WITH', 'frg.id = t.flightReservationGds')
             ->join(Flight::class, 'f', 'WITH', 'f.flightReservationGds = frg.id')
             ->where('f.departureTime > :now and p.name = :firstName and p.lastname = :lastName
-                    and f.departureTime= :departure and f.airportFrom = :from')
+                    and f.departureTime= :departure and f.airportFrom = :from and frg.status != :status ')
             ->setParameter('firstName', $firstName)
             ->setParameter('lastName', $lastName)
             ->setParameter('departure', $departure)
             ->setParameter('from', $from)
             ->setParameter('now', $now)
+            ->setParameter('status', FlightReservation::STATE_CANCEL)
             ->setMaxResults(1000)
             ->getQuery()->getResult();
 
