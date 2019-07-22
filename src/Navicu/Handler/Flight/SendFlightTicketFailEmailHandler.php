@@ -37,8 +37,8 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
         $passengers = [];
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
             foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
-                $recipients[] = $flightReservationPassenger->getPassenger()->getEmail();
 
+                $recipients[] = $flightReservationPassenger->getPassenger()->getEmail();
                 $passengers[] = [
                     'firstName' => $flightReservationPassenger->getPassenger()->getName(),
                     'lastName' => $flightReservationPassenger->getPassenger()->getLastName(),
@@ -61,8 +61,8 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
         // Envia correo a los pasajeros
         $data['sendNavicu'] = false;
         EmailService::send(
-            [$recipients[0]],
-            'Ticket Fail',
+            $recipients,
+            'Información importante: Problema en su proceso de compra',
             'Email/Flight/flightTicketFail.html.twig',
             $data
         );
@@ -71,7 +71,7 @@ class SendFlightTicketFailEmailHandler extends BaseHandler
         $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
-            'Ticket Fail',
+            'Información importante: Problema en su proceso de compra',
             'Email/Flight/flightTicketFail.html.twig',
             $data
         );
