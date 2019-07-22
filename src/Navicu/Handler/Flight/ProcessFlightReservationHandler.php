@@ -66,7 +66,7 @@ class ProcessFlightReservationHandler extends BaseHandler
 
         if (! $handler->isSuccess()) {
 
-            $this->addErrorToHandler( $handler->getErrors()['errors']);
+            $this->addErrorToHandler($handler->getErrors()['errors']);
 
             // En caso de error envia correo de notificacion a navicu
             $this->sendPaymentDeniedEmail($params['publicId'], $handler->getErrors()['params']);
