@@ -570,46 +570,12 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
         return  [
             'response' => $response,
             'error' => [
+                'id' => $paymentError->getId(),
                 'code' => $paymentError->getCode(),
                 'name' => $paymentError->getName(),
                 'gatewayMessage' => $paymentError->getGatewayMessage(),
                 'message' => $paymentError->getMessage()
             ]
-        ];
-
-        $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
-
-        if ($response['responsecode'] === '02') {
-
-            $code = $response['responsecode'];
-            $messages = ['La cédula de identidad no coincide con el número de tarjeta de crédito,',', por favor verifica tus datos'];
-
-        } else if ($response['responsecode'] === '05' || $response['responsecode'] === '99') {
-
-            $code = $response['responsecode'];
-            $messages = ['La tarjeta ha sido rechazada,','intenta nuevamente con otra tarjeta u otro de los métodos de pago disponibles'];
-
-        } else if ($response['responsecode'] === '14' || $response['responsecode'] === '15' || $response['responsecode'] === '82')  {
-
-            $code = $response['responsecode'];
-            $messages = ['Disculpe, los datos de la tarjeta son inválidos,',', por favor ingrese los datos nuevamente'];
-
-        } else if ($response['responsecode'] === '51') {
-
-            $code = $response['responsecode'];
-            $messages = ['La tarjeta que utilizaste no cuenta con fondo suficiente,','Recarga tu saldo o realiza una transferencia bancaria'];
-
-        } else if ($response['responsecode'] === '83') {
-
-            $code = $response['responsecode'];
-            $messages = ['El código CVC parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
-
-        }
-
-        return [
-            'code' => $code,
-            'response' => $response
         ];
     }
 

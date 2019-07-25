@@ -1223,6 +1223,7 @@ class PayeezyPaymentGateway extends BasePaymentGateway implements  PaymentGatewa
         return  [
             'response' => $response,
             'error' => [
+                'id' => $paymentError->getId(),
                 'code' => $paymentError->getCode(),
                 'name' => $paymentError->getName(),
                 'gatewayMessage' => $paymentError->getGatewayMessage(),
