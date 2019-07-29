@@ -59,10 +59,14 @@ class SendFlightDeniedEmailHandler extends BaseHandler
         // Agrega datos de error de pago
         if (isset($params['error'])) {
             $error = $params['error']['error'];
+            $data['name'] = $error['name'];
+            $data['id'] = $error['id'];
             $data['code'] = $error['code'];
             $data['gatewayMessage'] = $error['gatewayMessage'];
             $data['message'] = $error['message'];
         } else {
+            $data['name'] = '';
+            $data['id'] = '';
             $data['code'] = '';
             $data['gatewayMessage'] = '';
             $data['message'] = '';
