@@ -16,19 +16,19 @@ monolog:
         instapago:
             level: debug
             type: rotating_file
-            path: '%kernel.logs_dir%/exeception/instapago.log'
+            path: '%kernel.logs_dir%/instapago/instapago.log'
             max_files: 30
             channels: ["instapago"]
         payeezy:
             level: debug
             type: rotating_file
-            path: '%kernel.logs_dir%/exeception/payeezy.log'
+            path: '%kernel.logs_dir%/payeezy/payeezy.log'
             max_files: 30
             channels: ["payeezy"]
         stripe:
             level: debug
             type: rotating_file
-            path: '%kernel.logs_dir%/exeception/stripe.log'
+            path: '%kernel.logs_dir%/stripe/stripe.log'
             max_files: 30
             channels: ["stripe"]
         main:
