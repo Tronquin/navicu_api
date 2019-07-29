@@ -135,13 +135,13 @@ class BookFlightHandler extends BaseHandler
 
 
 
-        foreach ($params['passengers'] as $passengerData) {
+        foreach ($params['passengers'] as $i => $passengerData) {
             // Guarda la informacion de los pasajeros
             $passenger = $this->createPassengerFromData($passengerData);
             $manager->persist($passenger);
             $manager->flush();
 
-            foreach ($reservation->getGdsReservations() as $i => $gdsReservation) {
+            foreach ($reservation->getGdsReservations() as $gdsReservation) {
 
                 // Limpia los pasajeros
                 if ($i === 0) {
