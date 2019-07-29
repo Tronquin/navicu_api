@@ -141,13 +141,15 @@ class BookFlightHandler extends BaseHandler
             $manager->persist($passenger);
             $manager->flush();
 
-            foreach ($reservation->getGdsReservations() as $gdsReservation) {
+            foreach ($reservation->getGdsReservations() as $i => $gdsReservation) {
 
                 // Limpia los pasajeros
-                $flightReservationPassengers = $manager->getRepository(FlightReservationPassenger::class)->findBy(['flightReservationGds' => $gdsReservation]);
-                foreach ($flightReservationPassengers as $frp) {
-                    $manager->remove($frp);
-                    $manager->flush();
+                if ($i === 0) {
+                    $flightReservationPassengers = $manager->getRepository(FlightReservationPassenger::class)->findBy(['flightReservationGds' => $gdsReservation]);
+                    foreach ($flightReservationPassengers as $frp) {
+                        $manager->remove($frp);
+                        $manager->flush();
+                    }
                 }
 
                 // FlightReservationPassenger es la pivot entre flightReservationGds y Passenger
