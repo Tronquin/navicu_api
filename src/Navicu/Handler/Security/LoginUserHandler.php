@@ -22,13 +22,14 @@ class LoginUserHandler extends BaseHandler
     protected function handler() : array
     {
         $params = $this->getParams();
-        $encoder = $this->container->get('security.password_encoder');;
+        $encoder = $this->container->get('security.password_encoder');
         $generator = $this->container->get('lexik_jwt_authentication.jwt_manager');
         $manager = $this->getDoctrine()->getManager();
-
         $user = $manager->getRepository(FosUser::class)->findOneByCredentials([ 'email' => $params['username'], 'username' => $params['username'] ]);
 
-        if (! $encoder->isPasswordValid($user, $params['password'])) {
+        if(!$user){
+            throw new NavicuException('user does\'t exist', 400);
+        }elseif (! $encoder->isPasswordValid($user, $params['password'])) {
             throw new NavicuException('Bad Credentials', 400);
         }
 
