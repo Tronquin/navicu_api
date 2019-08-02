@@ -8,6 +8,7 @@ use App\Navicu\Exception\NavicuException;
 use App\Entity\FlightReservation;
 use App\Entity\FlightPayment;
 use App\Entity\CurrencyType;
+use App\Navicu\Service\EmailService;
 use App\Navicu\Service\NavicuFlightConverter;
 use App\Navicu\Service\NavicuCurrencyConverter;
 /**
@@ -87,18 +88,21 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
 
                     $responseData = $handler->getData()['data'];
 
-                    /*| **********************************************************************
-                    *| Paso 3:
-                    *| - Envia correo de confirmacion a los pasajeros y a navicu
-                    * .......................................................................
-                    */
-                    $handler = new SendFlightReservationEmailHandler();
-                    $handler->setParam('publicId',  $publicId );
-                    $handler->processHandler();
+                    if ($responseData['code'] !== BaseHandler::CODE_TICKET_ERROR) {
+                        /*| **********************************************************************
+                        *| Paso 3:
+                        *| - Envia correo de confirmacion a los pasajeros y a navicu
+                        * .......................................................................
+                        */
+                        $handler = new SendFlightReservationEmailHandler();
+                        $handler->setParam('publicId',  $publicId );
+                        $handler->processHandler();
 
-                    if (! $handler->isSuccess()) {
-                        // Si falla el correo se notifica a navicu para gestion offline
-                        $this->sendEmailAlternative( $publicId );
+                        if (! $handler->isSuccess()) {
+                            // Si falla el correo se notifica a navicu para gestion offline
+                            $this->sendEmailAlternative( $publicId );
+                        }
+
                     }
 
                     return $responseData;
@@ -120,6 +124,7 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
                 if ($handler->isSuccess()) {
                     $handler = new SendFlightDeniedEmailHandler();
                     $handler->setParam('publicId',  $publicId );
+                    $handler->setParam('PaymentDenied', false);
                     $handler->processHandler();
                     return [
                         "code"=> 200
@@ -161,6 +166,25 @@ class ChangeFlightReservationStatusHandler extends BaseHandler
         
     
         return $paymentComplete ;
+    }
+
+    /**
+     * Envia correo alternativo en caso que falle el envio del
+     * correo de confirmacion con el numero del ticket al cliente.
+     * La intencion es notificar a navicu sobre el fallo y gestionar
+     * el envio del numero del ticket, el resto del proceso deberia
+     * estar correcto.
+     *
+     * @param string $publicId
+     */
+    private function sendEmailAlternative(string $publicId) : void
+    {
+        EmailService::sendFromEmailRecipients(
+            'flightResume',
+            'Fallo correo confirmacion de ticket - navicu.com',
+            'Email/Flight/emailTicketFail.html.twig',
+            compact('publicId')
+        );
     }
 
     /**

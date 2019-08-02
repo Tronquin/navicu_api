@@ -1,5 +1,5 @@
 monolog:
-    channels: ['flight']
+    channels: ['flight','exeception','instapago','payeezy','stripe']
     handlers:
         flight:
             level: debug
@@ -7,6 +7,30 @@ monolog:
             path: '%kernel.logs_dir%/flight/flight.log'
             max_files: 30
             channels: ["flight"]
+        exeception:
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/exeception/exeception.log'
+            max_files: 30
+            channels: ["exeception"]
+        instapago:
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/instapago/instapago.log'
+            max_files: 30
+            channels: ["instapago"]
+        payeezy:
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/payeezy/payeezy.log'
+            max_files: 30
+            channels: ["payeezy"]
+        stripe:
+            level: debug
+            type: rotating_file
+            path: '%kernel.logs_dir%/stripe/stripe.log'
+            max_files: 30
+            channels: ["stripe"]
         main:
             type: fingers_crossed
             action_level: error

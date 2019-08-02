@@ -94,11 +94,12 @@ class BookFlightHandler extends BaseHandler
         }
 
         if ($validFlight != 200) {
-
             $repeated = [
                 'to' => $lastFlight['to'],
                 'from' => $lastFlight['from'],
-                'name' => $lastPassenger['fullName'] ];
+                'firstName' => $lastPassenger['firstName'],
+                'lastName' => $lastPassenger['lastName']
+            ];
 
             throw new NavicuException('RepeatReservation', $validFlight, $repeated);
 
@@ -130,15 +131,27 @@ class BookFlightHandler extends BaseHandler
         $reservation->setType('WEB');
         $reservation->setReservationDate(new \DateTime());
         $reservation->setExpireDate($timeLimit);
-        
 
-        foreach ($params['passengers'] as $passengerData) {
+
+
+
+        foreach ($params['passengers'] as $i => $passengerData) {
             // Guarda la informacion de los pasajeros
             $passenger = $this->createPassengerFromData($passengerData);
             $manager->persist($passenger);
             $manager->flush();
 
             foreach ($reservation->getGdsReservations() as $gdsReservation) {
+
+                // Limpia los pasajeros
+                if ($i === 0) {
+                    $flightReservationPassengers = $manager->getRepository(FlightReservationPassenger::class)->findBy(['flightReservationGds' => $gdsReservation]);
+                    foreach ($flightReservationPassengers as $frp) {
+                        $manager->remove($frp);
+                        $manager->flush();
+                    }
+                }
+
                 // FlightReservationPassenger es la pivot entre flightReservationGds y Passenger
                 // creo la relacion con cada reservationGds
                 $flightReservationPassenger = new FlightReservationPassenger();

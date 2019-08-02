@@ -5,6 +5,8 @@ namespace App\Navicu\Handler\Flight;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\EmailService;
+use App\Entity\FlightReservation;
+use App\Entity\FlightReservationGds;
 
 /**
  * Este handler agrupa todas las funcionalidades necesarias
@@ -25,6 +27,7 @@ class ProcessFlightReservationHandler extends BaseHandler
     protected function handler(): array
     {
         $params = $this->getParams();
+        $manager = $this->getDoctrine()->getManager();
 
         /*| **********************************************************************
          *| Paso 1:
@@ -63,10 +66,20 @@ class ProcessFlightReservationHandler extends BaseHandler
 
         if (! $handler->isSuccess()) {
 
-            $this->addErrorToHandler( $handler->getErrors()['errors'] );
+            $this->addErrorToHandler($handler->getErrors()['errors']);
 
             // En caso de error envia correo de notificacion a navicu
-            $this->sendPaymentDeniedEmail($params['publicId']);
+            $this->sendPaymentDeniedEmail($params['publicId'], $handler->getErrors()['params']);
+            
+            // Cambia el estatus de la reserva a cancelada
+            $reservation = $manager->getRepository(FlightReservation::class)->findOneBy(['publicId' => $params['publicId']]);
+            foreach ($reservation->getGdsReservations() as $reservationGds) {
+    
+                $reservationGds->setStatus(FlightReservation::STATE_CANCEL);
+                $manager->flush();
+            }
+            $reservation->setStatus(FlightReservation::STATE_CANCEL);
+            $manager->flush();
 
             throw new NavicuException('PayFlightReservationHandler fail', $handler->getErrors()['code'], $handler->getErrors()['params'] );
         }
@@ -90,21 +103,25 @@ class ProcessFlightReservationHandler extends BaseHandler
 
         $responseData = $handler->getData()['data'];
 
-        /*| **********************************************************************
-         *| Paso 4:
-         *| - Envia correo de confirmacion a los pasajeros y a navicu
-         * .......................................................................
-         */
-        $handler = new SendFlightReservationEmailHandler();
-        $handler->setParam('publicId', $params['publicId']);
-        $handler->processHandler();
+        if ($responseData['code'] !== BaseHandler::CODE_TICKET_ERROR) {
+            /*| **********************************************************************
+             *| Paso 4:
+             *| - Envia correo de confirmacion a los pasajeros y a navicu
+             * .......................................................................
+             */
+            $handler = new SendFlightReservationEmailHandler();
+            $handler->setParam('publicId', $params['publicId']);
+            $handler->processHandler();
 
-        if (! $handler->isSuccess()) {
-            // Si falla el correo se notifica a navicu para gestion offline
-            $this->sendEmailAlternative($params['publicId']);
+            if (! $handler->isSuccess()) {
+                // Si falla el correo se notifica a navicu para gestion offline
+                $this->sendEmailAlternative($params['publicId']);
+            }
+
         }
 
         return $responseData;
+
     }
 
     /**
@@ -151,10 +168,12 @@ class ProcessFlightReservationHandler extends BaseHandler
      *
      * @param string $publicId
      */
-    private function sendPaymentDeniedEmail(string $publicId) : void
+    private function sendPaymentDeniedEmail(string $publicId, array $error) : void
     {
         $handler = new SendFlightDeniedEmailHandler();
         $handler->setParam('publicId', $publicId);
+        $handler->setParam('error', $error);
+        $handler->setParam('PaymentDenied', true);
         $handler->processHandler();
     }
 }

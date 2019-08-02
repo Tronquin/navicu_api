@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use App\Navicu\Service\LogGenerator;
 
 /**
  * Maneja toda la logica de negocio de la aplicacion. La intención
@@ -33,6 +34,7 @@ abstract class BaseHandler
     const CODE_REPEATED_BOOK = 112;
     const CODE_REPEATED_TICKET = 113;
     const CODE_ERROR_ISSUE = 120;
+    const CODE_TICKET_ERROR = 90;
 
 
     /* codigos respuesta holeteria*/
@@ -161,14 +163,16 @@ abstract class BaseHandler
                 $this->data = $this->handler();
             }
         } catch (NavicuException $ex) {
-
+            LogGenerator::saveExeception(
+                json_encode(['message' => $ex->getMessage(),'code' =>$this->code,'params' => $ex->getParams() ]));
             $this->code = $ex->getCode();
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());
             $this->exception_params = $ex->getParams();
 
         } catch (\Exception $ex) {
-
+            LogGenerator::saveExeception(
+                json_encode(['message' => $ex->getMessage(),'code' =>$this->code,'params' => null ]));
             $this->code = self::CODE_EXCEPTION;
             $this->codeHttp = self::CODE_EXCEPTION;
             $this->addError($ex->getMessage());

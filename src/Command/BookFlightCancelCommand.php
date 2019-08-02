@@ -59,6 +59,7 @@ class BookFlightCancelCommand extends Command
             if ($handler->isSuccess()) {
                 $handler = new SendFlightDeniedEmailHandler();
                 $handler->setParam('publicId',  $flightReservation->getPublicId() );
+                $handler->setParam('PaymentDenied', false);
                 $handler->processHandler();
                 $logger->warning('La reserva con public_id '.$flightReservation->getPublicId(). 'fue cancelada correctamente');
                 if (! $handler->isSuccess()) {

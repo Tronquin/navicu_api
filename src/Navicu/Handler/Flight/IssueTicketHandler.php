@@ -7,11 +7,13 @@ use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\AirlineService;
 use App\Navicu\Service\ConsolidatorService;
+use App\Navicu\Service\EmailService;
 use App\Navicu\Service\NotificationService;
 use App\Navicu\Service\OtaService;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
+use App\Navicu\Service\LogGenerator;
 /**
  * Genera el ticket para una reserva
  *
@@ -52,6 +54,15 @@ class IssueTicketHandler extends BaseHandler
                     'BookingID' => $gdsReservation->getBookCode(),
                     'provider' => $gdsReservation->getGds()->getName()
                  ]);
+
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                    $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
+                    return [
+                        'code' => $response['code'],
+                        'publicId' => $params['publicId']
+                    ];
+                }
+
             } else {
                  $response = OtaService::ticketTest([
                     'country' => $country,
@@ -60,11 +71,16 @@ class IssueTicketHandler extends BaseHandler
                     'BookingID' => $gdsReservation->getBookCode(),
                     'provider' => $gdsReservation->getGds()->getName()
                 ]);
+
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                    $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
+                    return [
+                        'code' => $response['code'],
+                        'publicId' => $params['publicId']
+                    ];
+                }
             }
-            $logger = $this->container->get('monolog.logger.flight');
-            $logger->warning('**********************************');
-            $logger->warning('Recibiendo respuesta OTA');
-            $logger->warning(json_encode($response));
+            LogGenerator::saveFlight('Respuesta ticket OTA IssueTicketHandler',json_encode($response));
             foreach ($response['TicketItemInfo'] as $data) {
 
                 foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
@@ -78,25 +94,16 @@ class IssueTicketHandler extends BaseHandler
                     //Limpia los acentos para comparar con la ota
                     $name = $this->cleantext($name);
                     $lastName = $this->cleantext($lastName);
-                    $logger->warning('**********************************');
-                    $logger->warning(strtolower($name) );
-                    $logger->warning(strtolower($data['GivenName']));
-                    $logger->warning('**********************************');
-                    $logger->warning(strtolower($lastName) );
-                    $logger->warning(strtolower($data['Surname']));
-                    $logger->warning('**********************************');
-                    $logger->warning(!$flightReservationPassenger->hasTicket());
-                    $logger->warning(strtolower($name) === strtolower($data['GivenName']));
-                    $logger->warning( strtolower($lastName) === strtolower($data['Surname']));
-                    $logger->warning('**********************************');
+
+                    LogGenerator::saveFlight('Comparación de Nombres y Apellido IssueTicketHandler',
+                    json_encode(['nameNavicu'=>$name, 'nameOta' => $data['GivenName'],'lastNameNavicu'=>$lastName, 'lastNameOta' => $data['Surname'],'hasticketpassanger'=> $flightReservationPassenger->hasTicket()]));
+                
                     if (
                         strtolower($name) === strtolower($data['GivenName']) &&
                         strtolower($lastName) === strtolower($data['Surname']) &&
                         ! $flightReservationPassenger->hasTicket()
                     ) {
-                        $logger->warning('**********************************');
-                        $logger->warning('Guardando ticket en Base de datos');
-                        $logger->warning(json_encode($data));
+                        LogGenerator::saveFlight('Guardando ticket en Base de datos IssueTicketHandler',json_encode($data));
                         $flightReservationPassenger
                             ->setPrice($data['Amount'])
                             ->setCommision($data['Commission'])
@@ -139,6 +146,43 @@ class IssueTicketHandler extends BaseHandler
 
         return $name;
 
+    }
+
+    /**
+     * Envia correo cuando hay un fallo al generar el ticket
+     *
+     * @param string $publicId
+     */
+    private function sendEmailTicketFail(string $publicId, string $errorMessage) {
+        $handler = new SendFlightTicketFailEmailHandler();
+        $handler->setParam('publicId', $publicId);
+        $handler->setParam('error', $errorMessage);
+        $handler->processHandler();
+
+        if (! $handler->isSuccess()) {
+
+            // Si falla el correo se notifica a navicu para gestion offline
+            $this->sendEmailAlternative( $publicId );
+        }
+    }
+
+    /**
+     * Envia correo alternativo en caso que falle el envio del
+     * correo de confirmacion con el numero del ticket al cliente.
+     * La intencion es notificar a navicu sobre el fallo y gestionar
+     * el envio del numero del ticket, el resto del proceso deberia
+     * estar correcto.
+     *
+     * @param string $publicId
+     */
+    private function sendEmailAlternative(string $publicId) : void
+    {
+        EmailService::sendFromEmailRecipients(
+            'flightResume',
+            'Fallo correo confirmacion de ticket - navicu.com',
+            'Email/Flight/emailTicketFail.html.twig',
+            compact('publicId')
+        );
     }
 
     /**

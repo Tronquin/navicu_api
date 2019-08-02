@@ -3,9 +3,13 @@
 namespace App\Navicu\Service;
 
 use App\Navicu\Exception\OtaException;
+use App\Navicu\Handler\BaseHandler;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
+use App\Entity\ServiceRequest;
+use App\Entity\ServiceResponse;
+use App\Navicu\Service\LogGenerator;
 
 /**
  * Servicio para interactuar con la api de OTA
@@ -33,6 +37,7 @@ class OtaService
 
     /** Codigos de respuesta de OTA */
     const CODE_SUCCESS = 1;
+    const ISSUE_TICKET_FAIL = 3;
 
     /**
      * Hace una busqueda one way en OTA
@@ -368,7 +373,10 @@ class OtaService
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ . '/../../../.env');
         global  $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
+        $urlName = $url;
 
+        $urlCode = $url;
         $urlBase = getenv('OTA_URL_BASE');
         $url = $urlBase . $url;
         $params['token'] = getenv('OTA_TOKEN');
@@ -389,10 +397,24 @@ class OtaService
         }
 
         $url = $url . '?' . http_build_query($params);
-        $logger = $kernel->getContainer()->get('monolog.logger.flight');
-        $logger->warning('**********************************');
-        $logger->warning('URL a OTA');
-        $logger->warning(json_encode($url));
+
+        /*-----------------------------------------------------------
+         * | Guarda registro de la petición en Base de datos y Log
+         * ---------------------------------------------------------
+         * **********************************************************/
+        $serviceRequest = new ServiceRequest();
+        $serviceRequest->setNamespace(self::class)
+            ->setName($urlName)
+            ->setParameters($params)
+            ->setCreateAt(new \DateTime('now'))
+            ->setUpdateAt(new \DateTime('now'))
+            ->setRequest($url);
+
+        $manager->persist($serviceRequest);
+        $manager->flush();    	
+        
+        LogGenerator::saveFlight('Petición a OTA',json_encode($url));
+     
         if ($method !== self::METHOD_GET) {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
@@ -401,6 +423,40 @@ class OtaService
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
+
+
+        /*-----------------------------------------------------------
+         * | Guarda registro de la respuesta OTA en Base de datos y Log
+         * ---------------------------------------------------------
+         * **********************************************************/
+        $serviceResponse = new ServiceResponse();
+        $serviceResponse->setNamespace(self::class)
+            ->setName($urlName)
+            ->setParameters($params)
+            ->setCreateAt(new \DateTime('now'))
+            ->setUpdateAt(new \DateTime('now'))
+            ->setResponse(json_encode( $response ))
+            ->setServiceRequest($serviceRequest);
+
+        $manager->persist($serviceResponse);
+        $manager->flush();    
+        LogGenerator::saveFlight('Respuesta de OTA',json_encode($response));
+
+
+        /* ---------------------------------------------------------------- *
+         * | Respuesta en caso de que el servicio de generar ticket falle | *
+         * -----------------------------------------------------------------*/
+        if ($urlCode === self::URL_TICKET || $urlCode === self::URL_TICKET_TEST) {
+
+            if (! $response) {
+                $response = [];
+                $response['code'] = BaseHandler::CODE_TICKET_ERROR;
+                return $response;
+            }
+            if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                return $response;
+            }
+        }
 
         if (! $response) {
             throw new OtaException('Bad request to OTA');

@@ -6,14 +6,14 @@ use App\Entity\FlightReservation;
 use App\Navicu\Exception\NavicuException;
 use App\Navicu\Handler\BaseHandler;
 use App\Navicu\Service\EmailService;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
- * Envia correo para notificar algun error procesar
- * el pago
+ * Envia el correo cuando el ticket no se genera
  *
- * @author Emilio Ochoa <emilioaor@gmail.com>
+ * @author David Pinto <dpinto@jacidi.com>
  */
-class SendFlightDeniedEmailHandler extends BaseHandler
+class SendFlightTicketFailEmailHandler extends BaseHandler
 {
     /**
      * Aqui va la logica
@@ -32,67 +32,52 @@ class SendFlightDeniedEmailHandler extends BaseHandler
         if (! $reservation) {
             throw new NavicuException(sprintf('Reservation "%s" not found', $params['publicId']));
         }
-        $recipients = []; 
+
+        $recipients = [];
+        $passengers = [];
         foreach ($reservation->getGdsReservations() as $gdsReservation) {
             foreach ($gdsReservation->getFlightReservationPassengers() as $flightReservationPassenger) {
+
                 $recipients[] = $flightReservationPassenger->getPassenger()->getEmail();
+                $passengers[] = [
+                    'firstName' => $flightReservationPassenger->getPassenger()->getName(),
+                    'lastName' => $flightReservationPassenger->getPassenger()->getLastName(),
+                    'phone' => $flightReservationPassenger->getPassenger()->getPhone(),
+                    'email' => $flightReservationPassenger->getPassenger()->getEmail(),
+                    'bookCode' => $gdsReservation->getBookCode()
+                ];
             }
             break;
         }
-           
-        $handler = new ResumeReservationHandler();
-        $handler->setParam('public_id', $params['publicId']);
-        $handler->processHandler();
 
-        if (! $handler->isSuccess()) {
-            throw new NavicuException('Email data not found');
-        }
-        $data = $handler->getData()['data'];
 
-        //Verifico si viene de reserva cancelada o por fallo de Pago para cambiar el asunto
-        if($params['PaymentDenied']){
-            $subject =  'Reserva Denegada - navicu.com';
-        }else{
-            $subject =  'Reserva Cancelada - navicu.com';
-        }
-
-        // Agrega datos de error de pago
-        if (isset($params['error'])) {
-            $error = $params['error']['error'];
-            $data['name'] = $error['name'];
-            $data['id'] = $error['id'];
-            $data['code'] = $error['code'];
-            $data['gatewayMessage'] = $error['gatewayMessage'];
-            $data['message'] = $error['message'];
-        } else {
-            $data['name'] = '';
-            $data['id'] = '';
-            $data['code'] = '';
-            $data['gatewayMessage'] = '';
-            $data['message'] = '';
-        }
+        $data = [
+            'publicId' => $reservation->getPublicId(),
+            'passengers' => $passengers,
+            'error' => $params['error'],
+            'baseURL' => getenv('DOMAIN')
+        ];
 
         // Envia correo a los pasajeros
-        $data['amountsInLocalCurrency'] = false;
         $data['sendNavicu'] = false;
         EmailService::send(
             $recipients,
-            $subject,
-            'Email/Flight/flightDeniedReservation.html.twig',
+            'Información importante: Problema en su proceso de compra',
+            'Email/Flight/flightTicketFail.html.twig',
             $data
         );
 
         // Envia correo a navicu
-        $data['amountsInLocalCurrency'] = true;
         $data['sendNavicu'] = true;
         EmailService::sendFromEmailRecipients(
             'flightResume',
-            $subject,
-            'Email/Flight/flightDeniedReservation.html.twig',
+            'Información importante: Problema en su proceso de compra',
+            'Email/Flight/flightTicketFail.html.twig',
             $data
         );
 
         return compact('reservation');
+
     }
 
     /**
@@ -107,8 +92,7 @@ class SendFlightDeniedEmailHandler extends BaseHandler
     protected function validationRules(): array
     {
         return [
-            'publicId' => 'required',
-            'PaymentDenied' => 'required'
+            'publicId' => 'required'
         ];
     }
 }

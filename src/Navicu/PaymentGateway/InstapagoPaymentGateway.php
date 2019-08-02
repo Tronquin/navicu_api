@@ -2,10 +2,13 @@
 
 namespace App\Navicu\PaymentGateway;
 
+use App\Entity\PaymentError;
+use App\Entity\PaymentType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
 use Psr\Log\LoggerInterface;
+use App\Navicu\Service\LogGenerator;
 
 /**
  * Clase para la comunicación con la pasarela de pago: Instapago.
@@ -411,14 +414,10 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
         //global $kernel;
         //$logger = $kernel->getContainer()->get('Logger');
         
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        $logger->warning('Petición Instapago (request): ');
 
         $amount = str_replace(",","",(string)$request['amount']);  //Eliminar las comas del monto a cobrar
 
- 
-        $logger->warning(json_encode(array(
+        LogGenerator::saveInstapago('Petición Instapago (request):',json_encode(array(
             'PublicKeyId' => $this->config['public_id'],
             'KeyId' => $this->config['private_id'],
             'StatusId' => $this->statusId,
@@ -449,8 +448,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
     public function formaterRequestDataTotal($request)
     {
-        //global $kernel;
-        //$logger = $kernel->getContainer()->get('Logger');
+        
 
         //Eliminar las comas del monto a cobrar
         $requestFinal['Amount'] = (string)(str_replace(",","",(string)$request['amount']));
@@ -465,10 +463,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
         $requestFinal['Description'] = $request['description'];
         $requestFinal['IP'] = $request['ip'];
 
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        $logger->warning('Petición Instapago (request): ');
-        $logger->warning(json_encode(array(
+        LogGenerator::saveInstapago('Petición Instapago (request):',json_encode(array(
             'Amount' => $requestFinal['Amount'],
             'Description' => $requestFinal['Description'],
             'CardHolder' => $requestFinal['CardHolder'],
@@ -477,22 +472,8 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
             'StatusId' => "1",
             'ExpirationDate' => $requestFinal['ExpirationDate'],
             'IP' => $requestFinal['IP'])
-    ));
-      
-        /*
-        
-        $logger->warning('Petición (request): ');
-        $logger->warning(json_encode(array(
-                'Amount' => $requestFinal['Amount'],
-                'Description' => $requestFinal['Description'],
-                'CardHolder' => $requestFinal['CardHolder'],
-                'CardHolderId' => (string)$requestFinal['CardHolderId'],
-                'CardNumber' => preg_replace('/[0-9]/', '*', $requestFinal['CardNumber'], 12),
-                'StatusId' => "1",
-                'ExpirationDate' => $requestFinal['ExpirationDate'],
-                'IP' => $requestFinal['IP'])
         ));
-        */
+    
         return $requestFinal;
     }
 
@@ -504,8 +485,6 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
      */
     public function formaterResponseData($response)
     {
-        //global $kernel;
-        //$logger = $kernel->getContainer()->get('Logger');
 
         $request = $response['request'];
         $jsonResponse = $response['response'];
@@ -513,7 +492,7 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
 
         $amount = (! isset($response['amount']) ?  0 : str_replace(",","",(string)$response['amount']));
 
-        if (isset($response['success'])) {
+        if ($response['success']) {
             $return = array_merge($response, [
                 'id' => $response['id'],
                 'success' => $response['success'],
@@ -524,11 +503,10 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'status' => $response["success"] ? 1 : 2,
                 'amount' => $amount,
                 'response' => $jsonResponse,
-                'paymentError' => self::getPaymentError(array_merge($request, $response))
             ]);
         } else {
-            $return = array_merge($response,[
-                'id' =>  (isset($request['id']) ? $request['id'] : 0) ,
+            $return = [
+                'id' =>  (isset($request['id']) ? $request['id'] : 0),
                 'success' => false,
                 'code' => 500,
                 'reference' => 0,
@@ -538,65 +516,66 @@ class InstapagoPaymentGateway extends BasePaymentGateway  implements PaymentGate
                 'amount' => $amount,
                 'response' => $jsonResponse,
                 'message' => 'error',
-                'paymentError' => self::getPaymentError(array_merge($request, $response))
-            ]);
+                'paymentError' => $this->getPaymentError($response)
+            ];
         }
-        $logger = $this->getContainer()->get('monolog.logger.flight');
-        $logger->warning('******************************');
-        
-        $logger->warning('Respuesta de la peticion Instapago:');     
-        $logger->warning(json_encode(array( 'id' => $return['id'],
-            'success' => $return['success'],
-            'code' => $return['code'],
-            'reference' => $return['reference'],
-            'holder' => $return['holder'],
-            'holderId' => $return['holderId'],
-            'status' => $return["success"],
-            'amount' => $return['amount'])));
-        $logger->warning('.......................................................................................');
-        
 
+        LogGenerator::saveInstapago('Respuesta de la peticion Instapago:',json_encode(array( 'id' => $return['id'],
+        'success' => $return['success'],
+        'code' => $return['code'],
+        'reference' => $return['reference'],
+        'holder' => $return['holder'],
+        'holderId' => $return['holderId'],
+        'status' => $return["success"],
+        'amount' => $return['amount'])));
+        
         return $return;
     }
 
     private function getPaymentError($response)
     {
 
-        $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        if ($response['responsecode'] === '02') {
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
 
-            $code = $response['responsecode'];
-            $messages = ['La cédula de identidad no coincide con el número de tarjeta de crédito,',', por favor verifica tus datos'];
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
 
-        } else if ($response['responsecode'] === '05' || $response['responsecode'] === '99') {
+        if (isset($response['responsecode']) || isset($response['code'])) {
 
-            $code = $response['responsecode'];
-            $messages = ['La tarjeta ha sido rechazada,','intenta nuevamente con otra tarjeta u otro de los métodos de pago disponibles'];
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['responsecode'] ?? $response['code']
+            ]);
 
-        } else if ($response['responsecode'] === '14' || $response['responsecode'] === '15' || $response['responsecode'] === '82')  {
+            if (!$paymentError) {
+                $paymentError = new PaymentError();
+                $paymentError
+                    ->setPaymentType($paymentType)
+                    ->setCode($response['responsecode'])
+                    ->setName($response['message'] ?? '')
+                    ->setGatewayMessage($response['message'] ?? '')
+                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                    ->setCreatedAt(new \DateTime('now'));
 
-            $code = $response['responsecode'];
-            $messages = ['Disculpe, los datos de la tarjeta son inválidos,',', por favor ingrese los datos nuevamente'];
-
-        } else if ($response['responsecode'] === '51') {
-
-            $code = $response['responsecode'];
-            $messages = ['La tarjeta que utilizaste no cuenta con fondo suficiente,','Recarga tu saldo o realiza una transferencia bancaria'];
-
-        } else if ($response['responsecode'] === '83') {
-
-            $code = $response['responsecode'];
-            $messages = ['El código CVC parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
-
+                $manager->persist($paymentError);
+                $manager->flush();
+            }
         }
 
-        return [
-            'code' => $code,
-            'messages' => $messages,
-            'card' => $response['CardNumber'],
-            'responseError' => $response
+
+        return  [
+            'response' => $response,
+            'error' => [
+                'id' => $paymentError->getId(),
+                'code' => $paymentError->getCode(),
+                'name' => $paymentError->getName(),
+                'gatewayMessage' => $paymentError->getGatewayMessage(),
+                'message' => $paymentError->getMessage()
+            ]
         ];
     }
 

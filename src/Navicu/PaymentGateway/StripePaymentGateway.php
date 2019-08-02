@@ -1,6 +1,8 @@
 <?php
 namespace App\Navicu\PaymentGateway;
 
+use App\Entity\PaymentError;
+use App\Entity\PaymentType;
 use App\Navicu\Contract\PaymentGateway;
 use App\Entity\CurrencyType;
 use App\Navicu\Exception\NavicuException;
@@ -9,6 +11,7 @@ use Psr\Container\ContainerInterface;
 use Omnipay\Common\CreditCard;
 use Omnipay\Omnipay;
 use App\Navicu\Service\NavicuCurrencyConverter;
+use App\Navicu\Service\LogGenerator;
 
 /**
 * @author Javier Vasquez <jvasquez@jacidi.com>
@@ -71,19 +74,15 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
     public function processPayment($request)
     {
         try {
-            $logger = $this->getContainer()->get('monolog.logger.flight');
-            $logger->warning('******************************');
+        
             \Stripe\Stripe::setApiKey($this->config['api_key']);
-          
-            $logger->warning('Peticiom Stripe');
-            $logger->warning(json_encode($this->formaterRequestData($request)));
+            LogGenerator::saveStripe('Peticion Stripe:',json_encode($this->formaterRequestData($request)));
+            
 
             $charge = \Stripe\Charge::create($this->formaterRequestData($request));
-           
         
-            
-            $logger->warning('Respuesta Stripe');
-            $logger->warning(json_encode($this->formaterResponseData($charge)));
+            LogGenerator::saveStripe('Respuesta Stripe:',json_encode($this->formaterResponseData($charge)));
+
             return $this->formaterResponseData($charge);
             
 
@@ -93,8 +92,9 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
             $err  = $body['error'];
             $err['status'] = $e->getHttpStatus();
             $err['amount'] = $request['amount'];
-            $logger->warning('Error Stripe');
-            $logger->warning(json_encode( $this->formaterResponseErrorData($err,$request)));
+
+            LogGenerator::saveStripe('Error Stripe:',json_encode( $this->formaterResponseErrorData($err,$request)));
+
             return $this->formaterResponseErrorData($err,$request);
         }
     }
@@ -267,42 +267,47 @@ class StripePaymentGateway  extends BasePaymentGateway implements  PaymentGatewa
 
     private function getPaymentError($response) {
 
-        $code = '99';
-        $messages = ['No hemos podido establecer comunicación con el banco,', 'por favor intentalo más tarde'];
+        global $kernel;
+        $manager = $kernel->getContainer()->get('doctrine')->getManager();
 
-        if ($response['type'] === 'card_error') {
-            if ($response['code'] === 'incorrect_number') {
+        // Default Error
+        $paymentError = $manager->getRepository(PaymentError::class)->findOneBy(['code' => '2014']);
 
-                $code = '21';
-                $messages = ['El número de tarjeta parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
+        // Tipo de pago
+        $paymentType = $manager->getRepository(PaymentType::class)->find($this->getTypePayment());
 
-            } else if ($response['code'] === 'card_declined') {
+        if (isset($response['code'])) {
 
-                $code = '22';
-                $messages = ['Lo sentimos, tu tarjeta ha sido rechazada,','Intenta con otra o realiza una transferencia bancaria'];
+            $paymentError = $manager->getRepository(PaymentError::class)->findOneBy([
+                'paymentType' => $paymentType,
+                'code' => $response['decline_code'] ?? $response['code']
+            ]);
 
-            } else if ($response['code'] === 'invalid_expiry_year') {
+            if (!$paymentError) {
+                $paymentError = new PaymentError();
+                $paymentError
+                    ->setPaymentType($paymentType)
+                    ->setCode($response['decline_code'] ?? $response['code'])
+                    ->setName($response['decline_code'] ?? $response['code'])
+                    ->setGatewayMessage($response['message'] ?? '')
+                    ->setMessage('No pudimos procesar tu solicitud, por favor intenta nuevamente')
+                    ->setCreatedAt(new \DateTime('now'));
 
-                $code = '23';
-                $messages = ['La fecha de vencimiento de tu tarjeta no es correcta,','¡Verifica tus datos e intenta colocarla nuevamente!'];
-
-            }else if($response['code'] === 'incorrect_cvc'){
-
-                $code = '83';
-                $messages = ['El código CVC parece no estar correcto,','¡Intenta colocarlo de nuevo!'];
-                
-            }else if($response['code'] === 'insufficient_funds'){
-
-                $code = '51';
-                $messages = ['La tarjeta que utilizas no cuenta con fondo suficiente,','Recarga tu saldo o realiza una transferencia bancaria'];
+                $manager->persist($paymentError);
+                $manager->flush();
             }
+        }
 
-        }   
 
-        return [
-            'code' => $code,
-            'messages' => $messages,
-            'responseError' => $response
+        return  [
+            'response' => $response,
+            'error' => [
+                'id' => $paymentError->getId(),
+                'code' => $paymentError->getCode(),
+                'name' => $paymentError->getName(),
+                'gatewayMessage' => $paymentError->getGatewayMessage(),
+                'message' => $paymentError->getMessage()
+            ]
         ];
 
     }

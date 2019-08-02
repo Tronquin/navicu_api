@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class PaymentType
      */
     private $commision = '0';
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PaymentError", mappedBy="paymentType")
+     */
+    private $paymentErrors;
+
+    public function __construct()
+    {
+        $this->paymentErrors = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +73,37 @@ class PaymentType
     public function setCommision(float $commision): self
     {
         $this->commision = $commision;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PaymentError[]
+     */
+    public function getPaymentErrors(): Collection
+    {
+        return $this->paymentErrors;
+    }
+
+    public function addPaymentErrors(PaymentError $code): self
+    {
+        if (!$this->paymentErrors->contains($code)) {
+            $this->paymentErrors[] = $code;
+            $code->setPaymentType($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentErrors(PaymentError $code): self
+    {
+        if ($this->paymentErrors->contains($code)) {
+            $this->paymentErrors->removeElement($code);
+            // set the owning side to null (unless already changed)
+            if ($code->getPaymentType() === $this) {
+                $code->setPaymentType(null);
+            }
+        }
 
         return $this;
     }
