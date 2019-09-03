@@ -80,7 +80,8 @@ class CompleteReservationHandler extends BaseHandler
         $responseData = $handler->getData()['data'];
 
 
-        if ($responseData['code'] !== BaseHandler::CODE_TICKET_ERROR) {
+        if ($responseData['code'] !== BaseHandler::CODE_TICKET_ERROR ||
+            $responseData['code'] !== BaseHandler::CODE_OTA_UNSUCCESS) {
             /*| **********************************************************************
              *| Paso 4:
              *| - Envia correo de confirmacion a los pasajeros y a navicu

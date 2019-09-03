@@ -35,6 +35,7 @@ abstract class BaseHandler
     const CODE_REPEATED_TICKET = 113;
     const CODE_ERROR_ISSUE = 120;
     const CODE_TICKET_ERROR = 90;
+    const CODE_OTA_UNSUCCESS = 2;
 
 
     /* codigos respuesta holeteria*/

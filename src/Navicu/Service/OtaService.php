@@ -453,7 +453,8 @@ class OtaService
                 $response['code'] = BaseHandler::CODE_TICKET_ERROR;
                 return $response;
             }
-            if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+            if ($response['code'] === BaseHandler::CODE_TICKET_ERROR ||
+                $response['code'] === BaseHandler::CODE_OTA_UNSUCCESS) {
                 return $response;
             }
         }

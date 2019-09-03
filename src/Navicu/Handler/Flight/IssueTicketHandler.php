@@ -55,7 +55,8 @@ class IssueTicketHandler extends BaseHandler
                     'provider' => $gdsReservation->getGds()->getName()
                  ]);
 
-                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR ||
+                    $response['code'] === BaseHandler::CODE_OTA_UNSUCCESS) {
                     $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
                     return [
                         'code' => $response['code'],
@@ -72,7 +73,8 @@ class IssueTicketHandler extends BaseHandler
                     'provider' => $gdsReservation->getGds()->getName()
                 ]);
 
-                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR) {
+                if ($response['code'] === BaseHandler::CODE_TICKET_ERROR ||
+                    $response['code'] === BaseHandler::CODE_OTA_UNSUCCESS) {
                     $this->sendEmailTicketFail($params['publicId'], $response['errors'][0]);
                     return [
                         'code' => $response['code'],
