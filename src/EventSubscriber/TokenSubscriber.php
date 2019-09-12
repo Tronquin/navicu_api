@@ -24,6 +24,14 @@ class TokenSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
+        $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
+
+        if ($ip === '172.31.23.219') {
+            return $event->setController(function () {
+                return new JsonResponse(['code' => 400, 'errors' => ['error']], 400);
+            });
+        }
+
         if (! $request->headers->has('token')) {
 
             return $event->setController(function () {
